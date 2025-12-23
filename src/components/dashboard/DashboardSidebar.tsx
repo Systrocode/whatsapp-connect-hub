@@ -15,7 +15,8 @@ import {
   Megaphone,
   CreditCard,
   Target,
-  Plug
+  Plug,
+  Wrench
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
@@ -28,6 +29,7 @@ const navItems = [
   { icon: Megaphone, label: 'Broadcasts', path: '/dashboard/broadcasts' },
   { icon: Target, label: 'Campaigns', path: '/dashboard/campaigns' },
   { icon: BarChart3, label: 'Analytics', path: '/dashboard/analytics' },
+  { icon: Wrench, label: 'Tools', path: '/dashboard/tools' },
   { icon: Plug, label: 'Integrations', path: '/dashboard/integrations' },
   { icon: Settings, label: 'Settings', path: '/dashboard/settings' },
 ];
