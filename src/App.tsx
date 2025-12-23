@@ -18,6 +18,7 @@ import Broadcasts from "./pages/Broadcasts";
 import Campaigns from "./pages/Campaigns";
 import CampaignDetail from "./pages/CampaignDetail";
 import Integrations from "./pages/Integrations";
+import Tools from "./pages/Tools";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
@@ -62,6 +63,7 @@ const App = () => (
             <Route path="/dashboard/campaigns" element={<ProtectedRoute><Campaigns /></ProtectedRoute>} />
             <Route path="/dashboard/campaigns/:id" element={<ProtectedRoute><CampaignDetail /></ProtectedRoute>} />
             <Route path="/dashboard/integrations" element={<ProtectedRoute><Integrations /></ProtectedRoute>} />
+            <Route path="/dashboard/tools" element={<ProtectedRoute><Tools /></ProtectedRoute>} />
             {/* Admin Routes - Lazy loaded for code-splitting */}
             <Route path="/dashboard/admin" element={
               <AdminRoute>

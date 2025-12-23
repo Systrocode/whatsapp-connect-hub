@@ -42,7 +42,7 @@ const integrations: Integration[] = [
     icon: MessageCircle,
     status: "available",
     category: "Website",
-    configPath: "/dashboard/settings",
+    configPath: "/dashboard/tools",
   },
   {
     id: "whatsapp-link",
@@ -51,7 +51,7 @@ const integrations: Integration[] = [
     icon: Link2,
     status: "available",
     category: "Marketing",
-    configPath: "/dashboard/settings",
+    configPath: "/dashboard/tools",
   },
   {
     id: "meta-ads",

@@ -1,13 +1,17 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Search, MessageSquare, Clock, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Search, MessageSquare, Clock, CheckCircle2, AlertCircle, Target, ChevronDown, ChevronUp } from 'lucide-react';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useConversations, ConversationWithContact } from '@/hooks/useConversations';
+import { useCampaignLeads } from '@/hooks/useCampaignLeads';
 import { useNavigate } from 'react-router-dom';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatDistanceToNow } from 'date-fns';
+import CampaignLeadsList from '@/components/dashboard/CampaignLeadsList';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 const statusConfig = {
   active: { label: 'Active', color: 'bg-green-500', icon: MessageSquare },
@@ -17,9 +21,11 @@ const statusConfig = {
 
 const Conversations = () => {
   const { conversations, isLoading } = useConversations();
+  const { leads } = useCampaignLeads();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [showLeads, setShowLeads] = useState(true);
 
   const filteredConversations = conversations.filter((conv) => {
     const matchesSearch =
@@ -45,6 +51,37 @@ const Conversations = () => {
           <h1 className="text-2xl font-bold text-foreground mb-1">Conversations</h1>
           <p className="text-muted-foreground">Manage all your WhatsApp conversations</p>
         </motion.div>
+
+        {/* Campaign Leads Section */}
+        {leads.length > 0 && (
+          <Collapsible open={showLeads} onOpenChange={setShowLeads}>
+            <Card className="border-primary/20 bg-primary/5">
+              <CollapsibleTrigger asChild>
+                <CardHeader className="cursor-pointer hover:bg-primary/10 transition-colors rounded-t-lg">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="flex items-center gap-2 text-lg">
+                      <Target className="w-5 h-5 text-primary" />
+                      New Campaign Leads
+                      <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-primary text-primary-foreground">
+                        {leads.length}
+                      </span>
+                    </CardTitle>
+                    {showLeads ? (
+                      <ChevronUp className="w-5 h-5 text-muted-foreground" />
+                    ) : (
+                      <ChevronDown className="w-5 h-5 text-muted-foreground" />
+                    )}
+                  </div>
+                </CardHeader>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <CardContent>
+                  <CampaignLeadsList limit={5} />
+                </CardContent>
+              </CollapsibleContent>
+            </Card>
+          </Collapsible>
+        )}
 
         {/* Filters */}
         <motion.div
