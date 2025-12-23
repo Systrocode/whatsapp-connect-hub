@@ -4,7 +4,6 @@ import {
   Upload,
   FileText,
   ClipboardPaste,
-  X,
   CheckCircle2,
   AlertCircle,
   FileSpreadsheet,
@@ -32,15 +31,16 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useContactImport, DuplicateHandling } from '@/hooks/useContactImport';
-import { getSupportedFormats } from '@/utils/contactParsers';
+import { getSupportedFormats, ParsedContact } from '@/utils/contactParsers';
 import ImportPreview from './ImportPreview';
+import GoogleSheetsImport from './GoogleSheetsImport';
 
 interface ImportContactsDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-type ImportStep = 'select' | 'preview' | 'importing' | 'complete';
+type ImportStep = 'select' | 'google-sheets' | 'preview' | 'importing' | 'complete';
 
 const ImportContactsDialog = ({ open, onOpenChange }: ImportContactsDialogProps) => {
   const [step, setStep] = useState<ImportStep>('select');
@@ -105,6 +105,24 @@ const ImportContactsDialog = ({ open, onOpenChange }: ImportContactsDialogProps)
     setStep('preview');
   }, [pastedText, parseText]);
 
+  const handleGoogleSheetsContacts = useCallback((contacts: ParsedContact[]) => {
+    // Create a parse result from Google Sheets contacts
+    const result = {
+      contacts,
+      errors: [],
+      warnings: [],
+    };
+    // Manually set the parse result through the hook's state
+    parseText(''); // Clear any existing
+    // We need to trigger preview with these contacts
+    setStep('preview');
+    // Use a workaround - parse as text format
+    const textFormat = contacts.map(c => 
+      `${c.name || ''},${c.phone_number},${c.email || ''}`
+    ).join('\n');
+    parseText(textFormat);
+  }, [parseText]);
+
   const handleImport = useCallback(async () => {
     if (!parseResult || parseResult.contacts.length === 0) return;
 
@@ -155,14 +173,18 @@ const ImportContactsDialog = ({ open, onOpenChange }: ImportContactsDialogProps)
               </div>
 
               <Tabs defaultValue="file" className="w-full">
-                <TabsList className="grid w-full grid-cols-2">
+                <TabsList className="grid w-full grid-cols-3">
                   <TabsTrigger value="file" className="flex items-center gap-2">
                     <Upload className="w-4 h-4" />
-                    Upload File
+                    File
                   </TabsTrigger>
                   <TabsTrigger value="paste" className="flex items-center gap-2">
                     <ClipboardPaste className="w-4 h-4" />
                     Paste
+                  </TabsTrigger>
+                  <TabsTrigger value="sheets" className="flex items-center gap-2">
+                    <FileSpreadsheet className="w-4 h-4" />
+                    Google Sheets
                   </TabsTrigger>
                 </TabsList>
 
@@ -241,6 +263,13 @@ const ImportContactsDialog = ({ open, onOpenChange }: ImportContactsDialogProps)
                     Continue
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
+                </TabsContent>
+
+                <TabsContent value="sheets" className="mt-4">
+                  <GoogleSheetsImport
+                    onContactsParsed={handleGoogleSheetsContacts}
+                    onBack={() => {}}
+                  />
                 </TabsContent>
               </Tabs>
             </motion.div>
