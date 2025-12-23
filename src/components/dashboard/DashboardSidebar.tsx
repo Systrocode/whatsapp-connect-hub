@@ -13,7 +13,9 @@ import {
   UserCog,
   FileText,
   Megaphone,
-  CreditCard
+  CreditCard,
+  Target,
+  Plug
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
@@ -24,7 +26,9 @@ const navItems = [
   { icon: MessagesSquare, label: 'Conversations', path: '/dashboard/conversations' },
   { icon: Users, label: 'Contacts', path: '/dashboard/contacts' },
   { icon: Megaphone, label: 'Broadcasts', path: '/dashboard/broadcasts' },
+  { icon: Target, label: 'Campaigns', path: '/dashboard/campaigns' },
   { icon: BarChart3, label: 'Analytics', path: '/dashboard/analytics' },
+  { icon: Plug, label: 'Integrations', path: '/dashboard/integrations' },
   { icon: Settings, label: 'Settings', path: '/dashboard/settings' },
 ];
 
