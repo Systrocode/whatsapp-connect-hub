@@ -14,6 +14,59 @@ export type Database = {
   }
   public: {
     Tables: {
+      ad_performance: {
+        Row: {
+          campaign_id: string
+          clicks: number | null
+          conversions: number | null
+          cpc: number | null
+          created_at: string
+          ctr: number | null
+          date: string
+          id: string
+          impressions: number | null
+          reach: number | null
+          spend: number | null
+          updated_at: string
+        }
+        Insert: {
+          campaign_id: string
+          clicks?: number | null
+          conversions?: number | null
+          cpc?: number | null
+          created_at?: string
+          ctr?: number | null
+          date: string
+          id?: string
+          impressions?: number | null
+          reach?: number | null
+          spend?: number | null
+          updated_at?: string
+        }
+        Update: {
+          campaign_id?: string
+          clicks?: number | null
+          conversions?: number | null
+          cpc?: number | null
+          created_at?: string
+          ctr?: number | null
+          date?: string
+          id?: string
+          impressions?: number | null
+          reach?: number | null
+          spend?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ad_performance_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       broadcast_campaigns: {
         Row: {
           created_at: string
@@ -120,6 +173,111 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      campaign_leads: {
+        Row: {
+          campaign_id: string
+          contact_id: string | null
+          created_at: string
+          id: string
+          metadata: Json | null
+          name: string | null
+          phone_number: string
+          source: string | null
+        }
+        Insert: {
+          campaign_id: string
+          contact_id?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          name?: string | null
+          phone_number: string
+          source?: string | null
+        }
+        Update: {
+          campaign_id?: string
+          contact_id?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          name?: string | null
+          phone_number?: string
+          source?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_leads_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campaign_leads_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "contacts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campaigns: {
+        Row: {
+          created_at: string
+          creative: Json | null
+          daily_budget: number | null
+          end_date: string | null
+          id: string
+          lifetime_budget: number | null
+          meta_ad_id: string | null
+          meta_adset_id: string | null
+          meta_campaign_id: string | null
+          name: string
+          objective: string
+          start_date: string | null
+          status: string
+          targeting: Json | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          creative?: Json | null
+          daily_budget?: number | null
+          end_date?: string | null
+          id?: string
+          lifetime_budget?: number | null
+          meta_ad_id?: string | null
+          meta_adset_id?: string | null
+          meta_campaign_id?: string | null
+          name: string
+          objective?: string
+          start_date?: string | null
+          status?: string
+          targeting?: Json | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          creative?: Json | null
+          daily_budget?: number | null
+          end_date?: string | null
+          id?: string
+          lifetime_budget?: number | null
+          meta_ad_id?: string | null
+          meta_adset_id?: string | null
+          meta_campaign_id?: string | null
+          name?: string
+          objective?: string
+          start_date?: string | null
+          status?: string
+          targeting?: Json | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       contacts: {
         Row: {

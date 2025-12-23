@@ -5,3 +5,6 @@ verify_jwt = true
 
 [functions.google-sheets]
 verify_jwt = false
+
+[functions.meta-marketing]
+verify_jwt = true
