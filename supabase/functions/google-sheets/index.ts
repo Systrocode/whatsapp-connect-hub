@@ -17,22 +17,25 @@ const SCOPES = [
   "https://www.googleapis.com/auth/drive.readonly",
 ].join(" ");
 
-// Create Supabase clients
+// Create Supabase admin client
 const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-function getSupabaseClient(authHeader: string | null) {
-  const token = authHeader?.replace("Bearer ", "") || SUPABASE_ANON_KEY;
-  return createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-    global: { headers: { Authorization: `Bearer ${token}` } },
-  });
-}
-
 async function getUserFromToken(authHeader: string | null) {
-  if (!authHeader) return null;
-  const supabase = getSupabaseClient(authHeader);
-  const { data: { user }, error } = await supabase.auth.getUser();
+  if (!authHeader) {
+    console.log("No authorization header provided");
+    return null;
+  }
+  
+  const token = authHeader.replace("Bearer ", "");
+  if (!token) {
+    console.log("No token in authorization header");
+    return null;
+  }
+
+  // Use admin client to get user from JWT token
+  const { data: { user }, error } = await supabaseAdmin.auth.getUser(token);
   if (error) {
-    console.error("Error getting user:", error);
+    console.error("Error verifying token:", error);
     return null;
   }
   return user;
