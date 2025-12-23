@@ -1,9 +1,13 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { MessageSquare, ArrowRight, CheckCircle, Users, Clock, TrendingUp, Send } from 'lucide-react';
+import { MessageSquare, ArrowRight, CheckCircle, Users, Clock, TrendingUp, Send, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
+import { BookDemoDialog } from '@/components/landing/BookDemoDialog';
 
 const Index = () => {
+  const [isDemoDialogOpen, setIsDemoDialogOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -62,8 +66,9 @@ const Index = () => {
                   <ArrowRight className="w-5 h-5" />
                 </Button>
               </Link>
-              <Button variant="outline" size="xl">
-                Watch Demo
+              <Button variant="outline" size="xl" onClick={() => setIsDemoDialogOpen(true)}>
+                <Calendar className="w-5 h-5" />
+                Book a Demo
               </Button>
             </div>
           </motion.div>
@@ -243,6 +248,8 @@ const Index = () => {
           </p>
         </div>
       </footer>
+
+      <BookDemoDialog open={isDemoDialogOpen} onOpenChange={setIsDemoDialogOpen} />
     </div>
   );
 };
