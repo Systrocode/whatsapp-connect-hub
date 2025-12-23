@@ -2,3 +2,6 @@ project_id = "njnmspciqlwilrbbrcmc"
 
 [functions.whatsapp-api]
 verify_jwt = true
+
+[functions.google-sheets]
+verify_jwt = false
