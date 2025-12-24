@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { MessageSquare, Eye, EyeOff, ArrowRight, Building2, ArrowLeft, Mail } from 'lucide-react';
+import { MessageSquare, Eye, EyeOff, ArrowRight, Building2, ArrowLeft, Mail, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -23,6 +23,7 @@ const Auth = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [businessName, setBusinessName] = useState('');
+  const [fullName, setFullName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -75,11 +76,12 @@ const Auth = () => {
         toast.success('Welcome back!');
         navigate('/dashboard');
       } else {
-        const result = signupSchema.safeParse({ 
-          email, 
-          password, 
-          businessName, 
-          phoneNumber 
+        const result = signupSchema.safeParse({
+          email,
+          password,
+          businessName,
+          fullName,
+          phoneNumber
         });
         if (!result.success) {
           const fieldErrors: Record<string, string> = {};
@@ -95,9 +97,10 @@ const Auth = () => {
 
         const { error } = await signUp(email, password, {
           business_name: businessName,
-          phone_number: phoneNumber
+          phone_number: phoneNumber,
+          full_name: fullName
         });
-        
+
         if (error) {
           if (error.message.includes('already registered')) {
             toast.error('This email is already registered. Please sign in.');
@@ -158,7 +161,7 @@ const Auth = () => {
   return (
     <div className="min-h-screen flex">
       {/* Left Panel - Branding */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, x: -50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.6 }}
@@ -168,7 +171,7 @@ const Auth = () => {
           <div className="absolute top-20 left-20 w-64 h-64 rounded-full bg-whatsapp blur-3xl" />
           <div className="absolute bottom-20 right-20 w-96 h-96 rounded-full bg-whatsapp blur-3xl" />
         </div>
-        
+
         <div className="relative z-10 flex flex-col justify-center px-16 text-sidebar-foreground">
           <div className="flex items-center gap-3 mb-8">
             <div className="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center shadow-glow">
@@ -176,12 +179,12 @@ const Auth = () => {
             </div>
             <span className="text-2xl font-bold">WA Business</span>
           </div>
-          
+
           <h1 className="text-4xl font-bold mb-4 leading-tight">
             Connect with your customers
             <span className="text-gradient block">on WhatsApp</span>
           </h1>
-          
+
           <p className="text-sidebar-foreground/70 text-lg mb-8 max-w-md">
             Manage conversations, automate responses, and grow your business with our powerful dashboard.
           </p>
@@ -192,7 +195,7 @@ const Auth = () => {
               'Automated response templates',
               'Multi-agent support',
             ].map((feature, i) => (
-              <motion.div 
+              <motion.div
                 key={feature}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -209,7 +212,7 @@ const Auth = () => {
 
       {/* Right Panel - Form */}
       <div className="flex-1 flex items-center justify-center p-8 bg-background">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -228,8 +231,8 @@ const Auth = () => {
               {isLogin ? 'Welcome back' : 'Create your account'}
             </h2>
             <p className="text-muted-foreground">
-              {isLogin 
-                ? 'Enter your credentials to access your dashboard' 
+              {isLogin
+                ? 'Enter your credentials to access your dashboard'
                 : 'Get started with your WhatsApp Business dashboard'}
             </p>
           </div>
@@ -237,6 +240,24 @@ const Auth = () => {
           <form onSubmit={handleSubmit} className="space-y-5">
             {!isLogin && (
               <>
+                <div className="space-y-2">
+                  <Label htmlFor="fullName" className="text-foreground">Full Name</Label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                    <Input
+                      id="fullName"
+                      type="text"
+                      placeholder="John Doe"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
+                  {errors.fullName && (
+                    <p className="text-sm text-destructive">{errors.fullName}</p>
+                  )}
+                </div>
+
                 <div className="space-y-2">
                   <Label htmlFor="businessName" className="text-foreground">Business Name</Label>
                   <div className="relative">
@@ -311,8 +332,8 @@ const Auth = () => {
 
             {isLogin && (
               <div className="flex justify-end">
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="text-sm text-primary hover:underline"
                   onClick={() => setShowForgotPassword(true)}
                 >
@@ -321,10 +342,10 @@ const Auth = () => {
               </div>
             )}
 
-            <Button 
-              type="submit" 
-              variant="whatsapp" 
-              size="lg" 
+            <Button
+              type="submit"
+              variant="whatsapp"
+              size="lg"
               className="w-full"
               disabled={isLoading}
             >

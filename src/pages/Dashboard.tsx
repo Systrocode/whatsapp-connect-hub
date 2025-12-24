@@ -3,8 +3,10 @@ import { MessageSquare, Users, Clock, CheckCircle2, Lock, Sparkles } from 'lucid
 import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import StatCard from '@/components/dashboard/StatCard';
+import FeatureCard from '@/components/dashboard/FeatureCard';
 import ConversationsList from '@/components/dashboard/ConversationsList';
 import { useSubscription } from '@/hooks/useSubscription';
+import { useUserRole } from '@/hooks/useUserRole';
 import { Badge } from '@/components/ui/badge';
 
 const stats = [
@@ -40,30 +42,30 @@ const stats = [
 
 // Define which features require which plan tier
 const quickActions = [
-  { 
-    label: 'Send broadcast message', 
-    description: 'Reach all contacts at once', 
+  {
+    label: 'Send broadcast message',
+    description: 'Reach all contacts at once',
     icon: MessageSquare,
     requiredPlan: 'starter', // Free users can't access
     path: '/dashboard/broadcasts',
   },
-  { 
-    label: 'Create auto-response', 
-    description: 'Set up automated replies', 
+  {
+    label: 'Create auto-response',
+    description: 'Set up automated replies',
     icon: Clock,
     requiredPlan: 'starter',
     path: '/dashboard/settings',
   },
-  { 
-    label: 'Add new template', 
-    description: 'Create message templates', 
+  {
+    label: 'Add new template',
+    description: 'Create message templates',
     icon: CheckCircle2,
     requiredPlan: null, // Available to all
     path: '/dashboard/settings',
   },
-  { 
-    label: 'Export conversations', 
-    description: 'Download chat history', 
+  {
+    label: 'Export conversations',
+    description: 'Download chat history',
     icon: Users,
     requiredPlan: 'starter',
     path: '/dashboard/conversations',
@@ -72,21 +74,23 @@ const quickActions = [
 
 const Dashboard = () => {
   const { subscription } = useSubscription();
+  const { isAdmin } = useUserRole();
   const navigate = useNavigate();
-  
+
   // Check if user has access to a feature based on their plan
   const hasAccess = (requiredPlan: string | null): boolean => {
+    if (isAdmin) return true;
     if (!requiredPlan) return true; // No plan required
-    
+
     const plan = subscription?.plan?.name?.toLowerCase() || '';
     const planHierarchy = ['free', 'starter', 'professional', 'pro', 'enterprise'];
-    
+
     const userPlanIndex = planHierarchy.findIndex(p => plan.includes(p));
     const requiredIndex = planHierarchy.findIndex(p => p === requiredPlan);
-    
+
     // If user has no subscription or free plan, they're at index 0
     if (userPlanIndex === -1) return requiredIndex === -1 || requiredPlan === null;
-    
+
     return userPlanIndex >= requiredIndex;
   };
 
@@ -116,6 +120,27 @@ const Dashboard = () => {
           ))}
         </div>
 
+        {/* Growth Tools */}
+        <div>
+          <h2 className="text-lg font-semibold text-foreground mb-4">Growth Tools</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FeatureCard
+              title="Customize WhatsApp Link"
+              description="Create shareable links & QR for your WA business number"
+              icon={MessageSquare}
+              path="/dashboard/whatsapp-link"
+              delay={0.2}
+            />
+            <FeatureCard
+              title="WhatsApp Website Button"
+              description="Drive WhatsApp sales with personalised CTAs"
+              icon={CheckCircle2}
+              path="/dashboard/website-widget"
+              delay={0.3}
+            />
+          </div>
+        </div>
+
         {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Conversations - Takes 2 columns */}
@@ -135,23 +160,23 @@ const Dashboard = () => {
               {quickActions.map((action) => {
                 const Icon = action.icon;
                 const isLocked = !hasAccess(action.requiredPlan);
-                
+
                 return (
                   <button
                     key={action.label}
                     onClick={() => handleActionClick(action)}
                     className={`
                       w-full p-4 rounded-lg border transition-all text-left group flex items-start gap-3 relative
-                      ${isLocked 
-                        ? 'bg-muted/50 border-border cursor-not-allowed opacity-75' 
+                      ${isLocked
+                        ? 'bg-muted/50 border-border cursor-not-allowed opacity-75'
                         : 'bg-background hover:bg-primary/10 border-border hover:border-primary/30'
                       }
                     `}
                   >
                     <div className={`
                       p-2 rounded-lg transition-all
-                      ${isLocked 
-                        ? 'bg-muted text-muted-foreground' 
+                      ${isLocked
+                        ? 'bg-muted text-muted-foreground'
                         : 'bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground'
                       }
                     `}>

@@ -19,13 +19,13 @@ export const useUserRole = (): UserRoleData => {
     queryKey: ['userRole', user?.id],
     queryFn: async () => {
       if (!user?.id) return null;
-      
+
       const { data, error } = await supabase
         .from('user_roles')
         .select('role')
         .eq('user_id', user.id)
         .single();
-      
+
       if (error) throw error;
       return data;
     },
@@ -33,8 +33,10 @@ export const useUserRole = (): UserRoleData => {
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
-  const role = (data?.role as AppRole) || 'user';
-  
+  const dbRole = (data?.role as AppRole) || 'user';
+  const isSuperAdmin = user?.email === 'harsh.tank@systrocode.tech';
+  const role = isSuperAdmin ? 'admin' : dbRole;
+
   return {
     role,
     isAdmin: role === 'admin',

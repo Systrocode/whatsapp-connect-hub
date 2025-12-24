@@ -54,12 +54,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   const signUp = async (
-    email: string, 
-    password: string, 
-    metadata?: { business_name?: string; phone_number?: string }
+    email: string,
+    password: string,
+    metadata?: { business_name?: string; phone_number?: string; full_name?: string }
   ) => {
     const redirectUrl = `${window.location.origin}/`;
-    
+
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -68,7 +68,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         data: metadata
       }
     });
-    
+
     return { error: error as Error | null };
   };
 
@@ -77,18 +77,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       email,
       password
     });
-    
+
     return { error: error as Error | null };
   };
 
   const signInWithGoogle = async () => {
+    // Redirect to the dashboard after successful auth
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
         redirectTo: `${window.location.origin}/dashboard`
       }
     });
-    
+
     return { error: error as Error | null };
   };
 
@@ -98,11 +99,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const resetPassword = async (email: string) => {
     const redirectUrl = `${window.location.origin}/auth/reset-password`;
-    
+
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: redirectUrl
     });
-    
+
     return { error: error as Error | null };
   };
 
@@ -110,7 +111,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const { error } = await supabase.auth.updateUser({
       password: newPassword
     });
-    
+
     return { error: error as Error | null };
   };
 
