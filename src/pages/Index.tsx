@@ -13,20 +13,22 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border bg-card/50 backdrop-blur-sm fixed top-0 left-0 right-0 z-50">
-        <div className="container mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg gradient-primary flex items-center justify-center">
-              <MessageSquare className="w-5 h-5 text-primary-foreground" />
+        <div className="container mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg gradient-primary flex items-center justify-center">
+              <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 text-primary-foreground" />
             </div>
-            <span className="text-lg font-bold text-foreground">WA Business</span>
+            <span className="text-base sm:text-lg font-bold text-foreground">WA Business</span>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             <ModeToggle />
             <Link to="/auth">
-              <Button variant="ghost">Sign in</Button>
+              <Button variant="ghost" size="sm" className="hidden sm:inline-flex">Sign in</Button>
+              <Button variant="ghost" size="sm" className="sm:hidden px-2">Log in</Button>
             </Link>
             <Link to="/auth">
-              <Button variant="whatsapp">Get Started</Button>
+              <Button variant="whatsapp" size="sm" className="sm:hidden">Get Started</Button>
+              <Button variant="whatsapp" className="hidden sm:inline-flex">Get Started</Button>
             </Link>
           </div>
         </div>
@@ -50,7 +52,7 @@ const Index = () => {
               Trusted by 10,000+ businesses
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
               Your complete{' '}
               <span className="text-gradient">WhatsApp Business</span>{' '}
               dashboard
@@ -212,21 +214,21 @@ const Index = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="gradient-dark rounded-3xl p-12 text-center relative overflow-hidden"
+            className="gradient-dark rounded-3xl p-8 sm:p-12 text-center relative overflow-hidden"
           >
             <div className="absolute inset-0 opacity-20">
               <div className="absolute top-10 left-10 w-40 h-40 rounded-full bg-whatsapp blur-3xl" />
               <div className="absolute bottom-10 right-10 w-60 h-60 rounded-full bg-whatsapp blur-3xl" />
             </div>
             <div className="relative z-10">
-              <h2 className="text-3xl font-bold text-sidebar-foreground mb-4">
+              <h2 className="text-2xl sm:text-3xl font-bold text-sidebar-foreground mb-4">
                 Ready to transform your business?
               </h2>
               <p className="text-sidebar-foreground/70 mb-8 max-w-lg mx-auto">
                 Join thousands of businesses already using our platform to connect with their customers.
               </p>
               <Link to="/auth">
-                <Button variant="whatsapp" size="xl" className="animate-pulse-glow">
+                <Button variant="whatsapp" size="xl" className="w-full sm:w-auto animate-pulse-glow">
                   Get Started for Free
                   <ArrowRight className="w-5 h-5" />
                 </Button>
@@ -239,7 +241,7 @@ const Index = () => {
       {/* Footer */}
       <footer className="py-8 px-6 border-t border-border">
         <div className="container mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap justify-center items-center gap-4">
             <div className="flex items-center gap-2">
               <div className="w-7 h-7 rounded-md gradient-primary flex items-center justify-center">
                 <MessageSquare className="w-4 h-4 text-primary-foreground" />
