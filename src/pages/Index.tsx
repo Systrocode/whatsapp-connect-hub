@@ -4,6 +4,8 @@ import { MessageSquare, ArrowRight, CheckCircle, Users, Clock, TrendingUp, Send,
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { BookDemoDialog } from '@/components/landing/BookDemoDialog';
+import { LandingHeader } from '@/components/landing/LandingHeader';
+import { LandingFooter } from '@/components/landing/LandingFooter';
 import { ModeToggle } from '@/components/ui/mode-toggle';
 
 const Index = () => {
@@ -12,27 +14,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b border-border bg-card/50 backdrop-blur-sm fixed top-0 left-0 right-0 z-50">
-        <div className="container mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2 sm:gap-3">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg gradient-primary flex items-center justify-center">
-              <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 text-primary-foreground" />
-            </div>
-            <span className="text-base sm:text-lg font-bold text-foreground">WA Business</span>
-          </div>
-          <div className="flex items-center gap-2 sm:gap-4">
-            <ModeToggle />
-            <Link to="/auth">
-              <Button variant="ghost" size="sm" className="hidden sm:inline-flex">Sign in</Button>
-              <Button variant="ghost" size="sm" className="sm:hidden px-2">Log in</Button>
-            </Link>
-            <Link to="/auth">
-              <Button variant="whatsapp" size="sm" className="sm:hidden">Get Started</Button>
-              <Button variant="whatsapp" className="hidden sm:inline-flex">Get Started</Button>
-            </Link>
-          </div>
-        </div>
-      </header>
+      <LandingHeader />
 
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-6 relative overflow-hidden">
@@ -47,7 +29,7 @@ const Index = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-whatsapp-light text-whatsapp-dark text-sm font-medium mb-8">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-100 text-sm font-medium mb-8 border border-green-200 dark:border-green-800">
               <CheckCircle className="w-4 h-4" />
               Trusted by 10,000+ businesses
             </div>
@@ -92,7 +74,7 @@ const Index = () => {
                 <div className="w-3 h-3 rounded-full bg-whatsapp/50" />
               </div>
               <div className="p-6 bg-gradient-to-b from-background to-muted/30">
-                <div className="grid grid-cols-4 gap-4 mb-6">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
                   {[
                     { label: 'Conversations', value: '1,284', icon: MessageSquare, color: 'text-whatsapp' },
                     { label: 'Contacts', value: '3,721', icon: Users, color: 'text-primary' },
@@ -111,8 +93,8 @@ const Index = () => {
                     );
                   })}
                 </div>
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="col-span-2 h-48 rounded-xl bg-card border border-border p-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="col-span-1 sm:col-span-2 h-48 rounded-xl bg-card border border-border p-4">
                     <div className="flex items-center justify-between mb-4">
                       <span className="text-sm font-medium text-foreground">Recent Conversations</span>
                       <span className="text-xs text-muted-foreground">View all</span>
@@ -227,7 +209,7 @@ const Index = () => {
               <p className="text-sidebar-foreground/70 mb-8 max-w-lg mx-auto">
                 Join thousands of businesses already using our platform to connect with their customers.
               </p>
-              <Link to="/auth">
+              <Link to="/auth?mode=signup">
                 <Button variant="whatsapp" size="xl" className="w-full sm:w-auto animate-pulse-glow">
                   Get Started for Free
                   <ArrowRight className="w-5 h-5" />
@@ -239,33 +221,7 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 px-6 border-t border-border">
-        <div className="container mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex flex-wrap justify-center items-center gap-4">
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-md gradient-primary flex items-center justify-center">
-                <MessageSquare className="w-4 h-4 text-primary-foreground" />
-              </div>
-              <span className="font-semibold text-foreground">WA Business</span>
-            </div>
-            {/* Meta Tech Partner Badge */}
-            <a
-              href="https://www.facebook.com/business/partner-directory"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1877F2]/10 border border-[#1877F2]/20 hover:bg-[#1877F2]/20 transition-colors"
-            >
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="#1877F2">
-                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-              </svg>
-              <span className="text-xs font-medium text-[#1877F2]">Meta Tech Partner</span>
-            </a>
-          </div>
-          <p className="text-sm text-muted-foreground">
-            © 2024 WA Business Dashboard. All rights reserved.
-          </p>
-        </div>
-      </footer>
+      <LandingFooter />
 
       <BookDemoDialog open={isDemoDialogOpen} onOpenChange={setIsDemoDialogOpen} />
     </div>

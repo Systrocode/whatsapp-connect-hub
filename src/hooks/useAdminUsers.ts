@@ -33,7 +33,7 @@ export const useAdminUsers = () => {
 
       // Combine profiles with roles
       const rolesMap = new Map(roles?.map(r => [r.user_id, r.role]) || []);
-      
+
       return (profiles || []).map(profile => ({
         ...profile,
         role: (rolesMap.get(profile.id) as 'admin' | 'moderator' | 'user') || 'user',
@@ -68,11 +68,30 @@ export const useAdminUsers = () => {
     },
   });
 
+  const deleteUserMutation = useMutation({
+    mutationFn: async (userId: string) => {
+      const { error } = await (supabase.rpc as any)('delete_user_by_admin', {
+        target_user_id: userId,
+      });
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['adminUsers'] });
+      toast.success('User deleted successfully');
+    },
+    onError: (error) => {
+      toast.error('Failed to delete user: ' + error.message);
+    },
+  });
+
   return {
     users: usersQuery.data || [],
     isLoading: usersQuery.isLoading,
     error: usersQuery.error,
     updateRole: updateRoleMutation.mutate,
     isUpdating: updateRoleMutation.isPending,
+    deleteUser: deleteUserMutation.mutate,
+    isDeleting: deleteUserMutation.isPending,
   };
 };

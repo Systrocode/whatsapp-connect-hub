@@ -1,11 +1,11 @@
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { 
-  MessageSquare, 
-  LayoutDashboard, 
-  Users, 
-  BarChart3, 
-  Settings, 
+import {
+  MessageSquare,
+  LayoutDashboard,
+  Users,
+  BarChart3,
+  Settings,
   HelpCircle,
   LogOut,
   MessagesSquare,
@@ -16,7 +16,8 @@ import {
   CreditCard,
   Target,
   Plug,
-  Wrench
+  Wrench,
+  BookOpen
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
@@ -39,6 +40,7 @@ const adminItems = [
   { icon: UserCog, label: 'User Management', path: '/dashboard/admin/users' },
   { icon: FileText, label: 'Templates', path: '/dashboard/admin/templates' },
   { icon: CreditCard, label: 'Subscriptions', path: '/dashboard/admin/subscriptions' },
+  { icon: BookOpen, label: 'Blog Manager', path: '/dashboard/admin/blog' },
 ];
 
 const DashboardSidebar = () => {
@@ -53,7 +55,7 @@ const DashboardSidebar = () => {
   };
 
   const renderNavItem = (item: typeof navItems[0], isAdminSection = false) => {
-    const isActive = location.pathname === item.path || 
+    const isActive = location.pathname === item.path ||
       (item.path !== '/dashboard' && item.path !== '/dashboard/admin' && location.pathname.startsWith(item.path));
     return (
       <NavLink
@@ -61,9 +63,9 @@ const DashboardSidebar = () => {
         to={item.path}
         className={cn(
           "flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 relative group",
-          isActive 
-            ? isAdminSection 
-              ? "bg-red-500/10 text-red-500" 
+          isActive
+            ? isAdminSection
+              ? "bg-red-500/10 text-red-500"
               : "bg-sidebar-accent text-sidebar-primary"
             : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
         )}
@@ -119,7 +121,7 @@ const DashboardSidebar = () => {
           <HelpCircle className="w-5 h-5" />
           Help & Support
         </button>
-        <button 
+        <button
           onClick={handleSignOut}
           className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-sidebar-foreground/70 hover:bg-destructive/20 hover:text-destructive transition-all duration-200 w-full"
         >

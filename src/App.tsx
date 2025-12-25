@@ -7,39 +7,44 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeProvider";
 import { Analytics as VercelAnalytics } from "@vercel/analytics/react";
-import Index from "./pages/Index";
-import Auth from "./pages/Auth";
-import ResetPassword from "./pages/ResetPassword";
-import Dashboard from "./pages/Dashboard";
-import Conversations from "./pages/Conversations";
-import ConversationDetail from "./pages/ConversationDetail";
-import Contacts from "./pages/Contacts";
-import Analytics from "./pages/Analytics";
-import Settings from "./pages/Settings";
-import Broadcasts from "./pages/Broadcasts";
-import Campaigns from "./pages/Campaigns";
-import CampaignDetail from "./pages/CampaignDetail";
-import Integrations from "./pages/Integrations";
-import Tools from "./pages/Tools";
-import WhatsAppLink from "./pages/WhatsAppLink";
-import WebsiteWidget from "./pages/WebsiteWidget";
-import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
 
-// Lazy load admin pages to exclude from non-admin bundles
-// This prevents admin UI components from being loaded for regular users
+// Lazy load all pages for performance optimization
+const Index = lazy(() => import("./pages/Index"));
+const Pricing = lazy(() => import("./pages/Pricing"));
+const FeaturePage = lazy(() => import("./pages/FeaturePage"));
+const Auth = lazy(() => import("./pages/Auth"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Conversations = lazy(() => import("./pages/Conversations"));
+const ConversationDetail = lazy(() => import("./pages/ConversationDetail"));
+const Contacts = lazy(() => import("./pages/Contacts"));
+const Analytics = lazy(() => import("./pages/Analytics"));
+const Settings = lazy(() => import("./pages/Settings"));
+const Broadcasts = lazy(() => import("./pages/Broadcasts"));
+const Campaigns = lazy(() => import("./pages/Campaigns"));
+const CampaignDetail = lazy(() => import("./pages/CampaignDetail"));
+const Integrations = lazy(() => import("./pages/Integrations"));
+const Tools = lazy(() => import("./pages/Tools"));
+const WhatsAppLink = lazy(() => import("./pages/WhatsAppLink"));
+const WebsiteWidget = lazy(() => import("./pages/WebsiteWidget"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const Blog = lazy(() => import("./pages/Blog"));
+const BlogPost = lazy(() => import("./pages/BlogPost"));
+
+// Lazy load admin pages
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const AdminUsers = lazy(() => import("./pages/AdminUsers"));
 const AdminTemplates = lazy(() => import("./pages/AdminTemplates"));
 const AdminSubscriptions = lazy(() => import("./pages/AdminSubscriptions"));
+const AdminBlog = lazy(() => import("./pages/AdminBlog"));
 
-// Loading fallback for lazy-loaded admin components
-const AdminLoadingFallback = () => (
+// Global loading fallback
+const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center bg-background">
     <div className="flex flex-col items-center gap-4">
       <div className="w-8 h-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
-      <p className="text-muted-foreground">Loading admin panel...</p>
     </div>
   </div>
 );
@@ -54,56 +59,41 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/auth" element={<Auth />} />
-              <Route path="/auth/reset-password" element={<ResetPassword />} />
-              <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-              <Route path="/dashboard/conversations" element={<ProtectedRoute><Conversations /></ProtectedRoute>} />
-              <Route path="/dashboard/conversations/:id" element={<ProtectedRoute><ConversationDetail /></ProtectedRoute>} />
-              <Route path="/dashboard/contacts" element={<ProtectedRoute><Contacts /></ProtectedRoute>} />
-              <Route path="/dashboard/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
-              <Route path="/dashboard/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
-              <Route path="/dashboard/broadcasts" element={<ProtectedRoute><Broadcasts /></ProtectedRoute>} />
-              <Route path="/dashboard/campaigns" element={<ProtectedRoute><Campaigns /></ProtectedRoute>} />
-              <Route path="/dashboard/campaigns/:id" element={<ProtectedRoute><CampaignDetail /></ProtectedRoute>} />
-              <Route path="/dashboard/integrations" element={<ProtectedRoute><Integrations /></ProtectedRoute>} />
-              <Route path="/dashboard/tools" element={<ProtectedRoute><Tools /></ProtectedRoute>} />
-              <Route path="/dashboard/whatsapp-link" element={<ProtectedRoute><WhatsAppLink /></ProtectedRoute>} />
-              <Route path="/dashboard/website-widget" element={<ProtectedRoute><WebsiteWidget /></ProtectedRoute>} />
-              {/* Admin Routes - Lazy loaded for code-splitting */}
-              <Route path="/dashboard/admin" element={
-                <AdminRoute>
-                  <Suspense fallback={<AdminLoadingFallback />}>
-                    <AdminDashboard />
-                  </Suspense>
-                </AdminRoute>
-              } />
-              <Route path="/dashboard/admin/users" element={
-                <AdminRoute>
-                  <Suspense fallback={<AdminLoadingFallback />}>
-                    <AdminUsers />
-                  </Suspense>
-                </AdminRoute>
-              } />
-              <Route path="/dashboard/admin/templates" element={
-                <AdminRoute>
-                  <Suspense fallback={<AdminLoadingFallback />}>
-                    <AdminTemplates />
-                  </Suspense>
-                </AdminRoute>
-              } />
-              <Route path="/dashboard/admin/subscriptions" element={
-                <AdminRoute>
-                  <Suspense fallback={<AdminLoadingFallback />}>
-                    <AdminSubscriptions />
-                  </Suspense>
-                </AdminRoute>
-              } />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <Suspense fallback={<PageLoader />}>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/pricing" element={<Pricing />} />
+                <Route path="/features/:slug" element={<FeaturePage />} />
+                <Route path="/integrations/:slug" element={<FeaturePage />} />
+                <Route path="/product/:slug" element={<FeaturePage />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/blog/:slug" element={<BlogPost />} />
+                <Route path="/auth" element={<Auth />} />
+                <Route path="/auth/reset-password" element={<ResetPassword />} />
+                <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                <Route path="/dashboard/conversations" element={<ProtectedRoute><Conversations /></ProtectedRoute>} />
+                <Route path="/dashboard/conversations/:id" element={<ProtectedRoute><ConversationDetail /></ProtectedRoute>} />
+                <Route path="/dashboard/contacts" element={<ProtectedRoute><Contacts /></ProtectedRoute>} />
+                <Route path="/dashboard/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
+                <Route path="/dashboard/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+                <Route path="/dashboard/broadcasts" element={<ProtectedRoute><Broadcasts /></ProtectedRoute>} />
+                <Route path="/dashboard/campaigns" element={<ProtectedRoute><Campaigns /></ProtectedRoute>} />
+                <Route path="/dashboard/campaigns/:id" element={<ProtectedRoute><CampaignDetail /></ProtectedRoute>} />
+                <Route path="/dashboard/integrations" element={<ProtectedRoute><Integrations /></ProtectedRoute>} />
+                <Route path="/dashboard/tools" element={<ProtectedRoute><Tools /></ProtectedRoute>} />
+                <Route path="/dashboard/whatsapp-link" element={<ProtectedRoute><WhatsAppLink /></ProtectedRoute>} />
+                <Route path="/dashboard/website-widget" element={<ProtectedRoute><WebsiteWidget /></ProtectedRoute>} />
+                {/* Admin Routes */}
+                <Route path="/dashboard/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+                <Route path="/dashboard/admin/users" element={<AdminRoute><AdminUsers /></AdminRoute>} />
+                <Route path="/dashboard/admin/templates" element={<AdminRoute><AdminTemplates /></AdminRoute>} />
+                <Route path="/dashboard/admin/subscriptions" element={<AdminRoute><AdminSubscriptions /></AdminRoute>} />
+                <Route path="/dashboard/admin/blog" element={<AdminRoute><AdminBlog /></AdminRoute>} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
+            <VercelAnalytics />
           </BrowserRouter>
-          <VercelAnalytics />
         </TooltipProvider>
       </AuthProvider>
     </ThemeProvider>

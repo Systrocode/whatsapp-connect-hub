@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/table';
 import { useAdminUsers } from '@/hooks/useAdminUsers';
 import { useAuth } from '@/contexts/AuthContext';
-import { Users, Shield, UserCog, User } from 'lucide-react';
+import { Users, Shield, UserCog, User, Trash2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 
@@ -30,7 +30,7 @@ const roleConfig = {
 };
 
 const AdminUsers = () => {
-  const { users, isLoading, updateRole, isUpdating } = useAdminUsers();
+  const { users, isLoading, updateRole, isUpdating, deleteUser, isDeleting } = useAdminUsers();
   const { user: currentUser } = useAuth();
 
   const handleRoleChange = (userId: string, newRole: 'admin' | 'moderator' | 'user') => {
@@ -87,7 +87,7 @@ const AdminUsers = () => {
                     {users.map((user) => {
                       const role = roleConfig[user.role] || roleConfig.user;
                       const isCurrentUser = user.id === currentUser?.id;
-                      
+
                       return (
                         <TableRow key={user.id}>
                           <TableCell>
@@ -124,20 +124,35 @@ const AdminUsers = () => {
                             {format(new Date(user.created_at), 'MMM d, yyyy')}
                           </TableCell>
                           <TableCell className="text-right">
-                            <Select
-                              value={user.role}
-                              onValueChange={(value) => handleRoleChange(user.id, value as 'admin' | 'moderator' | 'user')}
-                              disabled={isUpdating || isCurrentUser}
-                            >
-                              <SelectTrigger className="w-32">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="user">User</SelectItem>
-                                <SelectItem value="moderator">Moderator</SelectItem>
-                                <SelectItem value="admin">Admin</SelectItem>
-                              </SelectContent>
-                            </Select>
+                            <div className="flex justify-end gap-2">
+                              <Select
+                                value={user.role}
+                                onValueChange={(value) => handleRoleChange(user.id, value as 'admin' | 'moderator' | 'user')}
+                                disabled={isUpdating || isCurrentUser}
+                              >
+                                <SelectTrigger className="w-32">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="user">User</SelectItem>
+                                  <SelectItem value="moderator">Moderator</SelectItem>
+                                  <SelectItem value="admin">Admin</SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                                disabled={isDeleting || isCurrentUser || user.role === 'admin'}
+                                onClick={() => {
+                                  if (window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+                                    deleteUser(user.id);
+                                  }
+                                }}
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
                           </TableCell>
                         </TableRow>
                       );

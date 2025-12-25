@@ -4,7 +4,7 @@ import { MessageSquare, Eye, EyeOff, ArrowRight, Building2, ArrowLeft, Mail, Use
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
 import { loginSchema, signupSchema, resetPasswordSchema } from '@/lib/validations';
@@ -18,7 +18,17 @@ import {
 } from '@/components/ui/dialog';
 
 const Auth = () => {
+  const location = useLocation();
   const [isLogin, setIsLogin] = useState(true);
+
+  // Check query params for mode
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('mode') === 'signup') {
+      setIsLogin(false);
+    }
+  }, [location.search]);
+
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
