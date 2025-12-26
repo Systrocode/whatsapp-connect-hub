@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { BookDemoDialog } from '@/components/landing/BookDemoDialog';
 import { LandingHeader } from '@/components/landing/LandingHeader';
 import { LandingFooter } from '@/components/landing/LandingFooter';
+import { FloatingWidget } from '@/components/landing/FloatingWidget';
 import { ModeToggle } from '@/components/ui/mode-toggle';
 
 const Index = () => {
@@ -110,7 +111,7 @@ const Index = () => {
 
 
           {/* WhatsApp Core Section */}
-          <div className="mt-32 max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center mb-32">
+          <div className="mt-16 md:mt-32 max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center mb-16 md:mb-32">
             {/* Text Content */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
@@ -139,7 +140,7 @@ const Index = () => {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="relative h-[500px] w-full flex items-center justify-center"
+              className="relative h-[350px] md:h-[500px] w-full flex items-center justify-center scale-[0.65] md:scale-100 origin-center"
             >
               {/* Central Pulse */}
               <div className="absolute w-[300px] h-[300px] bg-green-500/5 rounded-full blur-3xl animate-pulse" />
@@ -210,7 +211,7 @@ const Index = () => {
           </div>
 
           {/* AI Performance Section */}
-          <div className="mt-32 mb-32">
+          <div className="mt-16 md:mt-32 mb-16 md:mb-32">
             <div className="text-center mb-16">
               <span className="text-blue-500 font-bold tracking-wide uppercase text-sm">AI @ WHATSAPP CONNECT</span>
               <h2 className="text-4xl md:text-5xl font-bold mt-4 mb-6 text-foreground">
@@ -230,10 +231,10 @@ const Index = () => {
               {/* Inbound Intelligence Agent Card (Pink) */}
               <motion.div
                 whileHover={{ y: -8 }}
-                className="rounded-[2.5rem] border border-pink-200/60 bg-white/60 dark:bg-card/40 backdrop-blur-xl p-8 relative overflow-hidden flex flex-col items-center text-center shadow-xl shadow-pink-100/20 dark:shadow-none"
+                className="rounded-[2.5rem] border border-pink-200/60 bg-white/60 dark:bg-card/40 backdrop-blur-xl p-8 relative overflow-hidden flex flex-col items-center text-center shadow-xl shadow-pink-100/20 dark:shadow-none h-full"
               >
                 {/* Floating Elements Layout */}
-                <div className="w-full relative h-[300px] mb-8">
+                <div className="w-full relative h-[380px] mb-8">
                   {/* Top Badge */}
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 bg-white dark:bg-card px-6 py-3 rounded-full shadow-lg shadow-pink-100/50 border border-pink-100 flex items-center gap-4 whitespace-nowrap z-10">
                     <span className="font-semibold text-gray-700 dark:text-gray-200">Qualify & Convert Leads</span>
@@ -281,10 +282,10 @@ const Index = () => {
               {/* AI Support Agent Card (Blue) */}
               <motion.div
                 whileHover={{ y: -8 }}
-                className="rounded-[2.5rem] border border-blue-200/60 bg-white/60 dark:bg-card/40 backdrop-blur-xl p-8 relative overflow-hidden flex flex-col items-center text-center shadow-xl shadow-blue-100/20 dark:shadow-none"
+                className="rounded-[2.5rem] border border-blue-200/60 bg-white/60 dark:bg-card/40 backdrop-blur-xl p-8 relative overflow-hidden flex flex-col items-center text-center shadow-xl shadow-blue-100/20 dark:shadow-none h-full"
               >
                 {/* Floating Elements Layout */}
-                <div className="w-full relative h-[300px] mb-8">
+                <div className="w-full relative h-[380px] mb-8">
                   {/* Top Badge */}
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 bg-white dark:bg-card px-2 pl-6 py-3 rounded-full shadow-lg shadow-blue-100/50 border border-blue-100 flex items-center gap-2 whitespace-nowrap z-10">
                     <span className="text-4xl font-extrabold text-blue-500">60%</span>
@@ -359,18 +360,18 @@ const Index = () => {
                   </div>
 
                   {/* Stats Row */}
-                  <div className="grid grid-cols-3 gap-6 py-6 border-t border-slate-200 dark:border-slate-800">
+                  <div className="grid grid-cols-3 gap-2 md:gap-6 py-6 border-t border-slate-200 dark:border-slate-800">
                     <div>
-                      <div className="text-4xl font-bold text-blue-500 mb-1">98%</div>
-                      <div className="text-xs font-bold text-slate-500 tracking-wider">OPEN RATE</div>
+                      <div className="text-2xl md:text-4xl font-bold text-blue-500 mb-1">98%</div>
+                      <div className="text-[10px] md:text-xs font-bold text-slate-500 tracking-wider leading-tight">OPEN RATE</div>
                     </div>
-                    <div className="border-l border-slate-200 dark:border-slate-800 pl-6">
-                      <div className="text-4xl font-bold text-blue-500 mb-1">3X</div>
-                      <div className="text-xs font-bold text-slate-500 tracking-wider">MORE CONVERSIONS</div>
+                    <div className="border-l border-slate-200 dark:border-slate-800 pl-3 md:pl-6">
+                      <div className="text-2xl md:text-4xl font-bold text-blue-500 mb-1">3X</div>
+                      <div className="text-[10px] md:text-xs font-bold text-slate-500 tracking-wider leading-tight">MORE<br className="md:hidden" /> CONVERSIONS</div>
                     </div>
-                    <div className="border-l border-slate-200 dark:border-slate-800 pl-6">
-                      <div className="text-4xl font-bold text-blue-500 mb-1">45%</div>
-                      <div className="text-xs font-bold text-slate-500 tracking-wider">LOWER AD COST</div>
+                    <div className="border-l border-slate-200 dark:border-slate-800 pl-3 md:pl-6">
+                      <div className="text-2xl md:text-4xl font-bold text-blue-500 mb-1">45%</div>
+                      <div className="text-[10px] md:text-xs font-bold text-slate-500 tracking-wider leading-tight">LOWER<br className="md:hidden" /> AD COST</div>
                     </div>
                   </div>
 
@@ -503,7 +504,7 @@ const Index = () => {
                   </div>
 
                   {/* Chat Interface Layered */}
-                  <div className="w-full max-w-sm md:max-w-md mx-auto space-y-4 md:space-y-6 relative">
+                  <div className="w-full max-w-sm md:max-w-md mx-auto relative">
                     {/* Connecting Line from Chips to Chat (Visual Cue) */}
                     <div className="absolute left-1/2 -top-10 h-10 w-px bg-gradient-to-b from-pink-200 to-transparent"></div>
 
@@ -519,13 +520,13 @@ const Index = () => {
 
                     {/* Agent Reply - Gradient Border */}
                     <motion.div
-                      initial={{ x: 20, opacity: 0 }}
+                      initial={{ x: -20, opacity: 0 }}
                       whileInView={{ x: 0, opacity: 1 }}
                       transition={{ delay: 0.4 }}
-                      className="ml-auto pointer-events-none relative max-w-[95%] group"
+                      className="mr-auto pointer-events-none relative max-w-[95%] group mt-4 md:mt-6"
                     >
-                      <div className="p-[1px] rounded-2xl rounded-tr-none bg-gradient-to-r from-blue-300 via-purple-300 to-pink-300 shadow-lg">
-                        <div className="bg-white dark:bg-slate-800 p-4 md:p-6 rounded-2xl rounded-tr-none h-full w-full">
+                      <div className="p-[1px] rounded-2xl rounded-tl-none bg-gradient-to-r from-blue-300 via-purple-300 to-pink-300 shadow-lg">
+                        <div className="bg-white dark:bg-slate-800 p-4 md:p-6 rounded-2xl rounded-tl-none h-full w-full">
                           <div className="text-xs md:text-sm text-slate-700 dark:text-slate-200 font-medium leading-relaxed">
                             Happy to set up. Please let me know if I should add anyone else who'd be involved in taking a decision.
                           </div>
@@ -533,7 +534,7 @@ const Index = () => {
                       </div>
 
                       {/* Annotation - Text below */}
-                      <div className="absolute -bottom-5 right-0 text-[9px] md:text-[10px] text-slate-500 dark:text-slate-400 font-medium flex gap-1 justify-end w-full">
+                      <div className="absolute -bottom-5 left-0 text-[9px] md:text-[10px] text-slate-500 dark:text-slate-400 font-medium flex gap-1 justify-start w-full">
                         <span>Collecting <span className="text-pink-600 dark:text-pink-400 font-bold">qualification information</span> before confirming meeting.</span>
                       </div>
 
@@ -543,13 +544,13 @@ const Index = () => {
 
                     {/* Bot Action - Gradient Border */}
                     <motion.div
-                      initial={{ x: 20, opacity: 0 }}
+                      initial={{ x: -20, opacity: 0 }}
                       whileInView={{ x: 0, opacity: 1 }}
                       transition={{ delay: 0.6 }}
-                      className="ml-auto relative max-w-[95%] text-right mt-12"
+                      className="mr-auto relative max-w-[95%] text-left mt-24 md:mt-12"
                     >
-                      <div className="inline-block p-[1px] rounded-2xl rounded-tr-none bg-gradient-to-r from-cyan-300 via-blue-300 to-purple-300 shadow-lg text-left">
-                        <div className="bg-white dark:bg-slate-800 p-4 md:p-6 rounded-2xl rounded-tr-none h-full w-full">
+                      <div className="inline-block p-[1px] rounded-2xl rounded-tl-none bg-gradient-to-r from-cyan-300 via-blue-300 to-purple-300 shadow-lg text-left">
+                        <div className="bg-white dark:bg-slate-800 p-4 md:p-6 rounded-2xl rounded-tl-none h-full w-full">
                           <div className="text-xs md:text-sm text-slate-700 dark:text-slate-200 font-medium">
                             Thanks! I have shared the invite and forwarded your details to my sales team.
                           </div>
@@ -557,7 +558,7 @@ const Index = () => {
                       </div>
 
                       {/* Annotation */}
-                      <div className="absolute -bottom-5 right-0 text-[10px] text-slate-500 dark:text-slate-400 font-medium flex items-center gap-1 justify-end w-max ml-auto">
+                      <div className="absolute -bottom-5 left-0 text-[10px] text-slate-500 dark:text-slate-400 font-medium flex items-center gap-1 justify-start w-max mr-auto">
                         <span>Ticket routed to Keith by <span className="text-indigo-500 font-bold">Aibo(bot)</span> for <span className="font-bold text-slate-700 dark:text-slate-300">demo scheduling</span>.</span>
                       </div>
                       {/* Sparkles */}
@@ -622,7 +623,7 @@ const Index = () => {
 
           {/* Support Section (Yellow Theme) */}
           <div className="mt-20 mb-32 relative">
-            <div className="w-[95%] max-w-[1440px] mx-auto bg-[#FFFDEB] dark:bg-yellow-950/20 rounded-[3rem] px-8 pt-8 pb-8 md:px-16 md:pt-16 md:pb-6 relative overflow-hidden">
+            <div className="w-[95%] max-w-[1440px] mx-auto bg-[#FFFDEB] dark:bg-yellow-950/20 rounded-[3rem] px-4 pt-8 pb-8 md:px-16 md:pt-16 md:pb-6 relative overflow-hidden">
 
               {/* Decorative Background */}
               <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-yellow-100/60 dark:bg-yellow-900/10 rounded-full blur-[100px] -z-10 translate-x-1/2 -translate-y-1/2"></div>
@@ -677,7 +678,7 @@ const Index = () => {
                 {/* Right Visual (Mockup) */}
                 <div className="relative w-full flex flex-col items-center order-1 lg:order-2 mb-12 lg:mb-0">
                   {/* Process Pills */}
-                  <div className="w-full flex justify-center lg:justify-end gap-2 mb-8 md:mb-12">
+                  <div className="w-full flex flex-wrap justify-center lg:justify-end gap-2 mb-8 md:mb-12">
                     {['INQUIRY', 'RESPOND', 'ESCALATE', 'RESOLVE'].map((step, i) => (
                       <div key={step} className="flex items-center gap-1">
                         <span className="bg-[#FFF4C5] text-[#D8A700] px-3 py-1 rounded-full text-[10px] md:text-xs font-bold shadow-sm">{step}</span>
@@ -712,7 +713,7 @@ const Index = () => {
                     </motion.div>
 
                     {/* Tags */}
-                    <div className="flex gap-2 mt-8 justify-center">
+                    <div className="flex flex-wrap gap-2 mt-8 justify-center">
                       <span className="bg-blue-300 text-blue-900 text-[10px] md:text-xs font-bold px-3 py-1 rounded shadow-sm border-2 border-black">MULTILINGUAL</span>
                       <span className="bg-yellow-300 text-yellow-900 text-[10px] md:text-xs font-bold px-3 py-1 rounded shadow-sm border-2 border-black">CONTEXTUAL</span>
                       <span className="bg-pink-300 text-pink-900 text-[10px] md:text-xs font-bold px-3 py-1 rounded shadow-sm border-2 border-black">EMPATHETIC</span>
@@ -723,7 +724,7 @@ const Index = () => {
                   </div>
 
                   {/* Extra Visuals to fill length - Metrics & Team */}
-                  <div className="w-full max-w-md mx-auto mt-10 grid grid-cols-2 gap-6">
+                  <div className="w-full max-w-md mx-auto mt-10 grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
 
                     {/* CSAT Card */}
                     <motion.div
@@ -763,7 +764,7 @@ const Index = () => {
                       initial={{ opacity: 0, y: 10 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.8 }}
-                      className="col-span-2 bg-white/50 dark:bg-card/50 backdrop-blur-sm p-3 rounded-2xl border border-yellow-100/50 flex items-center justify-between px-6"
+                      className="col-span-full bg-white/50 dark:bg-card/50 backdrop-blur-sm p-3 rounded-2xl border border-yellow-100/50 flex items-center justify-between px-6"
                     >
                       <div className="flex -space-x-2">
                         {[1, 2, 3].map(i => (
@@ -837,35 +838,35 @@ const Index = () => {
                   </defs>
 
                   {/* Left Lines & Animations */}
-                  <path id="L1" d="M 600 250 C 450 250, 450 100, 300 100" fill="none" stroke="url(#lineGradient)" strokeWidth="1" />
+                  <path id="L1" d="M 600 250 C 450 250, 300 110, 150 110" fill="none" stroke="url(#lineGradient)" strokeWidth="1" />
                   <circle r="3" fill="#60A5FA" filter="url(#glow)"><animateMotion dur="3s" repeatCount="indefinite" keyPoints="0;1" keyTimes="0;1" calcMode="spline" keySplines="0.4 0 0.2 1"><mpath href="#L1" /></animateMotion></circle>
 
-                  <path id="L2" d="M 600 250 C 450 250, 450 180, 300 180" fill="none" stroke="url(#lineGradient)" strokeWidth="1" strokeDasharray="5 5" />
+                  <path id="L2" d="M 600 250 C 450 250, 450 175, 300 175" fill="none" stroke="url(#lineGradient)" strokeWidth="1" strokeDasharray="5 5" />
                   <circle r="3" fill="#34D399" filter="url(#glow)"><animateMotion dur="4s" repeatCount="indefinite" keyPoints="1;0" keyTimes="0;1" calcMode="linear"><mpath href="#L2" /></animateMotion></circle>
 
-                  <path id="L3" d="M 600 250 C 450 250, 450 250, 300 250" fill="none" stroke="url(#lineGradient)" strokeWidth="1" />
+                  <path id="L3" d="M 600 250 C 450 250, 300 260, 150 260" fill="none" stroke="url(#lineGradient)" strokeWidth="1" />
                   <circle r="3" fill="#A78BFA" filter="url(#glow)"><animateMotion dur="2.5s" repeatCount="indefinite" keyPoints="0;1" keyTimes="0;1" calcMode="linear"><mpath href="#L3" /></animateMotion></circle>
 
-                  <path id="L4" d="M 600 250 C 450 250, 450 320, 300 320" fill="none" stroke="url(#lineGradient)" strokeWidth="1" strokeDasharray="5 5" />
+                  <path id="L4" d="M 600 250 C 450 250, 450 350, 300 350" fill="none" stroke="url(#lineGradient)" strokeWidth="1" strokeDasharray="5 5" />
                   <circle r="3" fill="#F472B6" filter="url(#glow)"><animateMotion dur="3.5s" repeatCount="indefinite" keyPoints="1;0" keyTimes="0;1" calcMode="linear"><mpath href="#L4" /></animateMotion></circle>
 
-                  <path id="L5" d="M 600 250 C 450 250, 450 400, 300 400" fill="none" stroke="url(#lineGradient)" strokeWidth="1" />
+                  <path id="L5" d="M 600 250 C 450 250, 300 440, 150 440" fill="none" stroke="url(#lineGradient)" strokeWidth="1" />
                   <circle r="3" fill="#60A5FA" filter="url(#glow)"><animateMotion dur="4.5s" repeatCount="indefinite" keyPoints="0;1" keyTimes="0;1" calcMode="linear"><mpath href="#L5" /></animateMotion></circle>
 
                   {/* Right Lines & Animations */}
-                  <path id="R1" d="M 600 250 C 750 250, 750 100, 900 100" fill="none" stroke="url(#lineGradient)" strokeWidth="1" />
+                  <path id="R1" d="M 600 250 C 750 250, 900 110, 1050 110" fill="none" stroke="url(#lineGradient)" strokeWidth="1" />
                   <circle r="3" fill="#FBBF24" filter="url(#glow)"><animateMotion dur="3s" repeatCount="indefinite" keyPoints="0;1" keyTimes="0;1" calcMode="linear"><mpath href="#R1" /></animateMotion></circle>
 
-                  <path id="R2" d="M 600 250 C 750 250, 750 180, 900 180" fill="none" stroke="url(#lineGradient)" strokeWidth="1" strokeDasharray="5 5" />
+                  <path id="R2" d="M 600 250 C 750 250, 750 175, 900 175" fill="none" stroke="url(#lineGradient)" strokeWidth="1" strokeDasharray="5 5" />
                   <circle r="3" fill="#34D399" filter="url(#glow)"><animateMotion dur="5s" repeatCount="indefinite" keyPoints="1;0" keyTimes="0;1" calcMode="linear"><mpath href="#R2" /></animateMotion></circle>
 
-                  <path id="R3" d="M 600 250 C 750 250, 750 250, 900 250" fill="none" stroke="url(#lineGradient)" strokeWidth="1" />
+                  <path id="R3" d="M 600 250 C 750 250, 900 260, 1050 260" fill="none" stroke="url(#lineGradient)" strokeWidth="1" />
                   <circle r="3" fill="#F87171" filter="url(#glow)"><animateMotion dur="2.8s" repeatCount="indefinite" keyPoints="0;1" keyTimes="0;1" calcMode="linear"><mpath href="#R3" /></animateMotion></circle>
 
-                  <path id="R4" d="M 600 250 C 750 250, 750 320, 900 320" fill="none" stroke="url(#lineGradient)" strokeWidth="1" />
+                  <path id="R4" d="M 600 250 C 750 250, 750 350, 900 350" fill="none" stroke="url(#lineGradient)" strokeWidth="1" />
                   <circle r="3" fill="#A78BFA" filter="url(#glow)"><animateMotion dur="3.8s" repeatCount="indefinite" keyPoints="1;0" keyTimes="0;1" calcMode="linear"><mpath href="#R4" /></animateMotion></circle>
 
-                  <path id="R5" d="M 600 250 C 750 250, 750 400, 900 400" fill="none" stroke="url(#lineGradient)" strokeWidth="1" strokeDasharray="5 5" />
+                  <path id="R5" d="M 600 250 C 750 250, 900 440, 1050 440" fill="none" stroke="url(#lineGradient)" strokeWidth="1" strokeDasharray="5 5" />
                   <circle r="3" fill="#FBBF24" filter="url(#glow)"><animateMotion dur="4.2s" repeatCount="indefinite" keyPoints="0;1" keyTimes="0;1" calcMode="linear"><mpath href="#R5" /></animateMotion></circle>
                 </svg>
               </div>
@@ -899,7 +900,7 @@ const Index = () => {
             </div>
 
             {/* Mobile Grid Fallback */}
-            <div className="grid grid-cols-4 gap-4 px-4 md:hidden">
+            <div className="grid grid-cols-3 gap-3 px-4 md:hidden">
               {[
                 { name: 'Salesforce', logo: '/logos/salesforce.svg' },
                 { name: 'HubSpot', logo: '/logos/hubspot.svg' },
@@ -912,7 +913,7 @@ const Index = () => {
                 { name: 'Pipedrive', logo: '/logos/pipedrive.svg' },
                 { name: 'Odoo', logo: '/logos/odoo.svg' }
               ].map((item) => (
-                <div key={item.name} className="aspect-square bg-slate-50 dark:bg-slate-900 p-6 rounded-3xl flex items-center justify-center border border-slate-100 dark:border-slate-800">
+                <div key={item.name} className="aspect-square bg-slate-50 dark:bg-slate-900 p-4 rounded-3xl flex items-center justify-center border border-slate-100 dark:border-slate-800">
                   <img src={item.logo} alt={item.name} className="w-14 h-14 object-contain" />
                 </div>
               ))}
@@ -1076,6 +1077,7 @@ const Index = () => {
       < LandingFooter />
 
       <BookDemoDialog open={isDemoDialogOpen} onOpenChange={setIsDemoDialogOpen} />
+      <FloatingWidget />
     </div >
   );
 };
