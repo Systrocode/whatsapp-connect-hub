@@ -140,7 +140,7 @@ const Index = () => {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="relative h-[350px] md:h-[500px] w-full flex items-center justify-center scale-[0.65] md:scale-100 origin-center"
+              className="relative h-[350px] md:h-[500px] w-full flex items-center justify-center scale-[0.6] md:scale-100 origin-center mt-12 md:mt-0"
             >
               {/* Central Pulse */}
               <div className="absolute w-[300px] h-[300px] bg-green-500/5 rounded-full blur-3xl animate-pulse" />
@@ -534,7 +534,7 @@ const Index = () => {
                       </div>
 
                       {/* Annotation - Text below */}
-                      <div className="absolute -bottom-5 left-0 text-[9px] md:text-[10px] text-slate-500 dark:text-slate-400 font-medium flex gap-1 justify-start w-full">
+                      <div className="mt-2 text-[9px] md:text-[10px] text-slate-500 dark:text-slate-400 font-medium flex gap-1 justify-start w-full px-1">
                         <span>Collecting <span className="text-pink-600 dark:text-pink-400 font-bold">qualification information</span> before confirming meeting.</span>
                       </div>
 
@@ -547,7 +547,7 @@ const Index = () => {
                       initial={{ x: -20, opacity: 0 }}
                       whileInView={{ x: 0, opacity: 1 }}
                       transition={{ delay: 0.6 }}
-                      className="mr-auto relative max-w-[95%] text-left mt-24 md:mt-12"
+                      className="mr-auto relative max-w-[95%] text-left mt-4 md:mt-6"
                     >
                       <div className="inline-block p-[1px] rounded-2xl rounded-tl-none bg-gradient-to-r from-cyan-300 via-blue-300 to-purple-300 shadow-lg text-left">
                         <div className="bg-white dark:bg-slate-800 p-4 md:p-6 rounded-2xl rounded-tl-none h-full w-full">
@@ -558,7 +558,7 @@ const Index = () => {
                       </div>
 
                       {/* Annotation */}
-                      <div className="absolute -bottom-5 left-0 text-[10px] text-slate-500 dark:text-slate-400 font-medium flex items-center gap-1 justify-start w-max mr-auto">
+                      <div className="mt-2 text-[10px] text-slate-500 dark:text-slate-400 font-medium flex items-center gap-1 justify-start w-max mr-auto px-1">
                         <span>Ticket routed to Keith by <span className="text-indigo-500 font-bold">Aibo(bot)</span> for <span className="font-bold text-slate-700 dark:text-slate-300">demo scheduling</span>.</span>
                       </div>
                       {/* Sparkles */}
