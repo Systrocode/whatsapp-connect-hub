@@ -17,7 +17,7 @@ import {
     Users
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ModeToggle } from "@/components/ui/mode-toggle";
+
 import {
     NavigationMenu,
     NavigationMenuContent,
@@ -227,7 +227,7 @@ export function LandingHeader() {
                         <span>Eng</span>
                     </div>
 
-                    <ModeToggle />
+                    {/* ModeToggle removed */}
 
                     <div className="hidden lg:flex items-center gap-2">
                         <Link to="/auth">
