@@ -17,7 +17,7 @@ const plans = [
             "Basic Automation",
             "Unlimited Contacts"
         ],
-        cta: "Start for Free",
+        cta: "Request a Quote",
         variant: "outline"
     },
     {
@@ -33,7 +33,7 @@ const plans = [
             "Team Inbox (5 Agents)"
         ],
         popular: true,
-        cta: "Start Free Trial",
+        cta: "Request a Quote",
         variant: "whatsapp"
     },
     {
@@ -109,13 +109,15 @@ const Pricing = () => {
                                     ))}
                                 </ul>
 
-                                <Button
-                                    variant={plan.variant as any}
-                                    className="w-full"
-                                    size="lg"
-                                >
-                                    {plan.cta}
-                                </Button>
+                                <Link to="/auth" className="w-full">
+                                    <Button
+                                        variant={plan.variant as any}
+                                        className="w-full"
+                                        size="lg"
+                                    >
+                                        {plan.cta}
+                                    </Button>
+                                </Link>
                             </motion.div>
                         ))}
                     </div>
@@ -125,8 +127,8 @@ const Pricing = () => {
                         <h2 className="text-2xl font-bold mb-8">Frequently Asked Questions</h2>
                         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto text-left">
                             <div className="p-6 rounded-xl bg-muted/30">
-                                <h3 className="font-semibold mb-2">Do you offer a free trial?</h3>
-                                <p className="text-muted-foreground text-sm">Yes, all paid plans come with a 14-day free trial. No credit card required.</p>
+                                <h3 className="font-semibold mb-2">How can I see the platform in action?</h3>
+                                <p className="text-muted-foreground text-sm">We recommend booking a personalized demo with our team to see how WA Business can work for you.</p>
                             </div>
                             <div className="p-6 rounded-xl bg-muted/30">
                                 <h3 className="font-semibold mb-2">Can I change plans later?</h3>

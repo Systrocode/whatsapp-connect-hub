@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { MessageSquare, ArrowRight, CheckCircle, Users, Clock, TrendingUp, Send, Calendar, Instagram, Facebook, MessageCircle, Phone, Check, MoreHorizontal } from 'lucide-react';
+import { MessageSquare, ArrowRight, CheckCircle, Users, Clock, TrendingUp, Send, Calendar, Instagram, Facebook, MessageCircle, Phone, Check, MoreHorizontal, ArrowDown, Sparkles, Heart, Zap, Megaphone, Bot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { BookDemoDialog } from '@/components/landing/BookDemoDialog';
@@ -47,22 +47,28 @@ const Index = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-              <Link to="/auth">
+
+              <a
+                href="https://calendly.com/systrocode/new-meeting"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <Button
                   className="bg-[#00E785] hover:bg-[#00d176] text-black font-bold text-lg h-14 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
                 >
-                  Start Free Trial
+                  <Calendar className="w-5 h-5 mr-2" />
+                  Book Demo
+                </Button>
+              </a>
+              <Link to="/auth">
+                <Button
+                  variant="outline"
+                  size="xl"
+                  className="h-14 px-8 rounded-xl border-2 text-lg font-medium"
+                >
+                  Request a Quote
                 </Button>
               </Link>
-              <Button
-                variant="outline"
-                size="xl"
-                onClick={() => setIsDemoDialogOpen(true)}
-                className="h-14 px-8 rounded-xl border-2 text-lg font-medium"
-              >
-                <Calendar className="w-5 h-5 mr-2" />
-                Book a Demo
-              </Button>
             </div>
 
             {/* Trusted By Strip */}
@@ -465,8 +471,34 @@ const Index = () => {
             </div>
           </div>
 
+          {/* Connector: Marketing to Sales */}
+          <div className="flex flex-col items-center justify-center -mt-12 mb-4 relative z-10">
+            <div className="h-16 w-0.5 bg-slate-100/50 dark:bg-slate-800 relative overflow-hidden">
+              <motion.div
+                className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-transparent via-blue-400 to-transparent opacity-50"
+                animate={{ top: ['-100%', '200%'] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+              />
+            </div>
+
+            <div className="relative z-10">
+              <div className="absolute inset-0 bg-blue-400 blur-2xl opacity-20 animate-pulse rounded-full"></div>
+              <div className="w-14 h-14 bg-white dark:bg-card border-4 border-slate-50 dark:border-slate-800 rounded-full shadow-xl flex items-center justify-center relative z-20 transform hover:scale-110 transition-transform duration-300">
+                <Zap className="w-6 h-6 text-blue-500 fill-current" />
+              </div>
+            </div>
+
+            <div className="h-16 w-0.5 bg-slate-100/50 dark:bg-slate-800 relative overflow-hidden">
+              <motion.div
+                className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-transparent via-purple-400 to-transparent opacity-50"
+                animate={{ top: ['-100%', '200%'] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "linear", delay: 1 }}
+              />
+            </div>
+          </div>
+
           {/* Sales Pipeline Section */}
-          <div className="mt-20 mb-32 relative">
+          <div className="mt-0 mb-32 relative">
             <div className="w-[95%] max-w-[1440px] mx-auto bg-[#FFF5FD] dark:bg-pink-950/20 rounded-[3rem] p-8 md:p-16 relative overflow-hidden">
 
               {/* Decorative Background Elements */}
@@ -621,8 +653,34 @@ const Index = () => {
             </div>
           </div>
 
+          {/* Connector: Sales to Support */}
+          <div className="flex flex-col items-center justify-center -mt-12 mb-4 relative z-10">
+            <div className="h-16 w-0.5 bg-slate-100/50 dark:bg-slate-800 relative overflow-hidden">
+              <motion.div
+                className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-transparent via-pink-400 to-transparent opacity-50"
+                animate={{ top: ['-100%', '200%'] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+              />
+            </div>
+
+            <div className="relative z-10">
+              <div className="absolute inset-0 bg-pink-400 blur-2xl opacity-20 animate-pulse rounded-full"></div>
+              <div className="w-14 h-14 bg-white dark:bg-card border-4 border-slate-50 dark:border-slate-800 rounded-full shadow-xl flex items-center justify-center relative z-20 transform hover:scale-110 transition-transform duration-300">
+                <Heart className="w-6 h-6 text-pink-500 fill-current" />
+              </div>
+            </div>
+
+            <div className="h-16 w-0.5 bg-slate-100/50 dark:bg-slate-800 relative overflow-hidden">
+              <motion.div
+                className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-transparent via-yellow-400 to-transparent opacity-50"
+                animate={{ top: ['-100%', '200%'] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "linear", delay: 1 }}
+              />
+            </div>
+          </div>
+
           {/* Support Section (Yellow Theme) */}
-          <div className="mt-20 mb-32 relative">
+          <div className="mt-0 mb-32 relative">
             <div className="w-[95%] max-w-[1440px] mx-auto bg-[#FFFDEB] dark:bg-yellow-950/20 rounded-[3rem] px-4 pt-8 pb-8 md:px-16 md:pt-16 md:pb-6 relative overflow-hidden">
 
               {/* Decorative Background */}
@@ -1007,19 +1065,22 @@ const Index = () => {
                 title: 'Team Inbox',
                 description: 'One inbox for your entire team. Assign chats, add labels, and collaborate seamlessly.',
                 bg: 'bg-blue-50 dark:bg-blue-900/20',
-                iconColor: 'text-blue-600 dark:text-blue-400'
+                iconColor: 'text-blue-600 dark:text-blue-400',
+                icon: MessageSquare
               },
               {
                 title: 'Broadcast & Bulk',
                 description: 'Send personalized campaigns to thousands of customers with just a few clicks.',
                 bg: 'bg-purple-50 dark:bg-purple-900/20',
-                iconColor: 'text-purple-600 dark:text-purple-400'
+                iconColor: 'text-purple-600 dark:text-purple-400',
+                icon: Megaphone
               },
               {
                 title: 'Automated Chatbots',
                 description: 'Build no-code chatbots to handle support queries and qualify leads 24/7.',
                 bg: 'bg-green-50 dark:bg-green-900/20',
-                iconColor: 'text-green-600 dark:text-green-400'
+                iconColor: 'text-green-600 dark:text-green-400',
+                icon: Bot
               },
             ].map((feature, i) => (
               <motion.div
@@ -1031,7 +1092,7 @@ const Index = () => {
                 className={`${feature.bg} p-8 rounded-3xl border border-transparent hover:border-border transition-all`}
               >
                 <div className={`w-14 h-14 rounded-2xl bg-white dark:bg-background shadow-sm flex items-center justify-center mb-6`}>
-                  <MessageSquare className={`w-7 h-7 ${feature.iconColor}`} />
+                  <feature.icon className={`w-7 h-7 ${feature.iconColor}`} />
                 </div>
                 <h3 className="text-xl font-bold text-foreground mb-3">{feature.title}</h3>
                 <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
@@ -1041,37 +1102,7 @@ const Index = () => {
         </div>
       </section >
 
-      {/* CTA */}
-      < section className="py-20 px-6" >
-        <div className="container mx-auto max-w-4xl">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="gradient-dark rounded-3xl p-8 sm:p-12 text-center relative overflow-hidden"
-          >
-            <div className="absolute inset-0 opacity-20">
-              <div className="absolute top-10 left-10 w-40 h-40 rounded-full bg-whatsapp blur-3xl" />
-              <div className="absolute bottom-10 right-10 w-60 h-60 rounded-full bg-whatsapp blur-3xl" />
-            </div>
-            <div className="relative z-10">
-              <h2 className="text-2xl sm:text-3xl font-bold text-sidebar-foreground mb-4">
-                Ready to transform your business?
-              </h2>
-              <p className="text-sidebar-foreground/70 mb-8 max-w-lg mx-auto">
-                Join thousands of businesses already using our platform to connect with their customers.
-              </p>
-              <Link to="/auth?mode=signup">
-                <Button variant="whatsapp" size="xl" className="w-full sm:w-auto animate-pulse-glow">
-                  Get Started for Free
-                  <ArrowRight className="w-5 h-5" />
-                </Button>
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </section >
+
 
       {/* Footer */}
       < LandingFooter />

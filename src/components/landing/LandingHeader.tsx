@@ -234,7 +234,7 @@ export function LandingHeader() {
                             <Button variant="ghost" size="sm">Sign in</Button>
                         </Link>
                         <Link to="/auth?mode=signup">
-                            <Button variant="whatsapp" size="sm">Get Started</Button>
+                            <Button variant="whatsapp" size="sm">Request a Quote</Button>
                         </Link>
                     </div>
 
@@ -267,7 +267,7 @@ export function LandingHeader() {
                             <Button variant="ghost" className="w-full justify-start">Sign in</Button>
                         </Link>
                         <Link to="/auth?mode=signup">
-                            <Button variant="whatsapp" className="w-full">Get Started</Button>
+                            <Button variant="whatsapp" className="w-full">Request a Quote</Button>
                         </Link>
                     </div>
                 </div>

@@ -32,6 +32,20 @@ const WebsiteWidget = lazy(() => import("./pages/WebsiteWidget"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
+const PartnerPage = lazy(() => import("./pages/PartnerPage"));
+const AffiliatePage = lazy(() => import("./pages/AffiliatePage"));
+const ClientStoriesPage = lazy(() => import("./pages/ClientStoriesPage"));
+const CaseStudiesPage = lazy(() => import("./pages/CaseStudiesPage"));
+const ReviewsPage = lazy(() => import("./pages/ReviewsPage"));
+const MarketingPage = lazy(() => import("./pages/MarketingPage"));
+const AboutPage = lazy(() => import("./pages/AboutPage"));
+const TermsAndPrivacy = lazy(() => import("./pages/TermsAndPrivacy"));
+const SupportPage = lazy(() => import("./pages/SupportPage"));
+const SalesPage = lazy(() => import("./pages/SalesPage"));
+const EducationPage = lazy(() => import("./pages/EducationPage"));
+const EcommercePage = lazy(() => import("./pages/EcommercePage"));
+const CareersPage = lazy(() => import("./pages/CareersPage"));
+
 
 // Lazy load admin pages
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
@@ -89,6 +103,25 @@ const App = () => (
                 <Route path="/dashboard/admin/templates" element={<AdminRoute><AdminTemplates /></AdminRoute>} />
                 <Route path="/dashboard/admin/subscriptions" element={<AdminRoute><AdminSubscriptions /></AdminRoute>} />
                 <Route path="/dashboard/admin/blog" element={<AdminRoute><AdminBlog /></AdminRoute>} />
+                <Route path="/dashboard/admin/blog" element={<AdminRoute><AdminBlog /></AdminRoute>} />
+
+                {/* Partner Route */}
+                <Route path="/partners/become" element={<PartnerPage />} />
+                <Route path="/partners/affiliate" element={<AffiliatePage />} />
+                <Route path="/customers/stories" element={<ClientStoriesPage />} />
+                <Route path="/customers/case-studies" element={<CaseStudiesPage />} />
+                <Route path="/customers/reviews" element={<ReviewsPage />} />
+                <Route path="/solutions/marketing" element={<MarketingPage />} />
+                <Route path="/solutions/support" element={<SupportPage />} />
+                <Route path="/solutions/sales" element={<SalesPage />} />
+                <Route path="/solutions/education" element={<EducationPage />} />
+                <Route path="/solutions/ecommerce" element={<EcommercePage />} />
+                <Route path="/careers" element={<CareersPage />} />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/terms-privacy" element={<TermsAndPrivacy />} />
+
+
+
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
