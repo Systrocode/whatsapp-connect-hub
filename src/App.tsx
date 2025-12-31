@@ -45,6 +45,19 @@ const SalesPage = lazy(() => import("./pages/SalesPage"));
 const EducationPage = lazy(() => import("./pages/EducationPage"));
 const EcommercePage = lazy(() => import("./pages/EcommercePage"));
 const CareersPage = lazy(() => import("./pages/CareersPage"));
+const BrandingPage = lazy(() => import("./pages/BrandingPage"));
+const EbooksPage = lazy(() => import("./pages/EbooksPage"));
+const WebinarsPage = lazy(() => import("./pages/WebinarsPage"));
+const DocsPage = lazy(() => import("./pages/DocsPage"));
+const HelpCenterPage = lazy(() => import("./pages/HelpCenterPage"));
+const IntegrationPage = lazy(() => import("./pages/IntegrationPage"));
+const MobileAppPage = lazy(() => import("./pages/MobileAppPage"));
+
+// Tools Pages
+const WhatsAppLinkGenerator = lazy(() => import("./pages/tools/WhatsAppLinkGenerator"));
+const QRCodeGenerator = lazy(() => import("./pages/tools/QRCodeGenerator"));
+const ChatButtonGenerator = lazy(() => import("./pages/tools/ChatButtonGenerator"));
+const ROICalculator = lazy(() => import("./pages/tools/ROICalculator"));
 
 
 // Lazy load admin pages
@@ -78,7 +91,8 @@ const App = () => (
                 <Route path="/" element={<Index />} />
                 <Route path="/pricing" element={<Pricing />} />
                 <Route path="/features/:slug" element={<FeaturePage />} />
-                <Route path="/integrations/:slug" element={<FeaturePage />} />
+                <Route path="/integrations/:slug" element={<IntegrationPage />} />
+                <Route path="/mobile-app" element={<MobileAppPage />} />
                 <Route path="/product/:slug" element={<FeaturePage />} />
                 <Route path="/blog" element={<Blog />} />
                 <Route path="/blog/:slug" element={<BlogPost />} />
@@ -116,9 +130,20 @@ const App = () => (
                 <Route path="/solutions/sales" element={<SalesPage />} />
                 <Route path="/solutions/education" element={<EducationPage />} />
                 <Route path="/solutions/ecommerce" element={<EcommercePage />} />
+                <Route path="/ebooks" element={<EbooksPage />} />
+                <Route path="/webinars" element={<WebinarsPage />} />
+                <Route path="/docs" element={<DocsPage />} />
+                <Route path="/help" element={<HelpCenterPage />} />
                 <Route path="/careers" element={<CareersPage />} />
+                <Route path="/branding" element={<BrandingPage />} />
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/terms-privacy" element={<TermsAndPrivacy />} />
+
+                {/* Free Tools Routes */}
+                <Route path="/tools/whatsapp-link-generator" element={<WhatsAppLinkGenerator />} />
+                <Route path="/tools/qr-code-generator" element={<QRCodeGenerator />} />
+                <Route path="/tools/chat-button-generator" element={<ChatButtonGenerator />} />
+                <Route path="/tools/roi-calculator" element={<ROICalculator />} />
 
 
 

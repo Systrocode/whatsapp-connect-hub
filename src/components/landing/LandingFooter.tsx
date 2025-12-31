@@ -50,7 +50,7 @@ export function LandingFooter() {
                                 <ul className="space-y-4 text-sm font-medium">
                                     <li><Link to="/about" className="text-slate-300 hover:text-green-400 transition-colors">About Us</Link></li>
                                     <li><Link to="/careers" className="text-slate-300 hover:text-green-400 transition-colors">Careers</Link></li>
-                                    <li><Link to="/" className="text-slate-300 hover:text-green-400 transition-colors">Branding</Link></li>
+                                    <li><Link to="/branding" className="text-slate-300 hover:text-green-400 transition-colors">Branding</Link></li>
                                     <li><Link to="/terms-privacy" className="text-slate-300 hover:text-green-400 transition-colors">Terms & Privacy</Link></li>
                                 </ul>
                             </div>
@@ -79,12 +79,12 @@ export function LandingFooter() {
                         <div>
                             <h3 className="text-green-500 font-bold mb-6 text-lg">Resources</h3>
                             <ul className="space-y-4 text-sm font-medium">
-                                <li><Link to="/" className="text-slate-300 hover:text-green-400 transition-colors">Blog</Link></li>
-                                <li><Link to="/" className="text-slate-300 hover:text-green-400 transition-colors">Ebooks & Guides</Link></li>
-                                <li><Link to="/" className="text-slate-300 hover:text-green-400 transition-colors">Webinars</Link></li>
-                                <li><Link to="/" className="text-slate-300 hover:text-green-400 transition-colors">Developer Docs</Link></li>
+                                <li><Link to="/blog" className="text-slate-300 hover:text-green-400 transition-colors">Blog</Link></li>
+                                <li><Link to="/ebooks" className="text-slate-300 hover:text-green-400 transition-colors">Ebooks & Guides</Link></li>
+                                <li><Link to="/webinars" className="text-slate-300 hover:text-green-400 transition-colors">Webinars</Link></li>
+                                <li><Link to="/docs" className="text-slate-300 hover:text-green-400 transition-colors">Developer Docs</Link></li>
                                 <li><Link to="/" className="text-slate-300 hover:text-green-400 transition-colors">Community</Link></li>
-                                <li><Link to="/" className="text-slate-300 hover:text-green-400 transition-colors">Help Center</Link></li>
+                                <li><Link to="/help" className="text-slate-300 hover:text-green-400 transition-colors">Help Center</Link></li>
                             </ul>
                         </div>
 
@@ -92,14 +92,14 @@ export function LandingFooter() {
                         <div>
                             <h3 className="text-green-500 font-bold mb-6 text-lg">Integrations</h3>
                             <ul className="space-y-4 text-sm font-medium">
-                                <li><Link to="/" className="text-slate-300 hover:text-green-400 transition-colors">Salesforce</Link></li>
-                                <li><Link to="/" className="text-slate-300 hover:text-green-400 transition-colors">HubSpot</Link></li>
-                                <li><Link to="/" className="text-slate-300 hover:text-green-400 transition-colors">Zoho CRM</Link></li>
-                                <li><Link to="/" className="text-slate-300 hover:text-green-400 transition-colors">Shopify</Link></li>
-                                <li><Link to="/" className="text-slate-300 hover:text-green-400 transition-colors">WooCommerce</Link></li>
-                                <li><Link to="/" className="text-slate-300 hover:text-green-400 transition-colors">Zapier</Link></li>
-                                <li><Link to="/" className="text-slate-300 hover:text-green-400 transition-colors">Pipedrive</Link></li>
-                                <li><Link to="/" className="text-slate-300 hover:text-green-400 transition-colors">Google Sheets</Link></li>
+                                <li><Link to="/integrations/salesforce" className="text-slate-300 hover:text-green-400 transition-colors">Salesforce</Link></li>
+                                <li><Link to="/integrations/hubspot" className="text-slate-300 hover:text-green-400 transition-colors">HubSpot</Link></li>
+                                <li><Link to="/integrations/zoho-crm" className="text-slate-300 hover:text-green-400 transition-colors">Zoho CRM</Link></li>
+                                <li><Link to="/integrations/shopify" className="text-slate-300 hover:text-green-400 transition-colors">Shopify</Link></li>
+                                <li><Link to="/integrations/woocommerce" className="text-slate-300 hover:text-green-400 transition-colors">WooCommerce</Link></li>
+                                <li><Link to="/integrations/zapier" className="text-slate-300 hover:text-green-400 transition-colors">Zapier</Link></li>
+                                <li><Link to="/integrations/pipedrive" className="text-slate-300 hover:text-green-400 transition-colors">Pipedrive</Link></li>
+                                <li><Link to="/integrations/google-sheets" className="text-slate-300 hover:text-green-400 transition-colors">Google Sheets</Link></li>
                             </ul>
                         </div>
 
@@ -108,15 +108,15 @@ export function LandingFooter() {
                             <div>
                                 <h3 className="text-green-500 font-bold mb-6 text-lg">Free Tools</h3>
                                 <ul className="space-y-4 text-sm font-medium">
-                                    <li><Link to="/" className="text-slate-300 hover:text-green-400 transition-colors">WhatsApp Link Gen</Link></li>
-                                    <li><Link to="/" className="text-slate-300 hover:text-green-400 transition-colors">QR Code Gen</Link></li>
-                                    <li><Link to="/" className="text-slate-300 hover:text-green-400 transition-colors">Chat Button Gen</Link></li>
-                                    <li><Link to="/" className="text-slate-300 hover:text-green-400 transition-colors">ROI Calculator</Link></li>
+                                    <li><Link to="/tools/whatsapp-link-generator" className="text-slate-300 hover:text-green-400 transition-colors">WhatsApp Link Gen</Link></li>
+                                    <li><Link to="/tools/qr-code-generator" className="text-slate-300 hover:text-green-400 transition-colors">QR Code Gen</Link></li>
+                                    <li><Link to="/tools/chat-button-generator" className="text-slate-300 hover:text-green-400 transition-colors">Chat Button Gen</Link></li>
+                                    <li><Link to="/tools/roi-calculator" className="text-slate-300 hover:text-green-400 transition-colors">ROI Calculator</Link></li>
                                 </ul>
                             </div>
                             <div>
                                 <h3 className="text-green-500 font-bold mb-6 text-lg">Get the app</h3>
-                                <Link to="/" className="bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 flex items-center justify-center gap-3 hover:bg-slate-800 transition-colors text-slate-300 hover:text-white group">
+                                <Link to="/mobile-app" className="bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 flex items-center justify-center gap-3 hover:bg-slate-800 transition-colors text-slate-300 hover:text-white group">
                                     <span className="font-semibold">Coming Soon</span>
                                 </Link>
                             </div>

@@ -49,7 +49,7 @@ const pages: Record<string, PageData> = {
         title: "WhatsApp Broadcasting",
         subtitle: "Reach thousands in one click",
         description: "Send personalized campaigns to unlimited users. Get up to 98% open rates and boost your sales instantly.",
-        icon: Megaphone,
+        icon: (props: any) => <img src="https://img.icons8.com/3d-fluency/94/megaphone.png" alt="Broadcast" {...props} />,
         benefits: ["Detailed Analytics", "Media Support", "Button Messages", "Scheduling"],
         stats: [
             { label: "Message Delivery", value: "99.9%" },
@@ -60,12 +60,12 @@ const pages: Record<string, PageData> = {
             {
                 title: "Rich Media Support",
                 description: "Send images, videos, and PDFs. Use interactive buttons to increase click-through rates.",
-                icon: Zap
+                icon: (props: any) => <img src="https://img.icons8.com/3d-fluency/94/lightning-bolt.png" alt="Zap" {...props} />
             },
             {
                 title: "Smart Scheduling",
                 description: "Schedule campaigns for optimal delivery times. Manage time zones effortlessly.",
-                icon: TrendingUp
+                icon: (props: any) => <img src="https://img.icons8.com/3d-fluency/94/chart.png" alt="Chart" {...props} />
             }
         ]
     },
@@ -73,7 +73,7 @@ const pages: Record<string, PageData> = {
         title: "AI WhatsApp Chatbot",
         subtitle: "Automate support 24/7",
         description: "Train your custom AI agent on your business data. Answer queries, collect leads, and book appointments automatically.",
-        icon: Bot,
+        icon: (props: any) => <img src="https://img.icons8.com/3d-fluency/94/robot-2.png" alt="Bot" {...props} />,
         benefits: ["Custom Knowledge Base", "Context Awareness", "Instant Responses", "Human Handoff"],
         stats: [
             { label: "Automation Rate", value: "80%" },
@@ -84,12 +84,12 @@ const pages: Record<string, PageData> = {
             {
                 title: "No-Code Builder",
                 description: "Build flows visually. Train the AI by simply uploading your PDF or URL.",
-                icon: FileText
+                icon: (props: any) => <img src="https://img.icons8.com/3d-fluency/94/survey.png" alt="Builder" {...props} />
             },
             {
                 title: "Seamless Human Handoff",
                 description: "The AI knows when to escalate complex queries to a human agent.",
-                icon: Users
+                icon: (props: any) => <img src="https://img.icons8.com/3d-fluency/94/user-group-man-man.png" alt="Users" {...props} />
             }
         ]
     },
@@ -97,13 +97,13 @@ const pages: Record<string, PageData> = {
         title: "Click to WhatsApp Ads",
         subtitle: "3X Your Leads from Facebook",
         description: "Direct traffic from FB & Instagram ads straight to WhatsApp. Qualify leads instantly with automated flows.",
-        icon: Zap,
+        icon: (props: any) => <img src="https://img.icons8.com/3d-fluency/94/lightning-bolt.png" alt="Ads" {...props} />,
         benefits: ["High Conversion Rate", "Instant Lead Qualification", "Automated Retargeting", "Ad Analytics"],
         sections: [
             {
                 title: "Instant Qualification",
                 description: "Start a chat immediately after the click. Ask qualifying questions automatically.",
-                icon: CheckCircle
+                icon: (props: any) => <img src="https://img.icons8.com/3d-fluency/94/checked-user-male.png" alt="Qualify" {...props} />
             }
         ]
     },
@@ -111,13 +111,13 @@ const pages: Record<string, PageData> = {
         title: "WhatsApp Payments",
         subtitle: "Collect Payments Natively",
         description: "Allow customers to pay you without leaving the chat. Supports UPI, Cards, and Netbanking in select regions.",
-        icon: CreditCard,
+        icon: (props: any) => <img src="https://img.icons8.com/3d-fluency/94/bank-card-front-side.png" alt="Payments" {...props} />,
         benefits: ["Native Checkout", "Secure Transactions", "Order Tracking", "Instant Confirmations"],
         sections: [
             {
                 title: "Frictionless Checkout",
                 description: "Reduce drop-offs by keeping the entire payment flow within WhatsApp.",
-                icon: ShoppingCart
+                icon: (props: any) => <img src="https://img.icons8.com/3d-fluency/94/fast-cart.png" alt="Checkout" {...props} />
             }
         ]
     },
@@ -125,13 +125,13 @@ const pages: Record<string, PageData> = {
         title: "WhatsApp Forms",
         subtitle: "Collect Data Seamlessly",
         description: "Replace external forms with native WhatsApp Flows. Capture logic-based inputs for appointments, feedback, and leads.",
-        icon: FileText,
+        icon: (props: any) => <img src="https://img.icons8.com/3d-fluency/94/survey.png" alt="Forms" {...props} />,
         benefits: ["Native UI", "Logic Branching", "Higher Completion Rate", "No Redirects"],
         sections: [
             {
                 title: "Logic Branching",
                 description: "Show different questions based on previous answers. Create complex flows easily.",
-                icon: TrendingUp
+                icon: (props: any) => <img src="https://img.icons8.com/3d-fluency/94/flow-chart.png" alt="Logic" {...props} />
             }
         ]
     },
@@ -139,13 +139,13 @@ const pages: Record<string, PageData> = {
         title: "WhatsApp Catalog",
         subtitle: "Your Store on WhatsApp",
         description: "Sync your inventory and let customers browse and shop directly within the app.",
-        icon: ShoppingCart,
+        icon: (props: any) => <img src="https://img.icons8.com/3d-fluency/94/shopping-bag.png" alt="Catalog" {...props} />,
         benefits: ["Product Sync", "Cart Management", "Automated Orders", "Inventory Updates"],
         sections: [
             {
                 title: "Auto-Sync",
                 description: "Changes on your Shopify or WooCommerce store reflect on WhatsApp instantly.",
-                icon: Zap
+                icon: (props: any) => <img src="https://img.icons8.com/3d-fluency/94/refresh.png" alt="Sync" {...props} />
             }
         ]
     },
@@ -155,14 +155,14 @@ const pages: Record<string, PageData> = {
         title: "Shopify Integration",
         subtitle: "Recover Abandoned Carts",
         description: "Automatically sync orders and trigger messages for abandoned carts, order confirmations, and COD verification.",
-        icon: ShoppingCart,
+        icon: (props: any) => <img src="https://img.icons8.com/color/96/shopify.png" alt="Shopify" {...props} />,
         benefits: ["Auto-sync Orders", "Abandoned Cart Recovery", "COD Confirmation", "Delivery Updates"]
     },
     "razorpay": {
         title: "Razorpay Integration",
         subtitle: "Automated Payment Alerts",
         description: "Send instant payment receipts and failed payment reminders on WhatsApp automatically.",
-        icon: CreditCard,
+        icon: (props: any) => <img src="https://img.icons8.com/3d-fluency/94/bank-cards.png" alt="Razorpay" {...props} />,
         benefits: ["Payment Receipts", "Failed Payment Recovery", "Subscription Alerts", "Invoice Sharing"]
     }
 };
@@ -644,7 +644,7 @@ const renderFeatureVisual = (title: string, Icon: any, visualType?: string, desc
 
         return (
             <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50/30 dark:from-slate-900 dark:to-slate-800 py-8">
-                <div className="relative w-full max-w-[380px] h-[700px] bg-slate-900 rounded-[3.5rem] border-[14px] border-slate-900 shadow-2xl overflow-hidden">
+                <div className="relative w-full max-w-[300px] sm:max-w-[380px] h-[600px] sm:h-[700px] bg-slate-900 rounded-[3.5rem] border-[14px] border-slate-900 shadow-2xl overflow-hidden">
                     {/* Notch */}
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-7 bg-slate-900 rounded-b-2xl z-30 flex items-center justify-center gap-2">
                         <div className="w-14 h-1 bg-slate-800 rounded-full mt-1"></div>
@@ -679,7 +679,7 @@ const renderFeatureVisual = (title: string, Icon: any, visualType?: string, desc
                 <div className="absolute inset-0 opacity-30" style={{ backgroundImage: 'radial-gradient(#cbd5e1 1px, transparent 1px)', backgroundSize: '24px 24px' }}></div>
 
                 {/* Top Row: Source Channels */}
-                <div className="flex justify-between items-start w-full max-w-[550px] gap-2 md:gap-4 relative z-10">
+                <div className="flex justify-between items-start w-full max-w-[550px] gap-2 md:gap-4 relative z-10 scale-[0.6] sm:scale-100 origin-top">
 
                     {/* Card 1: Social Media */}
                     <div className="flex flex-col items-center w-1/4">
@@ -823,9 +823,9 @@ const renderFeatureVisual = (title: string, Icon: any, visualType?: string, desc
     if (visualType === 'chatbot') {
         return (
             <div className="w-full h-full flex items-center justify-center relative bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-slate-900 dark:to-slate-800 rounded-xl overflow-hidden">
-                <div className="flex items-center gap-4 relative z-10 scale-90 sm:scale-100">
+                <div className="flex flex-col sm:flex-row items-center gap-4 relative z-10 scale-90 sm:scale-100">
                     {/* Social Ad Card */}
-                    <div className="w-40 bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-3 transform -rotate-6 transition-transform hover:rotate-0 duration-500">
+                    <div className="w-40 bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-3 transform -rotate-3 sm:-rotate-6 transition-transform hover:rotate-0 duration-500">
                         <div className="flex items-center gap-2 mb-2">
                             {/* Instagram Logo */}
                             <div className="w-6 h-6 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 rounded-full flex items-center justify-center text-white">
@@ -847,12 +847,12 @@ const renderFeatureVisual = (title: string, Icon: any, visualType?: string, desc
                     </div>
 
                     {/* Arrow */}
-                    <div className="text-slate-300 dark:text-slate-600">
+                    <div className="text-slate-300 dark:text-slate-600 rotate-90 sm:rotate-0">
                         <ArrowRight className="w-6 h-6 animate-pulse" />
                     </div>
 
                     {/* WhatsApp Chat */}
-                    <div className="w-40 bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-3 transform rotate-6 transition-transform hover:rotate-0 duration-500">
+                    <div className="w-40 bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-3 transform rotate-3 sm:rotate-6 transition-transform hover:rotate-0 duration-500">
                         <div className="flex items-center gap-2 mb-3 border-b border-slate-100 dark:border-slate-800 pb-2">
                             <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white text-[10px] font-bold">W</div>
                             <div className="text-[10px] font-bold text-slate-700 dark:text-slate-300">Brand</div>
@@ -881,7 +881,7 @@ const renderFeatureVisual = (title: string, Icon: any, visualType?: string, desc
                 <div className="bg-white dark:bg-slate-800 rounded-[2.5rem] p-6 shadow-2xl border border-slate-200 dark:border-slate-700 w-full max-w-[600px] flex flex-col gap-4">
 
                     {/* Top Section: Bento Grid */}
-                    <div className="grid grid-cols-2 gap-4 h-[440px]">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-auto md:h-[440px]">
 
                         {/* Left: Tall Analytics Card - Pink */}
                         <motion.div
@@ -1028,7 +1028,7 @@ const renderFeatureVisual = (title: string, Icon: any, visualType?: string, desc
                 <div className="bg-white dark:bg-slate-800 rounded-[2.5rem] p-6 shadow-2xl border border-slate-100 dark:border-slate-700 w-full max-w-[600px] flex flex-col gap-4">
 
                     {/* Top Section: Bento Grid */}
-                    <div className="grid grid-cols-2 gap-4 h-[420px]">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-auto md:h-[420px]">
 
                         {/* Left: Tall Analytics Card */}
                         <motion.div
@@ -1704,7 +1704,7 @@ const renderFeatureVisual = (title: string, Icon: any, visualType?: string, desc
                 <div className="relative w-full h-full max-w-[850px] flex flex-col items-center justify-center gap-8">
 
                     {/* Top Row: Campaign Card + Recipient Cards */}
-                    <div className="flex items-center gap-6 w-full justify-center">
+                    <div className="flex flex-col lg:flex-row items-center gap-6 w-full justify-center">
                         {/* Central Broadcast Card */}
                         <motion.div
                             initial={{ scale: 0.8, opacity: 0 }}
@@ -1760,7 +1760,7 @@ const renderFeatureVisual = (title: string, Icon: any, visualType?: string, desc
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.8, delay: 0.3 }}
                         >
-                            <ArrowRight className="w-8 h-8 text-green-500" />
+                            <ArrowRight className="w-8 h-8 text-green-500 rotate-90 lg:rotate-0" />
                         </motion.div>
 
                         {/* Recipient Cards Stack */}
@@ -2261,7 +2261,7 @@ const TabbedFeatureSection = ({ section, isEven }: { section: Section, isEven: b
 
                     {/* Visual Side: Dynamic Preview */}
                     <div className="flex-1 w-full flex items-center justify-center">
-                        <div className="relative w-full min-h-[750px] max-w-[600px] rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-2xl bg-slate-50 dark:bg-slate-900 flex items-center justify-center p-4 lg:p-6">
+                        <div className="relative w-full min-h-[500px] lg:min-h-[750px] max-w-[600px] rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-2xl bg-slate-50 dark:bg-slate-900 flex items-center justify-center p-4 lg:p-6">
                             {/* Render different visual based on activeTab */}
                             {renderFeatureVisual(section.tabs![activeTab].label, null, 'tab_visual', section.tabs![activeTab].visualContent)}
                         </div>
@@ -2291,7 +2291,7 @@ const FeaturePage = () => {
             <LandingHeader />
 
             {/* Hero Section */}
-            <section className="pt-32 pb-20 px-6 relative overflow-hidden bg-white dark:bg-background">
+            <section className="pt-24 lg:pt-32 pb-12 lg:pb-20 px-6 relative overflow-hidden bg-white dark:bg-background">
                 <div className="container mx-auto max-w-7xl">
                     <div className="grid lg:grid-cols-2 gap-16 items-center">
                         <motion.div
@@ -2340,7 +2340,7 @@ const FeaturePage = () => {
                             className="relative h-[600px] w-full flex items-center justify-center"
                         >
                             {/* Background Circle */}
-                            <div className="absolute top-1/2 left-1/2 -translate-x-1/3 -translate-y-1/2 w-[500px] h-[500px] bg-yellow-100 rounded-full z-0" />
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] bg-yellow-100 rounded-full z-0" />
 
                             {/* Main Phone Frame */}
                             <div className="relative z-10 w-[300px] h-[550px] bg-white rounded-[3rem] border-[8px] border-slate-900 shadow-2xl overflow-hidden flex items-end justify-center">
@@ -2357,7 +2357,7 @@ const FeaturePage = () => {
                             <motion.div
                                 animate={{ y: [0, -8, 0] }}
                                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                                className="absolute top-12 left-0 lg:left-10 bg-white p-3 rounded-xl shadow-lg border border-slate-100 w-44 z-20"
+                                className="absolute top-12 left-0 lg:left-10 bg-white p-3 rounded-xl shadow-lg border border-slate-100 w-44 z-20 hidden md:block"
                             >
                                 <div className="flex justify-between items-center mb-1">
                                     <div className="flex items-center gap-1">
@@ -2377,7 +2377,7 @@ const FeaturePage = () => {
                             <motion.div
                                 animate={{ y: [0, -6, 0] }}
                                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                                className="absolute top-4 right-0 lg:right-4 bg-white p-3 rounded-xl shadow-lg border border-slate-100 w-40 z-20"
+                                className="absolute top-4 right-0 lg:right-4 bg-white p-3 rounded-xl shadow-lg border border-slate-100 w-40 z-20 hidden md:block"
                             >
                                 <div className="flex justify-between items-center mb-1">
                                     <div className="flex items-center gap-1">
@@ -2397,7 +2397,7 @@ const FeaturePage = () => {
                             <motion.div
                                 animate={{ y: [0, 8, 0] }}
                                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                                className="absolute top-48 left-[-20px] bg-white p-3 rounded-xl shadow-lg border border-slate-100 w-44 z-30"
+                                className="absolute top-48 left-[-20px] bg-white p-3 rounded-xl shadow-lg border border-slate-100 w-44 z-30 hidden md:block"
                             >
                                 <div className="flex justify-between items-center mb-1">
                                     <div className="flex items-center gap-1">

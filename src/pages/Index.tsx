@@ -357,8 +357,8 @@ const Index = () => {
                       "Analyze & Optimize: Track every open, click, and sale to maximize your campaign ROI in real-time."
                     ].map((item, i) => (
                       <div key={i} className="flex gap-3 items-start">
-                        <div className="mt-1 min-w-5 min-h-5 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
-                          <Check className="w-3 h-3 stroke-[3]" />
+                        <div className="mt-1 min-w-5 min-h-5 flex items-center justify-center">
+                          <img src="https://img.icons8.com/fluency/48/checked.png" alt="Check" className="w-5 h-5" />
                         </div>
                         <p className="text-slate-600 dark:text-slate-300 leading-relaxed font-medium">{item}</p>
                       </div>
@@ -484,7 +484,7 @@ const Index = () => {
             <div className="relative z-10">
               <div className="absolute inset-0 bg-blue-400 blur-2xl opacity-20 animate-pulse rounded-full"></div>
               <div className="w-14 h-14 bg-white dark:bg-card border-4 border-slate-50 dark:border-slate-800 rounded-full shadow-xl flex items-center justify-center relative z-20 transform hover:scale-110 transition-transform duration-300">
-                <Zap className="w-6 h-6 text-blue-500 fill-current" />
+                <img src="https://img.icons8.com/fluency/48/lightning-bolt.png" alt="Zap" className="w-8 h-8" />
               </div>
             </div>
 
@@ -620,8 +620,8 @@ const Index = () => {
                       "Monitor customer chats ensures high-quality customer experience"
                     ].map((item, i) => (
                       <div key={i} className="flex gap-3 md:gap-4 items-start group">
-                        <div className="mt-1 min-w-5 min-h-5 md:min-w-6 md:min-h-6 rounded-full bg-pink-100 text-pink-500 group-hover:bg-pink-500 group-hover:text-white transition-colors duration-300 flex items-center justify-center shadow-sm">
-                          <Check className="w-3 h-3 md:w-3.5 md:h-3.5 stroke-[3]" />
+                        <div className="mt-1 min-w-5 min-h-5 md:min-w-6 md:min-h-6 flex items-center justify-center">
+                          <img src="https://img.icons8.com/fluency/48/checked.png" alt="Check" className="w-5 h-5 md:w-6 md:h-6" />
                         </div>
                         <p className="text-slate-600 dark:text-slate-300 text-base md:text-lg leading-relaxed font-medium">{item}</p>
                       </div>
@@ -666,7 +666,7 @@ const Index = () => {
             <div className="relative z-10">
               <div className="absolute inset-0 bg-pink-400 blur-2xl opacity-20 animate-pulse rounded-full"></div>
               <div className="w-14 h-14 bg-white dark:bg-card border-4 border-slate-50 dark:border-slate-800 rounded-full shadow-xl flex items-center justify-center relative z-20 transform hover:scale-110 transition-transform duration-300">
-                <Heart className="w-6 h-6 text-pink-500 fill-current" />
+                <img src="https://img.icons8.com/fluency/48/like.png" alt="Heart" className="w-7 h-7" />
               </div>
             </div>
 
@@ -704,8 +704,8 @@ const Index = () => {
                       "Enhance your support operations with data-driven insights on response time, resolutions, and agent-wise performance"
                     ].map((item, i) => (
                       <div key={i} className="flex gap-3 md:gap-4 items-start group">
-                        <div className="mt-1 min-w-5 min-h-5 md:min-w-6 md:min-h-6 rounded-full bg-yellow-100 text-yellow-600 group-hover:bg-yellow-500 group-hover:text-white transition-colors duration-300 flex items-center justify-center shadow-sm">
-                          <Check className="w-3 h-3 md:w-3.5 md:h-3.5 stroke-[3]" />
+                        <div className="mt-1 min-w-5 min-h-5 md:min-w-6 md:min-h-6 flex items-center justify-center">
+                          <img src="https://img.icons8.com/fluency/48/checked.png" alt="Check" className="w-5 h-5 md:w-6 md:h-6" />
                         </div>
                         <p className="text-slate-600 dark:text-slate-300 text-base md:text-lg leading-relaxed font-medium">{item}</p>
                       </div>
@@ -1065,22 +1065,19 @@ const Index = () => {
                 title: 'Team Inbox',
                 description: 'One inbox for your entire team. Assign chats, add labels, and collaborate seamlessly.',
                 bg: 'bg-blue-50 dark:bg-blue-900/20',
-                iconColor: 'text-blue-600 dark:text-blue-400',
-                icon: MessageSquare
+                iconUrl: 'https://img.icons8.com/3d-fluency/94/chat-message.png'
               },
               {
                 title: 'Broadcast & Bulk',
                 description: 'Send personalized campaigns to thousands of customers with just a few clicks.',
                 bg: 'bg-purple-50 dark:bg-purple-900/20',
-                iconColor: 'text-purple-600 dark:text-purple-400',
-                icon: Megaphone
+                iconUrl: 'https://img.icons8.com/3d-fluency/94/megaphone.png'
               },
               {
                 title: 'Automated Chatbots',
                 description: 'Build no-code chatbots to handle support queries and qualify leads 24/7.',
                 bg: 'bg-green-50 dark:bg-green-900/20',
-                iconColor: 'text-green-600 dark:text-green-400',
-                icon: Bot
+                iconUrl: 'https://img.icons8.com/3d-fluency/94/robot-2.png'
               },
             ].map((feature, i) => (
               <motion.div
@@ -1091,8 +1088,8 @@ const Index = () => {
                 transition={{ duration: 0.4, delay: i * 0.1 }}
                 className={`${feature.bg} p-8 rounded-3xl border border-transparent hover:border-border transition-all`}
               >
-                <div className={`w-14 h-14 rounded-2xl bg-white dark:bg-background shadow-sm flex items-center justify-center mb-6`}>
-                  <feature.icon className={`w-7 h-7 ${feature.iconColor}`} />
+                <div className={`w-16 h-16 rounded-2xl bg-white dark:bg-background shadow-sm flex items-center justify-center mb-6`}>
+                  <img src={feature.iconUrl} alt={feature.title} className="w-10 h-10 object-contain" />
                 </div>
                 <h3 className="text-xl font-bold text-foreground mb-3">{feature.title}</h3>
                 <p className="text-muted-foreground leading-relaxed">{feature.description}</p>

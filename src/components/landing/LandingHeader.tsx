@@ -85,7 +85,7 @@ const integrations = [
     },
 ];
 
-export function LandingHeader() {
+export function LandingHeader({ variant = 'default' }: { variant?: 'default' | 'dark' }) {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -96,6 +96,10 @@ export function LandingHeader() {
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
+
+    const isDark = variant === 'dark' && !isScrolled;
+    const textColor = isDark ? "text-white hover:text-white/80" : "text-foreground";
+    const mutedTextColor = isDark ? "text-white/70 hover:text-white" : "text-muted-foreground hover:text-foreground";
 
     return (
         <header
@@ -108,28 +112,27 @@ export function LandingHeader() {
         >
             <div className="container mx-auto px-4 sm:px-6 flex items-center justify-between">
                 {/* Logo */}
-                {/* Logo */}
                 <Link to="/" className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
                         <MessageSquare className="w-4 h-4 text-primary-foreground" />
                     </div>
-                    <span className="text-lg font-bold text-foreground">WA Business</span>
+                    <span className={cn("text-lg font-bold", isDark ? "text-white" : "text-foreground")}>WA Business</span>
                 </Link>
 
                 {/* Desktop Navigation */}
                 <div className="hidden lg:block">
                     <NavigationMenu>
-                        <NavigationMenuList>
+                        <NavigationMenuList className={isDark ? "text-white" : ""}>
                             <NavigationMenuItem>
                                 <Link to="/pricing">
-                                    <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                                    <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), isDark && "bg-transparent text-white hover:bg-white/10 hover:text-white focus:bg-white/10 focus:text-white")}>
                                         Pricing
                                     </NavigationMenuLink>
                                 </Link>
                             </NavigationMenuItem>
 
                             <NavigationMenuItem>
-                                <NavigationMenuTrigger>Product</NavigationMenuTrigger>
+                                <NavigationMenuTrigger className={cn(isDark && "bg-transparent text-white hover:bg-white/10 hover:text-white focus:bg-white/10 focus:text-white data-[state=open]:bg-white/10 data-[state=open]:text-white")}>Product</NavigationMenuTrigger>
                                 <NavigationMenuContent>
                                     <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                                         <ListItem title="Official API" href="/product/official-api">
@@ -149,7 +152,7 @@ export function LandingHeader() {
                             </NavigationMenuItem>
 
                             <NavigationMenuItem>
-                                <NavigationMenuTrigger>Features</NavigationMenuTrigger>
+                                <NavigationMenuTrigger className={cn(isDark && "bg-transparent text-white hover:bg-white/10 hover:text-white focus:bg-white/10 focus:text-white data-[state=open]:bg-white/10 data-[state=open]:text-white")}>Features</NavigationMenuTrigger>
                                 <NavigationMenuContent>
                                     <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                                         {features.map((feature) => (
@@ -167,7 +170,7 @@ export function LandingHeader() {
                             </NavigationMenuItem>
 
                             <NavigationMenuItem>
-                                <NavigationMenuTrigger>Integrations</NavigationMenuTrigger>
+                                <NavigationMenuTrigger className={cn(isDark && "bg-transparent text-white hover:bg-white/10 hover:text-white focus:bg-white/10 focus:text-white data-[state=open]:bg-white/10 data-[state=open]:text-white")}>Integrations</NavigationMenuTrigger>
                                 <NavigationMenuContent>
                                     <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                                         {integrations.map((item) => (
@@ -185,7 +188,7 @@ export function LandingHeader() {
                             </NavigationMenuItem>
 
                             <NavigationMenuItem>
-                                <NavigationMenuTrigger>Resources</NavigationMenuTrigger>
+                                <NavigationMenuTrigger className={cn(isDark && "bg-transparent text-white hover:bg-white/10 hover:text-white focus:bg-white/10 focus:text-white data-[state=open]:bg-white/10 data-[state=open]:text-white")}>Resources</NavigationMenuTrigger>
                                 <NavigationMenuContent>
                                     <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                                         <li className="row-span-3">
@@ -222,16 +225,14 @@ export function LandingHeader() {
 
                 {/* Right Side Actions */}
                 <div className="flex items-center gap-4">
-                    <div className="hidden sm:flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground cursor-pointer transition-colors">
+                    <div className={cn("hidden sm:flex items-center gap-2 text-sm font-medium cursor-pointer transition-colors", mutedTextColor)}>
                         <Globe className="w-4 h-4" />
                         <span>Eng</span>
                     </div>
 
-                    {/* ModeToggle removed */}
-
                     <div className="hidden lg:flex items-center gap-2">
                         <Link to="/auth">
-                            <Button variant="ghost" size="sm">Sign in</Button>
+                            <Button variant="ghost" size="sm" className={cn(isDark && "text-white hover:text-white hover:bg-white/10")}>Sign in</Button>
                         </Link>
                         <Link to="/auth?mode=signup">
                             <Button variant="whatsapp" size="sm">Request a Quote</Button>
@@ -240,7 +241,7 @@ export function LandingHeader() {
 
                     {/* Mobile Menu Button */}
                     <button
-                        className="lg:hidden p-2 text-foreground"
+                        className={cn("lg:hidden p-2", isDark ? "text-white" : "text-foreground")}
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                     >
                         {isMobileMenuOpen ? <X /> : <Menu />}
