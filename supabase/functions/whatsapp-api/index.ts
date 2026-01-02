@@ -6,235 +6,81 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Use the exact string you pasted in Meta Dashboard
+const VERIFY_TOKEN = "your_chosen_secret_verify_token";
+
 serve(async (req) => {
-  // Handle CORS preflight requests
+  const url = new URL(req.url);
+
+  // 1. Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
-  try {
-    // Verify user is authenticated
-    const authHeader = req.headers.get('Authorization');
-    if (!authHeader) {
-      console.error('No authorization header provided');
-      return new Response(
-        JSON.stringify({ error: 'Unauthorized' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+  // 2. Handle Meta Webhook Verification (GET request)
+  if (req.method === "GET") {
+    const mode = url.searchParams.get("hub.mode");
+    const token = url.searchParams.get("hub.verify_token");
+    const challenge = url.searchParams.get("hub.challenge");
+
+    if (mode === "subscribe" && token === VERIFY_TOKEN) {
+      console.log("Webhook Verified!");
+      return new Response(challenge, { status: 200 });
     }
+    return new Response("Forbidden", { status: 403 });
+  }
 
-    // Create Supabase client with user's auth context
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
-    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-      global: { headers: { Authorization: authHeader } }
-    });
+  // 3. Handle POST Requests
+  if (req.method === "POST") {
+    const payload = await req.json();
 
-    // Get the authenticated user
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      console.error('Failed to get user:', userError?.message);
-      return new Response(
-        JSON.stringify({ error: 'Unauthorized' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    if (payload.object === "whatsapp_business_account") {
+      const value = payload.entry?.[0]?.changes?.[0]?.value;
+
+      const supabaseServiceRole = createClient(
+        Deno.env.get('SUPABASE_URL')!,
+        Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
       );
-    }
 
-    const { action, ...params } = await req.json();
-    console.log(`WhatsApp API action: ${action} for user: ${user.id}`);
+      // --- 1. Handle Status Updates ---
+      const statusUpdate = value?.statuses?.[0];
+      if (statusUpdate) {
+        // Matches 'whatsapp_message_id' from your DB in image_1b81af.png
+        await supabaseServiceRole
+          .from('messages')
+          .update({ status: statusUpdate.status })
+          .eq('whatsapp_message_id', statusUpdate.id);
 
-    switch (action) {
-      case 'save_access_token': {
-        // Save the access token securely - only accessible server-side
-        const { access_token } = params;
-        if (!access_token) {
-          return new Response(
-            JSON.stringify({ error: 'Access token is required' }),
-            { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-          );
-        }
-
-        // Use service role to update the encrypted token
-        const supabaseServiceRole = createClient(
-          supabaseUrl,
-          Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-        );
-
-        // Check if settings exist
-        const { data: existing } = await supabaseServiceRole
-          .from('whatsapp_settings')
-          .select('id')
-          .eq('user_id', user.id)
-          .single();
-
-        if (existing) {
-          const { error: updateError } = await supabaseServiceRole
-            .from('whatsapp_settings')
-            .update({ 
-              access_token_encrypted: access_token,
-              is_connected: true,
-              updated_at: new Date().toISOString()
-            })
-            .eq('user_id', user.id);
-
-          if (updateError) {
-            console.error('Failed to update access token:', updateError.message);
-            throw updateError;
-          }
-        } else {
-          const { error: insertError } = await supabaseServiceRole
-            .from('whatsapp_settings')
-            .insert({
-              user_id: user.id,
-              access_token_encrypted: access_token,
-              is_connected: true
-            });
-
-          if (insertError) {
-            console.error('Failed to insert access token:', insertError.message);
-            throw insertError;
-          }
-        }
-
-        console.log('Access token saved successfully for user:', user.id);
-        return new Response(
-          JSON.stringify({ success: true, message: 'Access token saved securely' }),
-          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
+        return new Response("STATUS_UPDATED", { status: 200 });
       }
 
-      case 'send_message': {
-        // Send a WhatsApp message using stored credentials
-        const { to, message, template_name, template_params } = params;
-
-        // Get user's WhatsApp settings using service role to access token
-        const supabaseServiceRole = createClient(
-          supabaseUrl,
-          Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-        );
-
-        const { data: settings, error: settingsError } = await supabaseServiceRole
-          .from('whatsapp_settings')
-          .select('phone_number_id, access_token_encrypted, is_connected')
-          .eq('user_id', user.id)
-          .single();
-
-        if (settingsError || !settings) {
-          console.error('WhatsApp settings not found:', settingsError?.message);
-          return new Response(
-            JSON.stringify({ error: 'WhatsApp settings not configured' }),
-            { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-          );
-        }
-
-        if (!settings.is_connected || !settings.access_token_encrypted || !settings.phone_number_id) {
-          return new Response(
-            JSON.stringify({ error: 'WhatsApp is not fully configured. Please add your access token and phone number ID.' }),
-            { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-          );
-        }
-
-        // Build the WhatsApp API request
-        const whatsappUrl = `https://graph.facebook.com/v18.0/${settings.phone_number_id}/messages`;
-        
-        let messagePayload: Record<string, unknown>;
-        
-        if (template_name) {
-          // Template message
-          messagePayload = {
-            messaging_product: 'whatsapp',
-            to: to,
-            type: 'template',
-            template: {
-              name: template_name,
-              language: { code: 'en' },
-              components: template_params || []
-            }
-          };
-        } else {
-          // Text message
-          messagePayload = {
-            messaging_product: 'whatsapp',
-            to: to,
-            type: 'text',
-            text: { body: message }
-          };
-        }
-
-        console.log('Sending WhatsApp message to:', to);
-        
-        const whatsappResponse = await fetch(whatsappUrl, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${settings.access_token_encrypted}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(messagePayload)
+      // --- 2. Handle New Incoming Messages ---
+      const message = value?.messages?.[0];
+      if (message) {
+        // We use 'whatsapp_message_id' to match your schema in image_1b81af.png
+        const { error } = await supabaseServiceRole.from('messages').insert({
+          whatsapp_message_id: message.id,
+          sender_phone: message.from,
+          content: message.text?.body,
+          direction: 'inbound',
+          status: 'received'
         });
 
-        const whatsappResult = await whatsappResponse.json();
-
-        if (!whatsappResponse.ok) {
-          console.error('WhatsApp API error:', whatsappResult);
-          return new Response(
-            JSON.stringify({ error: 'Failed to send message', details: whatsappResult }),
-            { status: whatsappResponse.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-          );
-        }
-
-        console.log('WhatsApp message sent successfully:', whatsappResult);
-        return new Response(
-          JSON.stringify({ success: true, result: whatsappResult }),
-          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
+        if (error) console.error("DB Insert Error:", error);
+        return new Response("MESSAGE_SAVED", { status: 200 });
       }
 
-      case 'check_connection': {
-        // Check if WhatsApp is properly configured (without exposing token)
-        const supabaseServiceRole = createClient(
-          supabaseUrl,
-          Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-        );
-
-        const { data: settings, error: settingsError } = await supabaseServiceRole
-          .from('whatsapp_settings')
-          .select('phone_number_id, is_connected, access_token_encrypted')
-          .eq('user_id', user.id)
-          .single();
-
-        if (settingsError) {
-          return new Response(
-            JSON.stringify({ 
-              connected: false, 
-              has_token: false,
-              has_phone_number_id: false
-            }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-          );
-        }
-
-        return new Response(
-          JSON.stringify({ 
-            connected: settings?.is_connected || false,
-            has_token: !!settings?.access_token_encrypted,
-            has_phone_number_id: !!settings?.phone_number_id
-          }),
-          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-
-      default:
-        return new Response(
-          JSON.stringify({ error: `Unknown action: ${action}` }),
-          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
+      return new Response("EVENT_RECEIVED", { status: 200 });
     }
-  } catch (error) {
-    console.error('WhatsApp API error:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    return new Response(
-      JSON.stringify({ error: errorMessage }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+
+    // Outgoing Dashboard Logic
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) return new Response('Unauthorized', { status: 401, headers: corsHeaders });
+
+    return new Response(JSON.stringify({ success: true }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    });
   }
+
+  return new Response("Not Found", { status: 404 });
 });
