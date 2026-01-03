@@ -10,8 +10,8 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAdminSubscriptions, SubscriptionWithUser } from '@/hooks/useAdminSubscriptions';
-import { 
-  Users, AlertTriangle, TrendingUp, 
+import {
+  Users, AlertTriangle, TrendingUp,
   RefreshCw, Calendar, Ban, Settings,
   ChevronRight, Clock
 } from 'lucide-react';
@@ -49,18 +49,18 @@ export default function AdminSubscriptions() {
 
   const handleExtend = async () => {
     if (!selectedUser) return;
-    await extendSubscription.mutateAsync({ 
-      userId: selectedUser.user_id, 
-      days: parseInt(extendDays) 
+    await extendSubscription.mutateAsync({
+      userId: selectedUser.user_id,
+      days: parseInt(extendDays)
     });
     setSelectedUser(null);
   };
 
   const handleChangePlan = async () => {
     if (!selectedUser || !selectedPlan) return;
-    await changePlan.mutateAsync({ 
-      userId: selectedUser.user_id, 
-      planId: selectedPlan 
+    await changePlan.mutateAsync({
+      userId: selectedUser.user_id,
+      planId: selectedPlan
     });
     setSelectedUser(null);
   };
@@ -68,7 +68,7 @@ export default function AdminSubscriptions() {
   const SubscriptionRow = ({ sub }: { sub: SubscriptionWithUser }) => {
     const isExpiringSoon = new Date(sub.current_period_end) <= new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
     const isExpired = new Date(sub.current_period_end) < new Date();
-    
+
     return (
       <TableRow>
         <TableCell>
@@ -113,8 +113,8 @@ export default function AdminSubscriptions() {
           <div className="flex gap-1">
             <Dialog>
               <DialogTrigger asChild>
-                <Button 
-                  size="sm" 
+                <Button
+                  size="sm"
                   variant="outline"
                   onClick={() => setSelectedUser(sub)}
                 >
@@ -128,7 +128,7 @@ export default function AdminSubscriptions() {
                     {sub.profile?.business_name || 'User'}'s subscription
                   </DialogDescription>
                 </DialogHeader>
-                
+
                 <div className="space-y-4 py-4">
                   <div className="space-y-2">
                     <Label>Extend Subscription</Label>
@@ -146,7 +146,7 @@ export default function AdminSubscriptions() {
                       </Button>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label>Change Plan</Label>
                     <div className="flex gap-2">
@@ -167,17 +167,17 @@ export default function AdminSubscriptions() {
                       </Button>
                     </div>
                   </div>
-                  
+
                   <div className="flex gap-2 pt-4 border-t">
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       onClick={() => resetUsage.mutate(sub.user_id)}
                       disabled={resetUsage.isPending}
                     >
                       <RefreshCw className="mr-2 h-4 w-4" />
                       Reset Usage
                     </Button>
-                    <Button 
+                    <Button
                       variant="destructive"
                       onClick={() => cancelSubscription.mutate(sub.user_id)}
                       disabled={cancelSubscription.isPending}
@@ -211,28 +211,28 @@ export default function AdminSubscriptions() {
             value={stats.active.toString()}
             change={`${stats.active} active`}
             changeType="positive"
-            icon={Users}
+            icon="https://img.icons8.com/fluency/48/checked-user-male.png"
           />
           <StatCard
             title="Expiring Soon"
             value={stats.expiring.toString()}
             change={stats.expiring > 0 ? 'Needs attention' : 'All good'}
             changeType={stats.expiring > 0 ? 'negative' : 'positive'}
-            icon={Clock}
+            icon="https://img.icons8.com/fluency/48/time-machine.png"
           />
           <StatCard
             title="Expired"
             value={stats.expired.toString()}
             change={stats.expired > 0 ? `${stats.expired} expired` : 'None'}
             changeType={stats.expired > 0 ? 'negative' : 'neutral'}
-            icon={AlertTriangle}
+            icon="https://img.icons8.com/fluency/48/cancel-subscription.png"
           />
           <StatCard
             title="Monthly Revenue"
             value={`₹${stats.totalRevenue.toLocaleString()}`}
             change="This month"
             changeType="positive"
-            icon={TrendingUp}
+            icon="https://img.icons8.com/fluency/48/money-bag.png"
           />
         </div>
 

@@ -8,6 +8,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeProvider";
 import { Analytics as VercelAnalytics } from "@vercel/analytics/react";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { FacebookSDK } from "@/components/FacebookSDK";
 import AdminRoute from "./components/AdminRoute";
 
 // Lazy load all pages for performance optimization
@@ -25,6 +26,9 @@ const Settings = lazy(() => import("./pages/Settings"));
 const Broadcasts = lazy(() => import("./pages/Broadcasts"));
 const Campaigns = lazy(() => import("./pages/Campaigns"));
 const CampaignDetail = lazy(() => import("./pages/CampaignDetail"));
+const AdsManager = lazy(() => import("./pages/AdsManager"));
+const FlowBuilder = lazy(() => import("./pages/FlowBuilder"));
+const Templates = lazy(() => import("./pages/Templates"));
 const Integrations = lazy(() => import("./pages/Integrations"));
 const Tools = lazy(() => import("./pages/Tools"));
 const WhatsAppLink = lazy(() => import("./pages/WhatsAppLink"));
@@ -84,6 +88,7 @@ const App = () => (
       <AuthProvider>
         <TooltipProvider>
           <Toaster />
+          <FacebookSDK />
           <Sonner />
           <BrowserRouter>
             <Suspense fallback={<PageLoader />}>
@@ -107,6 +112,9 @@ const App = () => (
                 <Route path="/dashboard/broadcasts" element={<ProtectedRoute><Broadcasts /></ProtectedRoute>} />
                 <Route path="/dashboard/campaigns" element={<ProtectedRoute><Campaigns /></ProtectedRoute>} />
                 <Route path="/dashboard/campaigns/:id" element={<ProtectedRoute><CampaignDetail /></ProtectedRoute>} />
+                <Route path="/dashboard/ads" element={<ProtectedRoute><AdsManager /></ProtectedRoute>} />
+                <Route path="/dashboard/flows" element={<ProtectedRoute><FlowBuilder /></ProtectedRoute>} />
+                <Route path="/dashboard/templates" element={<ProtectedRoute><Templates /></ProtectedRoute>} />
                 <Route path="/dashboard/integrations" element={<ProtectedRoute><Integrations /></ProtectedRoute>} />
                 <Route path="/dashboard/tools" element={<ProtectedRoute><Tools /></ProtectedRoute>} />
                 <Route path="/dashboard/whatsapp-link" element={<ProtectedRoute><WhatsAppLink /></ProtectedRoute>} />

@@ -43,8 +43,11 @@ export const useSubscription = () => {
         .select('*')
         .eq('is_active', true)
         .order('price_monthly', { ascending: true });
-      
-      if (error) throw error;
+
+      if (error) {
+        console.error('Error fetching plans:', error);
+        return [];
+      }
       return data as SubscriptionPlan[];
     },
   });
@@ -54,7 +57,7 @@ export const useSubscription = () => {
     queryKey: ['user-subscription', user?.id],
     queryFn: async () => {
       if (!user?.id) return null;
-      
+
       const { data, error } = await supabase
         .from('user_subscriptions')
         .select(`
@@ -63,8 +66,11 @@ export const useSubscription = () => {
         `)
         .eq('user_id', user.id)
         .single();
-      
-      if (error && error.code !== 'PGRST116') throw error;
+
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error fetching subscription:', error);
+        return null;
+      }
       return data as UserSubscription | null;
     },
     enabled: !!user?.id,
@@ -74,7 +80,7 @@ export const useSubscription = () => {
   const checkUsageLimit = (type: 'messages' | 'contacts'): boolean => {
     const subscription = subscriptionQuery.data;
     if (!subscription?.plan) return false;
-    
+
     if (type === 'messages') {
       return subscription.messages_used < subscription.plan.message_limit;
     }
@@ -85,7 +91,7 @@ export const useSubscription = () => {
   const getUsagePercentage = (type: 'messages' | 'contacts'): number => {
     const subscription = subscriptionQuery.data;
     if (!subscription?.plan) return 0;
-    
+
     if (type === 'messages') {
       return (subscription.messages_used / subscription.plan.message_limit) * 100;
     }
@@ -96,11 +102,11 @@ export const useSubscription = () => {
   const isExpiringSoon = (): boolean => {
     const subscription = subscriptionQuery.data;
     if (!subscription) return false;
-    
+
     const endDate = new Date(subscription.current_period_end);
     const now = new Date();
     const daysUntilExpiry = Math.ceil((endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-    
+
     return daysUntilExpiry <= 7 && daysUntilExpiry > 0;
   };
 
@@ -108,23 +114,23 @@ export const useSubscription = () => {
   const incrementUsage = useMutation({
     mutationFn: async ({ type, amount = 1 }: { type: 'messages' | 'contacts'; amount?: number }) => {
       if (!user?.id) throw new Error('Not authenticated');
-      
+
       // Use server-side RPC function for atomic increment with limit enforcement
       const { data, error } = await supabase.rpc('increment_usage', {
         p_user_id: user.id,
         p_type: type,
         p_amount: amount,
       });
-      
+
       if (error) throw error;
-      
+
       // Parse the JSON response from the RPC function
       const result = data as { success: boolean; error?: string; new_value?: number; limit?: number; remaining?: number };
-      
+
       if (!result.success) {
         throw new Error(result.error || 'Failed to increment usage');
       }
-      
+
       return result;
     },
     onSuccess: () => {

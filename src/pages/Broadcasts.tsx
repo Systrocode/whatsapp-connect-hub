@@ -9,12 +9,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useBroadcasts, BroadcastCampaign } from '@/hooks/useBroadcasts';
 import { useTemplates } from '@/hooks/useTemplates';
 import { useContacts } from '@/hooks/useContacts';
-import { useSubscription } from '@/hooks/useSubscription';
-import { Plus, Send, Calendar, Users, MessageSquare, Trash2, Eye, Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import { Plus, Send, Calendar, Users, MessageSquare, Trash2, Eye, Clock, CheckCircle, XCircle, AlertCircle, Settings, Smartphone, Image as ImageIcon } from 'lucide-react';
 import { format } from 'date-fns';
+import PhoneMockup from '@/components/PhoneMockup';
 
 const statusColors: Record<string, string> = {
   draft: 'bg-muted text-muted-foreground',
@@ -38,8 +39,7 @@ export default function Broadcasts() {
   const { campaigns, isLoading, createCampaign, addRecipients, deleteCampaign } = useBroadcasts();
   const { templates } = useTemplates();
   const { contacts } = useContacts();
-  const { subscription, checkUsageLimit } = useSubscription();
-  
+
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [selectedContacts, setSelectedContacts] = useState<string[]>([]);
   const [newCampaign, setNewCampaign] = useState({
@@ -51,9 +51,21 @@ export default function Broadcasts() {
   });
   const [filterTag, setFilterTag] = useState('');
 
+  // Handle Template Selection & Content Parsing (Basic)
+  const handleTemplateSelect = (templateId: string) => {
+    const template = templates.find(t => t.id === templateId);
+    if (template) {
+      setNewCampaign(prev => ({
+        ...prev,
+        template_id: templateId,
+        message_content: template.content,
+      }));
+    }
+  };
+
   const handleCreate = async () => {
     if (!newCampaign.name) return;
-    
+
     const campaign = await createCampaign.mutateAsync({
       name: newCampaign.name,
       template_id: newCampaign.template_id || undefined,
@@ -61,14 +73,14 @@ export default function Broadcasts() {
       scheduled_at: newCampaign.scheduled_at || undefined,
       segment_filter: newCampaign.segment_filter,
     });
-    
+
     if (selectedContacts.length > 0) {
       await addRecipients.mutateAsync({
         campaignId: campaign.id,
         contactIds: selectedContacts,
       });
     }
-    
+
     setIsCreateOpen(false);
     setNewCampaign({ name: '', template_id: '', message_content: '', scheduled_at: '', segment_filter: {} });
     setSelectedContacts([]);
@@ -89,14 +101,12 @@ export default function Broadcasts() {
   };
 
   const toggleContact = (contactId: string) => {
-    setSelectedContacts(prev => 
-      prev.includes(contactId) 
+    setSelectedContacts(prev =>
+      prev.includes(contactId)
         ? prev.filter(id => id !== contactId)
         : [...prev, contactId]
     );
   };
-
-  const canSendMessages = checkUsageLimit('messages');
 
   return (
     <DashboardLayout>
@@ -108,170 +118,143 @@ export default function Broadcasts() {
               Create and manage bulk message campaigns
             </p>
           </div>
-          <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-            <DialogTrigger asChild>
-              <Button disabled={!canSendMessages}>
-                <Plus className="mr-2 h-4 w-4" />
-                New Campaign
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>Create Broadcast Campaign</DialogTitle>
-                <DialogDescription>
-                  Send messages to multiple contacts at once
-                </DialogDescription>
-              </DialogHeader>
-              
-              <div className="space-y-4 py-4">
-                <div className="space-y-2">
-                  <Label>Campaign Name</Label>
-                  <Input
-                    placeholder="e.g., Holiday Promotion"
-                    value={newCampaign.name}
-                    onChange={e => setNewCampaign(prev => ({ ...prev, name: e.target.value }))}
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label>Message Template (Optional)</Label>
-                  <Select
-                    value={newCampaign.template_id}
-                    onValueChange={value => setNewCampaign(prev => ({ 
-                      ...prev, 
-                      template_id: value,
-                      message_content: templates.find(t => t.id === value)?.content ?? '',
-                    }))}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a template" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {templates.filter(t => t.is_approved).map(template => (
-                        <SelectItem key={template.id} value={template.id}>
-                          {template.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label>Message Content</Label>
-                  <Textarea
-                    placeholder="Enter your message..."
-                    value={newCampaign.message_content}
-                    onChange={e => setNewCampaign(prev => ({ ...prev, message_content: e.target.value }))}
-                    rows={4}
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label>Schedule (Optional)</Label>
-                  <Input
-                    type="datetime-local"
-                    value={newCampaign.scheduled_at}
-                    onChange={e => setNewCampaign(prev => ({ ...prev, scheduled_at: e.target.value }))}
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label>Select Recipients</Label>
-                    <div className="flex items-center gap-2">
-                      <Label className="text-sm text-muted-foreground">Filter by tag:</Label>
-                      <Select value={filterTag} onValueChange={setFilterTag}>
-                        <SelectTrigger className="w-32">
-                          <SelectValue placeholder="All" />
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => window.location.href = '/dashboard/templates'}>
+              <Settings className="w-4 h-4 mr-2" />
+              Manage Templates
+            </Button>
+            <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+              <DialogTrigger asChild>
+                <Button>
+                  <Plus className="mr-2 h-4 w-4" />
+                  New Campaign
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-5xl max-h-[90vh] overflow-hidden flex flex-col p-0">
+                <DialogHeader className="px-6 py-4 border-b">
+                  <DialogTitle>Create Broadcast Campaign</DialogTitle>
+                  <DialogDescription>
+                    Configure your campaign and preview it in real-time.
+                  </DialogDescription>
+                </DialogHeader>
+
+                <div className="flex flex-1 overflow-hidden">
+                  {/* LEFT COLUMN: FORM */}
+                  <div className="flex-1 overflow-y-auto p-6 space-y-6 border-r">
+                    <div className="space-y-2">
+                      <Label>Campaign Name</Label>
+                      <Input
+                        placeholder="e.g., Holiday Promotion"
+                        value={newCampaign.name}
+                        onChange={e => setNewCampaign(prev => ({ ...prev, name: e.target.value }))}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Select Template</Label>
+                      <Select
+                        value={newCampaign.template_id}
+                        onValueChange={handleTemplateSelect}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Choose a WhatsApp Template" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">All Contacts</SelectItem>
-                          {allTags.map(tag => (
-                            <SelectItem key={tag} value={tag}>{tag}</SelectItem>
-                          ))}
+                          {templates.length > 0 ? (
+                            templates.map(template => (
+                              <SelectItem key={template.id} value={template.id}>
+                                {template.name} ({template.category})
+                              </SelectItem>
+                            ))
+                          ) : (
+                            <div className="p-2 text-sm text-muted-foreground text-center">No templates found.</div>
+                          )}
                         </SelectContent>
                       </Select>
+                      <p className="text-xs text-muted-foreground">
+                        Templates must be approved by Meta. <a href="/dashboard/templates" className="underline text-primary">Manage Templates</a>
+                      </p>
                     </div>
-                  </div>
-                  
-                  <div className="border rounded-md p-3 max-h-48 overflow-y-auto space-y-2">
-                    <div className="flex items-center gap-2 pb-2 border-b">
-                      <Checkbox
-                        checked={selectedContacts.length === filteredContacts.length && filteredContacts.length > 0}
-                        onCheckedChange={handleSelectAllContacts}
-                      />
-                      <span className="text-sm font-medium">
-                        Select All ({filteredContacts.length})
-                      </span>
-                    </div>
-                    {filteredContacts.map(contact => (
-                      <div key={contact.id} className="flex items-center gap-2">
-                        <Checkbox
-                          checked={selectedContacts.includes(contact.id)}
-                          onCheckedChange={() => toggleContact(contact.id)}
-                        />
-                        <span className="text-sm">
-                          {contact.name || contact.phone_number}
-                        </span>
-                        {contact.tags?.map(tag => (
-                          <Badge key={tag} variant="outline" className="text-xs">
-                            {tag}
-                          </Badge>
-                        ))}
+
+                    {/* Dynamic Template Fields would go here (e.g. Image Upload, Variable Inputs) */}
+                    {newCampaign.template_id && (
+                      <div className="p-4 bg-muted/30 rounded-lg space-y-4 border border-dashed text-sm">
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <ImageIcon className="w-4 h-4" />
+                          <span>Media Header (Optional)</span>
+                        </div>
+                        <Input type="file" disabled className="bg-background" />
+                        <p className="text-[10px] text-muted-foreground">Only if your template has an Image header.</p>
                       </div>
-                    ))}
+                    )}
+
+                    <div className="space-y-2">
+                      <Label>Message Content (Preview)</Label>
+                      <Textarea
+                        disabled
+                        className="bg-muted"
+                        value={newCampaign.message_content || "Select a template to view content..."}
+                        rows={4}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Select Recipients</Label>
+                      <div className="border rounded-md p-3 max-h-48 overflow-y-auto space-y-2">
+                        <div className="flex items-center gap-2 pb-2 border-b sticky top-0 bg-background z-10">
+                          <Checkbox
+                            checked={selectedContacts.length === filteredContacts.length && filteredContacts.length > 0}
+                            onCheckedChange={handleSelectAllContacts}
+                          />
+                          <span className="text-sm font-medium">Select All ({filteredContacts.length})</span>
+                        </div>
+                        {filteredContacts.map(contact => (
+                          <div key={contact.id} className="flex items-center gap-2">
+                            <Checkbox
+                              checked={selectedContacts.includes(contact.id)}
+                              onCheckedChange={() => toggleContact(contact.id)}
+                            />
+                            <span className="text-sm">{contact.name || contact.phone_number}</span>
+                          </div>
+                        ))}
+                        {filteredContacts.length === 0 && (
+                          <p className="text-sm text-muted-foreground text-center py-2">No contacts found.</p>
+                        )}
+                      </div>
+                      <p className="text-sm text-muted-foreground">{selectedContacts.length} contacts selected</p>
+                    </div>
                   </div>
-                  <p className="text-sm text-muted-foreground">
-                    {selectedContacts.length} contacts selected
-                  </p>
+
+                  {/* RIGHT COLUMN: PREVIEW */}
+                  <div className="w-[350px] bg-muted/10 p-6 flex flex-col items-center justify-center bg-slate-50 relative">
+                    <div className="absolute top-4 left-0 w-full text-center">
+                      <h3 className="text-sm font-semibold text-muted-foreground flex items-center justify-center gap-2">
+                        <Smartphone className="w-4 h-4" /> Live Preview
+                      </h3>
+                    </div>
+                    <PhoneMockup
+                      message={newCampaign.message_content || "Select a template to preview"}
+                      time={format(new Date(), 'HH:mm')}
+                    />
+                  </div>
                 </div>
-              </div>
-              
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setIsCreateOpen(false)}>
-                  Cancel
-                </Button>
-                <Button 
-                  onClick={handleCreate} 
-                  disabled={!newCampaign.name || selectedContacts.length === 0 || createCampaign.isPending}
-                >
-                  {newCampaign.scheduled_at ? 'Schedule Campaign' : 'Create Campaign'}
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+
+                <DialogFooter className="px-6 py-4 border-t bg-background">
+                  <Button variant="outline" onClick={() => setIsCreateOpen(false)}>Cancel</Button>
+                  <Button
+                    onClick={handleCreate}
+                    disabled={!newCampaign.name || !newCampaign.template_id || selectedContacts.length === 0 || createCampaign.isPending}
+                  >
+                    <Send className="w-4 h-4 mr-2" />
+                    {newCampaign.scheduled_at ? 'Schedule' : 'Send Broadcast'}
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
 
-        {!canSendMessages && (
-          <Card className="border-destructive bg-destructive/10">
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-2 text-destructive">
-                <AlertCircle className="h-5 w-5" />
-                <p>You've reached your message limit. Upgrade your plan to send more broadcasts.</p>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {subscription && (
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between text-sm">
-                <span>Messages Used</span>
-                <span className="font-medium">
-                  {subscription.messages_used} / {subscription.plan?.message_limit ?? 0}
-                </span>
-              </div>
-              <div className="mt-2 h-2 rounded-full bg-muted overflow-hidden">
-                <div 
-                  className="h-full bg-primary transition-all"
-                  style={{ width: `${Math.min((subscription.messages_used / (subscription.plan?.message_limit ?? 1)) * 100, 100)}%` }}
-                />
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
+        {/* Campaign List */}
         {isLoading ? (
           <div className="text-center py-12 text-muted-foreground">Loading campaigns...</div>
         ) : campaigns.length === 0 ? (
@@ -290,9 +273,7 @@ export default function Broadcasts() {
                   <div className="flex items-start justify-between">
                     <div>
                       <CardTitle className="text-lg">{campaign.name}</CardTitle>
-                      <CardDescription>
-                        Created {format(new Date(campaign.created_at), 'PPp')}
-                      </CardDescription>
+                      <CardDescription>Created {format(new Date(campaign.created_at), 'PPp')}</CardDescription>
                     </div>
                     <Badge className={statusColors[campaign.status]}>
                       {statusIcons[campaign.status]}
@@ -312,50 +293,13 @@ export default function Broadcasts() {
                         <span>{campaign.template.name}</span>
                       </div>
                     )}
-                    {campaign.scheduled_at && (
-                      <div className="flex items-center gap-1">
-                        <Calendar className="h-4 w-4" />
-                        <span>Scheduled: {format(new Date(campaign.scheduled_at), 'PPp')}</span>
-                      </div>
-                    )}
                   </div>
-                  
-                  {campaign.status === 'completed' && (
-                    <div className="mt-4 grid grid-cols-3 gap-4 text-center">
-                      <div className="p-2 rounded-md bg-muted">
-                        <p className="text-lg font-semibold">{campaign.sent_count}</p>
-                        <p className="text-xs text-muted-foreground">Sent</p>
-                      </div>
-                      <div className="p-2 rounded-md bg-green-500/10">
-                        <p className="text-lg font-semibold text-green-500">{campaign.delivered_count}</p>
-                        <p className="text-xs text-muted-foreground">Delivered</p>
-                      </div>
-                      <div className="p-2 rounded-md bg-destructive/10">
-                        <p className="text-lg font-semibold text-destructive">{campaign.failed_count}</p>
-                        <p className="text-xs text-muted-foreground">Failed</p>
-                      </div>
-                    </div>
-                  )}
-                  
+
                   <div className="mt-4 flex gap-2">
+                    <Button size="sm" variant="outline"><Eye className="mr-2 h-3 w-3" /> View Details</Button>
                     {campaign.status === 'draft' && (
-                      <Button size="sm">
-                        <Send className="mr-2 h-3 w-3" />
-                        Send Now
-                      </Button>
-                    )}
-                    <Button size="sm" variant="outline">
-                      <Eye className="mr-2 h-3 w-3" />
-                      View Details
-                    </Button>
-                    {campaign.status === 'draft' && (
-                      <Button 
-                        size="sm" 
-                        variant="destructive"
-                        onClick={() => deleteCampaign.mutate(campaign.id)}
-                      >
-                        <Trash2 className="mr-2 h-3 w-3" />
-                        Delete
+                      <Button size="sm" variant="destructive" onClick={() => deleteCampaign.mutate(campaign.id)}>
+                        <Trash2 className="mr-2 h-3 w-3" /> Delete
                       </Button>
                     )}
                   </div>

@@ -34,32 +34,35 @@ export const useTemplates = () => {
         .from('message_templates')
         .select('*')
         .order('created_at', { ascending: false });
-      
-      if (error) throw error;
+
+      if (error) {
+        console.error('Error fetching templates:', error);
+        return [];
+      }
       return data as MessageTemplate[];
     },
     enabled: !!user,
   });
 
   const createTemplate = useMutation({
-    mutationFn: async (templateData: CreateTemplateData) => {
+    mutationFn: async (templateData: CreateTemplateData & { headerType?: string }) => {
       if (!user) throw new Error('User not authenticated');
-      
-      const { data, error } = await supabase
-        .from('message_templates')
-        .insert({
+
+      const { data, error } = await supabase.functions.invoke('create-template', {
+        body: {
           ...templateData,
-          user_id: user.id,
-        })
-        .select()
-        .single();
-      
+          headerType: templateData.headerType || 'NONE'
+        }
+      });
+
       if (error) throw error;
-      return data as MessageTemplate;
+      if (data.error) throw new Error(data.error);
+
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['templates'] });
-      toast.success('Template created successfully');
+      toast.success('Template submitted to Meta for approval');
     },
     onError: (error: Error) => {
       toast.error(error.message);
@@ -74,7 +77,7 @@ export const useTemplates = () => {
         .eq('id', id)
         .select()
         .single();
-      
+
       if (error) throw error;
       return data as MessageTemplate;
     },
@@ -93,7 +96,7 @@ export const useTemplates = () => {
         .from('message_templates')
         .delete()
         .eq('id', id);
-      
+
       if (error) throw error;
     },
     onSuccess: () => {

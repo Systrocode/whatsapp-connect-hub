@@ -586,6 +586,250 @@ serve(async (req) => {
         });
       }
 
+      case 'get_business_profile': {
+        const { data: settings } = await supabaseServiceRole
+          .from('whatsapp_settings')
+          .select('phone_number_id, access_token:access_token_encrypted')
+          .eq('user_id', user.id)
+          .single();
+
+        if (!settings?.phone_number_id || !settings?.access_token) {
+          return new Response(JSON.stringify({ error: 'WhatsApp not configured' }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        const response = await fetch(
+          `https://graph.facebook.com/v21.0/${settings.phone_number_id}/whatsapp_business_profile?fields=about,address,description,email,websites,profile_picture_url,vertical`,
+          {
+            headers: {
+              'Authorization': `Bearer ${settings.access_token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+
+        const data = await response.json();
+
+        if (data.error) {
+          console.error('Meta API Error:', data.error);
+          return new Response(JSON.stringify({ error: data.error.message }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        return new Response(JSON.stringify(data.data?.[0] || {}), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      case 'update_business_profile': {
+        const { about, address, description, email, websites, vertical } = params;
+
+        const { data: settings } = await supabaseServiceRole
+          .from('whatsapp_settings')
+          .select('phone_number_id, access_token:access_token_encrypted')
+          .eq('user_id', user.id)
+          .single();
+
+        if (!settings?.phone_number_id || !settings?.access_token) {
+          return new Response(JSON.stringify({ error: 'WhatsApp not configured' }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        const payload: any = {
+          messaging_product: 'whatsapp',
+          about,
+          address,
+          description,
+          email,
+          websites,
+          vertical
+        };
+
+        // Filter out undefined/empty values to avoid overwriting with null
+        Object.keys(payload).forEach(key => payload[key] === undefined && delete payload[key]);
+
+        const response = await fetch(
+          `https://graph.facebook.com/v21.0/${settings.phone_number_id}/whatsapp_business_profile`,
+          {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${settings.access_token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload)
+          }
+        );
+
+        const data = await response.json();
+
+        if (data.error) {
+          console.error('Meta API Error:', data.error);
+          return new Response(JSON.stringify({ error: data.error.message }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        return new Response(JSON.stringify({ success: true }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      case 'update_profile_photo': {
+        const formData = await req.formData();
+        const file = formData.get('file');
+
+        if (!file || !(file instanceof File)) {
+          return new Response(JSON.stringify({ error: 'No file uploaded' }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        const { data: settings } = await supabaseServiceRole
+          .from('whatsapp_settings')
+          .select('phone_number_id, access_token:access_token_encrypted, business_account_id')
+          .eq('user_id', user.id)
+          .single();
+
+        if (!settings?.phone_number_id || !settings?.access_token) {
+          return new Response(JSON.stringify({ error: 'WhatsApp not configured' }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        const appId = Deno.env.get('META_APP_ID');
+        // Note: Resumable upload uses App ID in URL: graph.facebook.com/{app_id}/uploads
+        // If we don't have App ID in env, we might fail. 
+        // Fallback: Use standard upload if allowed? No, Cloud API forces Resumable for Profile Pic usually.
+        // Actually, endpoint is: POST https://graph.facebook.com/v21.0/app/uploads
+
+        // 1. Start Upload Session
+        const startSessionUrl = new URL(`https://graph.facebook.com/v21.0/${appId || 'app'}/uploads`);
+        startSessionUrl.searchParams.append('file_length', String(file.size));
+        startSessionUrl.searchParams.append('file_type', file.type);
+
+        const sessionRes = await fetch(startSessionUrl, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${settings.access_token}`
+          }
+        });
+
+        const sessionData = await sessionRes.json();
+
+        if (!sessionRes.ok) {
+          console.error("Upload Session Error:", sessionData);
+          return new Response(JSON.stringify({ error: sessionData.error?.message || 'Failed to start upload session' }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        const uploadSessionId = sessionData.id;
+
+        // 2. Upload File Content
+        const fileContent = await file.arrayBuffer();
+
+        const uploadRes = await fetch(`https://graph.facebook.com/v21.0/${uploadSessionId}`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${settings.access_token}`,
+            'file_offset': '0'
+          },
+          body: fileContent
+        });
+
+        const uploadData = await uploadRes.json();
+
+        if (!uploadRes.ok) {
+          console.error("File Upload Error:", uploadData);
+          return new Response(JSON.stringify({ error: uploadData.error?.message || 'Failed to upload file content' }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        const fileHandle = uploadData.h;
+
+        // 3. Update Business Profile with Handle
+        const profileRes = await fetch(
+          `https://graph.facebook.com/v21.0/${settings.phone_number_id}/whatsapp_business_profile`,
+          {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${settings.access_token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              messaging_product: 'whatsapp',
+              profile_picture_handle: fileHandle
+            })
+          }
+        );
+
+        const profileData = await profileRes.json();
+
+        if (profileData.error) {
+          console.error("Profile Picture Update Error:", profileData);
+          return new Response(JSON.stringify({ error: profileData.error.message }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        return new Response(JSON.stringify({ success: true }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      case 'get_status': {
+        // Get settings
+        const { data: settings } = await supabaseServiceRole
+          .from('whatsapp_settings')
+          .select('phone_number_id, access_token:access_token_encrypted')
+          .eq('user_id', user.id)
+          .single();
+
+        if (!settings?.phone_number_id || !settings?.access_token) {
+          return new Response(JSON.stringify({ error: 'Not configured' }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        const response = await fetch(
+          `https://graph.facebook.com/v21.0/${settings.phone_number_id}?fields=quality_rating,status,messaging_limit_tier`,
+          {
+            headers: {
+              'Authorization': `Bearer ${settings.access_token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+
+        const data = await response.json();
+
+        if (data.error) {
+          console.error('WhatsApp API Error:', data.error);
+          return new Response(JSON.stringify({ error: data.error.message }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        return new Response(JSON.stringify(data), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
       default:
         return new Response(JSON.stringify({ error: 'Unknown action' }), {
           status: 400,

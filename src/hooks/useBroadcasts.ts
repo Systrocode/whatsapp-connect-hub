@@ -49,7 +49,7 @@ export const useBroadcasts = () => {
     queryKey: ['broadcasts', user?.id],
     queryFn: async () => {
       if (!user?.id) return [];
-      
+
       const { data, error } = await supabase
         .from('broadcast_campaigns')
         .select(`
@@ -58,8 +58,11 @@ export const useBroadcasts = () => {
         `)
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
-      
-      if (error) throw error;
+
+      if (error) {
+        console.error('Error fetching broadcasts:', error);
+        return [];
+      }
       return data as BroadcastCampaign[];
     },
     enabled: !!user?.id,
@@ -75,7 +78,7 @@ export const useBroadcasts = () => {
       scheduled_at?: string;
     }) => {
       if (!user?.id) throw new Error('Not authenticated');
-      
+
       const { data, error } = await supabase
         .from('broadcast_campaigns')
         .insert({
@@ -89,7 +92,7 @@ export const useBroadcasts = () => {
         })
         .select()
         .single();
-      
+
       if (error) throw error;
       return data as BroadcastCampaign;
     },
@@ -111,7 +114,7 @@ export const useBroadcasts = () => {
         .eq('id', id)
         .select()
         .single();
-      
+
       if (error) throw error;
       return data as BroadcastCampaign;
     },
@@ -132,13 +135,13 @@ export const useBroadcasts = () => {
         contact_id: contactId,
         status: 'pending' as const,
       }));
-      
+
       const { error } = await supabase
         .from('broadcast_recipients')
         .insert(recipients);
-      
+
       if (error) throw error;
-      
+
       // Update total recipients count
       await supabase
         .from('broadcast_campaigns')
@@ -163,7 +166,7 @@ export const useBroadcasts = () => {
         contact:contacts(id, name, phone_number)
       `)
       .eq('campaign_id', campaignId);
-    
+
     if (error) throw error;
     return data as BroadcastRecipient[];
   };
@@ -175,7 +178,7 @@ export const useBroadcasts = () => {
         .from('broadcast_campaigns')
         .delete()
         .eq('id', id);
-      
+
       if (error) throw error;
     },
     onSuccess: () => {

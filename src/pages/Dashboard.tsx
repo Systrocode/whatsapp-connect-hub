@@ -9,6 +9,7 @@ import { useSubscription } from '@/hooks/useSubscription';
 import { useUserRole } from '@/hooks/useUserRole';
 import { Badge } from '@/components/ui/badge';
 import { useDashboardStats } from '@/hooks/useDashboardStats';
+import { StatusWidget } from '@/components/dashboard/StatusWidget';
 
 const icons = {
   chat: 'https://img.icons8.com/fluency/48/chat.png',
@@ -124,6 +125,8 @@ const Dashboard = () => {
           <h1 className="text-2xl font-bold text-foreground mb-1">Dashboard</h1>
           <p className="text-muted-foreground">Welcome back! Here's what's happening today.</p>
         </motion.div>
+
+        <StatusWidget />
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

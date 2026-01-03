@@ -23,6 +23,8 @@ const icons = {
   help: 'https://img.icons8.com/fluency/48/help.png',
   logout: 'https://img.icons8.com/fluency/48/exit.png',
   whatsapp: 'https://img.icons8.com/fluency/48/whatsapp.png',
+  ads: 'https://img.icons8.com/fluency/48/commercial.png',
+  flow: 'https://img.icons8.com/fluency/48/flow-chart.png',
 };
 
 const navItems = [
@@ -30,7 +32,10 @@ const navItems = [
   { icon: icons.conversations, label: 'Conversations', path: '/dashboard/conversations' },
   { icon: icons.contacts, label: 'Contacts', path: '/dashboard/contacts' },
   { icon: icons.broadcasts, label: 'Broadcasts', path: '/dashboard/broadcasts' },
+  { icon: icons.templates, label: 'Templates', path: '/dashboard/templates' },
   { icon: icons.campaigns, label: 'Campaigns', path: '/dashboard/campaigns' },
+  { icon: icons.ads, label: 'Ads Manager', path: '/dashboard/ads' },
+  { icon: icons.flow, label: 'Flow Builder', path: '/dashboard/flows' },
   { icon: icons.analytics, label: 'Analytics', path: '/dashboard/analytics' },
   { icon: icons.tools, label: 'Tools', path: '/dashboard/tools' },
   { icon: icons.integrations, label: 'Integrations', path: '/dashboard/integrations' },

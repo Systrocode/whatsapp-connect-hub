@@ -35,8 +35,11 @@ export const useContacts = () => {
         .from('contacts')
         .select('*')
         .order('created_at', { ascending: false });
-      
-      if (error) throw error;
+
+      if (error) {
+        console.error('Error fetching contacts:', error);
+        return [];
+      }
       return data as Contact[];
     },
     enabled: !!user,
@@ -45,7 +48,7 @@ export const useContacts = () => {
   const createContact = useMutation({
     mutationFn: async (contactData: CreateContactData) => {
       if (!user) throw new Error('User not authenticated');
-      
+
       const { data, error } = await supabase
         .from('contacts')
         .insert({
@@ -54,7 +57,7 @@ export const useContacts = () => {
         })
         .select()
         .single();
-      
+
       if (error) throw error;
       return data as Contact;
     },
@@ -75,7 +78,7 @@ export const useContacts = () => {
         .eq('id', id)
         .select()
         .single();
-      
+
       if (error) throw error;
       return data as Contact;
     },
@@ -94,7 +97,7 @@ export const useContacts = () => {
         .from('contacts')
         .delete()
         .eq('id', id);
-      
+
       if (error) throw error;
     },
     onSuccess: () => {
