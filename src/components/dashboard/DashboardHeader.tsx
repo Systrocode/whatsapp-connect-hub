@@ -11,10 +11,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useDashboardStats } from '@/hooks/useDashboardStats';
+import { useConversations } from '@/hooks/useConversations';
 
 const DashboardHeader = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+
+  const { data: stats } = useDashboardStats();
+  const { conversations } = useConversations();
+
+  const unreadCount = stats?.unreadMessages || 0;
+  // Filter conversations that have unread messages
+  const notifications = conversations.filter(c => (c.unread_count || 0) > 0).slice(0, 5);
 
   const handleSignOut = async () => {
     await signOut();
@@ -38,10 +47,61 @@ const DashboardHeader = () => {
       {/* Right side */}
       <div className="flex items-center gap-4">
         {/* Notifications */}
-        <button className="relative p-2 rounded-lg hover:bg-accent transition-colors">
-          <Bell className="w-5 h-5 text-muted-foreground" />
-          <span className="absolute top-1 right-1 w-2 h-2 bg-whatsapp rounded-full" />
-        </button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="relative p-2 rounded-lg hover:bg-accent transition-colors outline-none">
+              <Bell className="w-5 h-5 text-muted-foreground" />
+              {unreadCount > 0 && (
+                <span className="absolute top-1 right-1 w-2 h-2 bg-whatsapp rounded-full animate-pulse" />
+              )}
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-80 p-0">
+            <div className="p-4 border-b border-border">
+              <h4 className="font-semibold text-sm">Notifications</h4>
+            </div>
+            <div className="max-h-[300px] overflow-y-auto">
+              {notifications.length === 0 ? (
+                <div className="p-8 text-center text-muted-foreground text-sm">
+                  <p>No new notifications</p>
+                </div>
+              ) : (
+                notifications.map((conv) => (
+                  <DropdownMenuItem
+                    key={conv.id}
+                    className="p-4 border-b border-border last:border-0 cursor-pointer focus:bg-accent"
+                    onClick={() => navigate(`/dashboard/conversations/${conv.id}`)}
+                  >
+                    <div className="flex items-start gap-3 w-full">
+                      <div className="w-2 h-2 mt-2 rounded-full bg-whatsapp flex-shrink-0" />
+                      <div className="flex-1 overflow-hidden">
+                        <p className="text-sm font-medium truncate">
+                          {conv.contacts?.name || conv.contacts?.phone_number || 'Unknown'}
+                        </p>
+                        <p className="text-xs text-muted-foreground truncate">
+                          {conv.unread_count} new message{conv.unread_count > 1 ? 's' : ''}
+                        </p>
+                      </div>
+                      <span className="text-[10px] text-muted-foreground whitespace-nowrap">
+                        {new Date(conv.last_message_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                    </div>
+                  </DropdownMenuItem>
+                ))
+              )}
+            </div>
+            {notifications.length > 0 && (
+              <div className="p-2 border-t border-border">
+                <button
+                  className="w-full text-center text-xs text-primary hover:underline py-1"
+                  onClick={() => navigate('/dashboard/conversations')}
+                >
+                  View all
+                </button>
+              </div>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
 
         <ModeToggle />
 

@@ -27,10 +27,17 @@ const Conversations = () => {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [showLeads, setShowLeads] = useState(true);
 
+  // Debug log to check incoming data
+  console.log('Conversations:', conversations);
+
   const filteredConversations = conversations.filter((conv) => {
+    const contactName = conv.contacts?.name?.toLowerCase() || '';
+    const contactPhone = conv.contacts?.phone_number || '';
+
     const matchesSearch =
-      conv.contacts?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      conv.contacts?.phone_number.includes(searchQuery);
+      contactName.includes(searchQuery.toLowerCase()) ||
+      contactPhone.includes(searchQuery);
+
     const matchesStatus = statusFilter === 'all' || conv.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
@@ -208,13 +215,12 @@ const ConversationItem = ({ conversation, index, onClick }: ConversationItemProp
                 </span>
               )}
               <span
-                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs ${
-                  conversation.status === 'active'
+                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs ${conversation.status === 'active'
                     ? 'bg-green-500/10 text-green-600'
                     : conversation.status === 'waiting'
-                    ? 'bg-yellow-500/10 text-yellow-600'
-                    : 'bg-blue-500/10 text-blue-600'
-                }`}
+                      ? 'bg-yellow-500/10 text-yellow-600'
+                      : 'bg-blue-500/10 text-blue-600'
+                  }`}
               >
                 <StatusIcon className="w-3 h-3" />
                 {status.label}

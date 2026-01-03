@@ -1,0 +1,5 @@
+
+-- TEMPORARY: Disable RLS for debugging
+ALTER TABLE public.messages DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.conversations DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.contacts DISABLE ROW LEVEL SECURITY;

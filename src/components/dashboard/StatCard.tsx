@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion';
-import { LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface StatCardProps {
@@ -7,11 +6,11 @@ interface StatCardProps {
   value: string;
   change: string;
   changeType: 'positive' | 'negative' | 'neutral';
-  icon: LucideIcon;
+  icon: string;
   delay?: number;
 }
 
-const StatCard = ({ title, value, change, changeType, icon: Icon, delay = 0 }: StatCardProps) => {
+const StatCard = ({ title, value, change, changeType, icon, delay = 0 }: StatCardProps) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -20,11 +19,11 @@ const StatCard = ({ title, value, change, changeType, icon: Icon, delay = 0 }: S
       className="bg-card rounded-xl p-6 border border-border shadow-sm hover:shadow-md transition-shadow"
     >
       <div className="flex items-start justify-between mb-4">
-        <div className="p-2 rounded-lg bg-whatsapp-light">
-          <Icon className="w-5 h-5 text-whatsapp" />
+        <div className="p-2 rounded-lg bg-sidebar-accent/50">
+          <img src={icon} alt={title} className="w-6 h-6 object-contain" />
         </div>
         <span className={cn(
-          "text-sm font-medium px-2 py-1 rounded-full",
+          "text-xs font-medium px-2 py-1 rounded-full",
           changeType === 'positive' && "bg-whatsapp-light text-whatsapp-dark",
           changeType === 'negative' && "bg-destructive/10 text-destructive",
           changeType === 'neutral' && "bg-muted text-muted-foreground"

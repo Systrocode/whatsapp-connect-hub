@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Send, Phone, MoreVertical, CheckCircle2, Clock, User } from 'lucide-react';
+import { ArrowLeft, Send, Phone, MoreVertical, CheckCircle2, Clock, User, Paperclip, Loader2, Image as ImageIcon, FileText, Music, Video } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,16 +18,98 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
+import { WhatsAppMedia } from '@/components/dashboard/WhatsAppMedia';
+
 const ConversationDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { messages, isLoading: messagesLoading, sendMessage } = useMessages(id);
-  const { conversations, updateConversation } = useConversations();
+  const { messages, isLoading: messagesLoading, error, sendMessage } = useMessages(id);
+  const { conversations, updateConversation, markAsRead } = useConversations();
   const [newMessage, setNewMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validation
+    let isValid = true;
+    let type: 'image' | 'audio' | 'video' | 'document' = 'document';
+
+    if (file.type.startsWith('image/')) {
+      type = 'image';
+      if (file.size > 5 * 1024 * 1024) { toast.error('Image max size is 5MB'); isValid = false; }
+      else if (!['image/jpeg', 'image/png'].includes(file.type)) { toast.error('Only JPEG and PNG images supported'); isValid = false; }
+    } else if (file.type.startsWith('audio/')) {
+      type = 'audio';
+      if (file.size > 16 * 1024 * 1024) { toast.error('Audio max size is 16MB'); isValid = false; }
+      // WhatsApp supports specific audio types, allowing common ones
+    } else if (file.type.startsWith('video/')) {
+      type = 'video';
+      if (file.size > 16 * 1024 * 1024) { toast.error('Video max size is 16MB'); isValid = false; }
+      else if (!['video/mp4', 'video/3gpp'].includes(file.type)) { toast.error('Only MP4 and 3GPP videos supported'); isValid = false; }
+    } else {
+      type = 'document';
+      if (file.size > 100 * 1024 * 1024) { toast.error('Document max size is 100MB'); isValid = false; }
+    }
+
+    if (!isValid) {
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${crypto.randomUUID()}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('chat-media')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('chat-media')
+        .getPublicUrl(filePath);
+
+      await sendMessage.mutateAsync({
+        content: newMessage || file.name, // Use message input as caption/content or filename
+        messageType: type,
+        mediaUrl: publicUrl,
+        filename: file.name
+      });
+
+      setNewMessage('');
+      toast.success('Media sent successfully');
+    } catch (err: any) {
+      console.error('Upload error:', err);
+      toast.error('Failed to upload media: ' + err.message);
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
+  const triggerFileInput = (acceptType: string) => {
+    if (fileInputRef.current) {
+      fileInputRef.current.accept = acceptType;
+      fileInputRef.current.click();
+    }
+  };
 
   const conversation = conversations.find((c) => c.id === id);
   const contact = conversation?.contacts;
+
+  // Mark messages as read when viewing conversation
+  useEffect(() => {
+    if (id && conversation?.unread_count && conversation.unread_count > 0) {
+      markAsRead.mutate(id);
+    }
+  }, [id, conversation?.unread_count, markAsRead]);
 
   // Scroll to bottom when messages change
   useEffect(() => {
@@ -144,24 +228,53 @@ const ConversationDetail = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.02 }}
-                className={`flex ${
-                  message.direction === 'outbound' ? 'justify-end' : 'justify-start'
-                }`}
+                className={`flex ${message.direction === 'outbound' ? 'justify-end' : 'justify-start'
+                  }`}
               >
                 <div
-                  className={`max-w-[70%] rounded-2xl px-4 py-2 ${
-                    message.direction === 'outbound'
-                      ? 'bg-primary text-primary-foreground rounded-br-md'
-                      : 'bg-muted text-foreground rounded-bl-md'
-                  }`}
-                >
-                  <p className="text-sm">{message.content}</p>
-                  <p
-                    className={`text-xs mt-1 ${
-                      message.direction === 'outbound'
-                        ? 'text-primary-foreground/70'
-                        : 'text-muted-foreground'
+                  className={`max-w-[70%] rounded-2xl px-4 py-2 ${message.direction === 'outbound'
+                    ? 'bg-primary text-primary-foreground rounded-br-md'
+                    : 'bg-muted text-foreground rounded-bl-md'
                     }`}
+                >
+                  {['image', 'video', 'audio', 'document'].includes(message.message_type || '') ? (() => {
+                    try {
+                      const parsed = JSON.parse(message.content);
+
+                      // Handle Image
+                      if (parsed.image) {
+                        const mediaId = parsed.image.id;
+                        const mediaUrl = parsed.image.link;
+                        const caption = parsed.caption;
+                        if (mediaId || mediaUrl) {
+                          return <WhatsAppMedia mediaId={mediaId} mediaUrl={mediaUrl} caption={caption} />;
+                        }
+                      }
+
+                      // Handle other media types gracefully
+                      if (parsed.video) return <div className="flex items-center gap-2 p-2 bg-background/20 rounded">🎥 Video</div>;
+                      if (parsed.audio) return <div className="flex items-center gap-2 p-2 bg-background/20 rounded">🎵 Audio</div>;
+                      if (parsed.document) return <div className="flex items-center gap-2 p-2 bg-background/20 rounded">📄 Document: {parsed.filename || 'File'}</div>;
+
+                    } catch (e) {
+                      // Legacy message or text
+                    }
+
+                    // Fallback
+                    return (
+                      <div className="flex items-center gap-2 text-sm italic text-muted-foreground/80">
+                        <span>📷</span>
+                        <span>{message.content}</span>
+                      </div>
+                    );
+                  })() : (
+                    <p className="text-sm">{message.content}</p>
+                  )}
+                  <p
+                    className={`text-xs mt-1 ${message.direction === 'outbound'
+                      ? 'text-primary-foreground/70'
+                      : 'text-muted-foreground'
+                      }`}
                   >
                     {format(new Date(message.created_at), 'HH:mm')}
                   </p>
@@ -179,6 +292,40 @@ const ConversationDetail = () => {
           onSubmit={handleSendMessage}
           className="flex gap-2 pt-4 border-t border-border"
         >
+          <input
+            type="file"
+            ref={fileInputRef}
+            className="hidden"
+            onChange={handleFileSelect}
+          // accept is set dynamically
+          />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                disabled={isUploading || sendMessage.isPending}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                {isUploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Paperclip className="w-5 h-5" />}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56 mb-2">
+              <DropdownMenuItem onClick={() => triggerFileInput('image/jpeg,image/png,video/mp4,video/3gpp')} className="cursor-pointer gap-2 py-3">
+                <ImageIcon className="w-5 h-5 text-purple-500" />
+                <span className="text-base">Photos & Videos</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => triggerFileInput('application/*,text/*')} className="cursor-pointer gap-2 py-3">
+                <FileText className="w-5 h-5 text-indigo-500" />
+                <span className="text-base">Document</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => triggerFileInput('audio/*')} className="cursor-pointer gap-2 py-3">
+                <Music className="w-5 h-5 text-orange-500" />
+                <span className="text-base">Audio</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Input
             placeholder="Type a message..."
             value={newMessage}

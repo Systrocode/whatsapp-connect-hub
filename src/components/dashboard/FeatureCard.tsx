@@ -1,16 +1,16 @@
 import { motion } from 'framer-motion';
-import { LucideIcon, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface FeatureCardProps {
     title: string;
     description: string;
-    icon: LucideIcon;
+    icon: string;
     path: string;
     delay?: number;
 }
 
-const FeatureCard = ({ title, description, icon: Icon, path, delay = 0 }: FeatureCardProps) => {
+const FeatureCard = ({ title, description, icon, path, delay = 0 }: FeatureCardProps) => {
     const navigate = useNavigate();
 
     return (
@@ -23,7 +23,7 @@ const FeatureCard = ({ title, description, icon: Icon, path, delay = 0 }: Featur
         >
             <div className="flex items-start justify-between mb-4">
                 <div className="p-3 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                    <Icon className="w-6 h-6 text-primary" />
+                    <img src={icon} alt={title} className="w-8 h-8 object-contain" />
                 </div>
                 <div className="p-2 rounded-full bg-transparent group-hover:bg-accent transition-colors">
                     <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />

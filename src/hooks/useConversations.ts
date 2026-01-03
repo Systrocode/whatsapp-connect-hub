@@ -36,7 +36,7 @@ export const useConversations = () => {
           contacts (*)
         `)
         .order('last_message_at', { ascending: false });
-      
+
       if (error) throw error;
       return data as ConversationWithContact[];
     },
@@ -70,16 +70,16 @@ export const useConversations = () => {
   const createConversation = useMutation({
     mutationFn: async (contactId: string) => {
       if (!user) throw new Error('User not authenticated');
-      
+
       // Check if conversation already exists
       const { data: existing } = await supabase
         .from('conversations')
         .select('*')
         .eq('contact_id', contactId)
         .single();
-      
+
       if (existing) return existing;
-      
+
       const { data, error } = await supabase
         .from('conversations')
         .insert({
@@ -88,7 +88,7 @@ export const useConversations = () => {
         })
         .select()
         .single();
-      
+
       if (error) throw error;
       return data;
     },
@@ -108,7 +108,7 @@ export const useConversations = () => {
         .eq('id', id)
         .select()
         .single();
-      
+
       if (error) throw error;
       return data;
     },
@@ -120,11 +120,32 @@ export const useConversations = () => {
     },
   });
 
+  const markAsRead = useMutation({
+    mutationFn: async (id: string) => {
+      const { data, error } = await supabase
+        .from('conversations')
+        .update({ unread_count: 0 })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['conversations'] });
+    },
+    onError: (error: Error) => {
+      console.error('Error marking as read:', error);
+    },
+  });
+
   return {
     conversations: conversationsQuery.data ?? [],
     isLoading: conversationsQuery.isLoading,
     error: conversationsQuery.error,
     createConversation,
     updateConversation,
+    markAsRead,
   };
 };

@@ -34,7 +34,7 @@ serve(async (req) => {
       console.log("Webhook Verified Successfully!");
       return new Response(challenge, { status: 200 });
     }
-    
+
     console.log("Webhook verification failed - token mismatch");
     return new Response("Forbidden", { status: 403 });
   }
@@ -57,7 +57,7 @@ serve(async (req) => {
       if (statuses && statuses.length > 0) {
         for (const statusUpdate of statuses) {
           console.log("Processing status update:", statusUpdate);
-          
+
           const { error } = await supabaseServiceRole
             .from('messages')
             .update({ status: statusUpdate.status })
@@ -75,11 +75,11 @@ serve(async (req) => {
       // --- 2. Handle New Incoming Messages ---
       const messages = value?.messages;
       const contacts = value?.contacts;
-      
+
       if (messages && messages.length > 0) {
         for (const message of messages) {
           console.log("Processing incoming message:", message);
-          
+
           const senderPhone = message.from;
           const contactInfo = contacts?.find((c: any) => c.wa_id === senderPhone);
           const contactName = contactInfo?.profile?.name || senderPhone;
@@ -87,58 +87,69 @@ serve(async (req) => {
           // Get message content based on type
           let content = '';
           let messageType = 'text';
-          
+
           if (message.type === 'text') {
             content = message.text?.body || '';
             messageType = 'text';
           } else if (message.type === 'image') {
-            content = message.image?.caption || '[Image]';
+            // Store metadata in content field as JSON string
+            content = JSON.stringify({
+              caption: message.image?.caption || '',
+              image: message.image // contains id, mine_type, sha256
+            });
             messageType = 'image';
           } else if (message.type === 'document') {
-            content = message.document?.filename || '[Document]';
+            content = JSON.stringify({
+              filename: message.document?.filename || '',
+              document: message.document
+            });
             messageType = 'document';
           } else if (message.type === 'audio') {
-            content = '[Audio message]';
-            messageType = 'text';
+            content = JSON.stringify({ audio: message.audio });
+            messageType = 'text'; // or 'audio' if supported by DB enum, but sticking to text for safety or keeping it
           } else if (message.type === 'video') {
-            content = '[Video]';
+            content = JSON.stringify({ video: message.video });
             messageType = 'text';
           } else if (message.type === 'sticker') {
-            content = '[Sticker]';
+            content = JSON.stringify({ sticker: message.sticker });
             messageType = 'text';
           } else if (message.type === 'location') {
-            content = `[Location: ${message.location?.latitude}, ${message.location?.longitude}]`;
+            content = JSON.stringify({ location: message.location });
             messageType = 'text';
           } else if (message.type === 'contacts') {
-            content = '[Contact card]';
+            content = JSON.stringify({ contacts: message.contacts });
             messageType = 'text';
           } else if (message.type === 'button') {
             content = message.button?.text || '[Button response]';
             messageType = 'text';
           } else if (message.type === 'interactive') {
-            content = message.interactive?.button_reply?.title || 
-                     message.interactive?.list_reply?.title || 
-                     '[Interactive response]';
+            content = message.interactive?.button_reply?.title ||
+              message.interactive?.list_reply?.title ||
+              '[Interactive response]';
             messageType = 'text';
           }
 
           // 1. Find or create contact
-          let { data: existingContact } = await supabaseServiceRole
-            .from('contacts')
-            .select('id, user_id')
-            .eq('phone_number', senderPhone)
-            .single();
+          const phoneNumberId = value?.metadata?.phone_number_id;
 
-          let contactId: string;
-          let userId: string;
+          // Find the user who owns this WhatsApp number
+          let userId: string | null = null;
 
-          if (existingContact) {
-            contactId = existingContact.id;
-            userId = existingContact.user_id;
-            console.log("Found existing contact:", contactId);
-          } else {
-            // For new contacts, we need to assign them to a user
-            // Get the first admin user or the user with whatsapp settings configured
+          if (phoneNumberId) {
+            const { data: whatsappSettings } = await supabaseServiceRole
+              .from('whatsapp_settings')
+              .select('user_id')
+              .eq('phone_number_id', phoneNumberId)
+              .single();
+
+            if (whatsappSettings) {
+              userId = whatsappSettings.user_id;
+              console.log("Found user for phone_number_id:", phoneNumberId, "User ID:", userId);
+            }
+          }
+
+          if (!userId) {
+            console.log("No user found by phone_number_id, trying fallback...");
             const { data: whatsappSettings } = await supabaseServiceRole
               .from('whatsapp_settings')
               .select('user_id')
@@ -149,15 +160,31 @@ serve(async (req) => {
               console.error("No WhatsApp settings found - cannot assign contact");
               return new Response("NO_SETTINGS", { status: 200, headers: corsHeaders });
             }
-
             userId = whatsappSettings.user_id;
+          }
 
+          // Search for contact - checking with and without '+' prefix
+          // This handles cases where user saved contact as "+123..." but webhook sends "123..."
+          let { data: existingContacts } = await supabaseServiceRole
+            .from('contacts')
+            .select('id, user_id, phone_number')
+            .eq('user_id', userId)
+            .or(`phone_number.eq.${senderPhone},phone_number.eq.+${senderPhone}`);
+
+          let existingContact = existingContacts?.[0];
+
+          let contactId: string;
+
+          if (existingContact) {
+            contactId = existingContact.id;
+            console.log("Found existing contact:", contactId);
+          } else {
             // Create new contact
             const { data: newContact, error: contactError } = await supabaseServiceRole
               .from('contacts')
               .insert({
                 user_id: userId,
-                phone_number: senderPhone,
+                phone_number: senderPhone, // Save exactly as received from WhatsApp
                 name: contactName,
               })
               .select()
@@ -184,17 +211,17 @@ serve(async (req) => {
           if (existingConversation) {
             conversationId = existingConversation.id;
             console.log("Found existing conversation:", conversationId);
-            
+
             // Update conversation - increment unread count
             const { data: convData } = await supabaseServiceRole
               .from('conversations')
               .select('unread_count')
               .eq('id', conversationId)
               .single();
-            
+
             await supabaseServiceRole
               .from('conversations')
-              .update({ 
+              .update({
                 last_message_at: new Date().toISOString(),
                 unread_count: (convData?.unread_count || 0) + 1,
                 status: 'active'
@@ -232,7 +259,7 @@ serve(async (req) => {
               content: content,
               direction: 'inbound',
               message_type: messageType,
-              status: 'received'
+              status: 'delivered', // Using 'delivered' as 'received' is not in allowed DB status enum
             });
 
           if (msgError) {
@@ -241,7 +268,7 @@ serve(async (req) => {
             console.log("Message saved successfully for conversation:", conversationId);
           }
         }
-        
+
         return new Response("MESSAGE_PROCESSED", { status: 200, headers: corsHeaders });
       }
 
@@ -251,20 +278,20 @@ serve(async (req) => {
     // --- Dashboard API Actions (requires auth) ---
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), { 
-        status: 401, 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
     }
 
     // Get user from token
     const token = authHeader.replace('Bearer ', '');
     const { data: { user }, error: userError } = await supabaseServiceRole.auth.getUser(token);
-    
+
     if (userError || !user) {
-      return new Response(JSON.stringify({ error: 'Invalid token' }), { 
-        status: 401, 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      return new Response(JSON.stringify({ error: 'Invalid token' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
     }
 
@@ -272,10 +299,87 @@ serve(async (req) => {
 
     // Handle different dashboard actions
     switch (action) {
+      case 'get_media': {
+        const { media_id } = params;
+        if (!media_id) {
+          return new Response(JSON.stringify({ error: 'Missing media_id' }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        // Get user settings
+        const { data: settings } = await supabaseServiceRole
+          .from('whatsapp_settings')
+          .select('access_token:access_token_encrypted')
+          .eq('user_id', user.id)
+          .single();
+
+        if (!settings?.access_token) {
+          return new Response(JSON.stringify({ error: 'WhatsApp not connected' }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        // 1. Get Media URL
+        const mediaRes = await fetch(`https://graph.facebook.com/v18.0/${media_id}`, {
+          headers: { 'Authorization': `Bearer ${settings.access_token}` }
+        });
+        const mediaJson = await mediaRes.json();
+
+        if (!mediaRes.ok) {
+          console.error('Meta API Error:', mediaJson);
+          return new Response(JSON.stringify({ error: mediaJson.error?.message || 'Failed to get media info' }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        const downloadUrl = mediaJson.url;
+
+        // 2. Download Media with Manual Redirect handling
+        // CDNs often reject the Authorization header, so we must strip it on redirect
+        let fileRes = await fetch(downloadUrl, {
+          headers: { 'Authorization': `Bearer ${settings.access_token}` },
+          redirect: 'manual'
+        });
+
+        if (fileRes.status === 301 || fileRes.status === 302) {
+          const location = fileRes.headers.get('Location');
+          if (!location) {
+            return new Response(JSON.stringify({ error: 'Redirect location missing' }), {
+              status: 400,
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            });
+          }
+          // Follow redirect WITHOUT Authorization header
+          fileRes = await fetch(location);
+        }
+
+        if (!fileRes.ok) {
+          console.error('Media Download Error status:', fileRes.status);
+          return new Response(JSON.stringify({ error: 'Failed to download media file' }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        const blob = await fileRes.blob();
+
+        return new Response(blob, {
+          headers: {
+            ...corsHeaders,
+            'Content-Type': fileRes.headers.get('Content-Type') || 'application/octet-stream',
+            'Cache-Control': 'public, max-age=3600'
+          }
+        });
+      }
+
       case 'check_connection': {
         const { data: settings } = await supabaseServiceRole
           .from('whatsapp_settings')
-          .select('phone_number_id, access_token')
+          .select('phone_number_id, access_token:access_token_encrypted')
           .eq('user_id', user.id)
           .single();
 
@@ -290,12 +394,12 @@ serve(async (req) => {
 
       case 'save_access_token': {
         const { access_token } = params;
-        
+
         const { error } = await supabaseServiceRole
           .from('whatsapp_settings')
           .upsert({
             user_id: user.id,
-            access_token: access_token,
+            access_token_encrypted: access_token,
             updated_at: new Date().toISOString()
           }, { onConflict: 'user_id' });
 
@@ -312,12 +416,12 @@ serve(async (req) => {
       }
 
       case 'send_message': {
-        const { to, message, template_name, template_params } = params;
-        
+        const { to, message, template_name, template_params, type = 'text', media_url, caption, filename } = params;
+
         // Get user's WhatsApp settings
         const { data: settings } = await supabaseServiceRole
           .from('whatsapp_settings')
-          .select('phone_number_id, access_token')
+          .select('phone_number_id, access_token:access_token_encrypted')
           .eq('user_id', user.id)
           .single();
 
@@ -342,6 +446,18 @@ serve(async (req) => {
             language: { code: 'en' },
             components: template_params || []
           };
+        } else if (type === 'image') {
+          messagePayload.type = 'image';
+          messagePayload.image = { link: media_url, caption: caption || message };
+        } else if (type === 'audio') {
+          messagePayload.type = 'audio';
+          messagePayload.audio = { link: media_url };
+        } else if (type === 'video') {
+          messagePayload.type = 'video';
+          messagePayload.video = { link: media_url, caption: caption || message };
+        } else if (type === 'document') {
+          messagePayload.type = 'document';
+          messagePayload.document = { link: media_url, caption: caption || message, filename: filename || 'document' };
         } else {
           messagePayload.type = 'text';
           messagePayload.text = { body: message };
@@ -370,9 +486,101 @@ serve(async (req) => {
           });
         }
 
-        return new Response(JSON.stringify({ 
-          success: true, 
-          message_id: result.messages?.[0]?.id 
+        // --- Save to Database ---
+        try {
+          // 1. Find or create contact
+          let { data: existingContact } = await supabaseServiceRole
+            .from('contacts')
+            .select('id')
+            .eq('phone_number', to)
+            .eq('user_id', user.id) // Ensure we search within the current user's contacts
+            .single();
+
+          let contactId: string;
+
+          if (existingContact) {
+            contactId = existingContact.id;
+          } else {
+            // Create new contact
+            const { data: newContact, error: contactError } = await supabaseServiceRole
+              .from('contacts')
+              .insert({
+                user_id: user.id,
+                phone_number: to,
+                name: to, // Default name to phone number
+              })
+              .select()
+              .single();
+
+            if (contactError) throw contactError;
+            contactId = newContact.id;
+          }
+
+          // 2. Find or create conversation
+          let { data: existingConversation } = await supabaseServiceRole
+            .from('conversations')
+            .select('id')
+            .eq('contact_id', contactId)
+            .eq('user_id', user.id)
+            .single();
+
+          let conversationId: string;
+
+          if (existingConversation) {
+            conversationId = existingConversation.id;
+            // Update last_message_at
+            await supabaseServiceRole
+              .from('conversations')
+              .update({ last_message_at: new Date().toISOString() })
+              .eq('id', conversationId);
+          } else {
+            // Create new conversation
+            const { data: newConversation, error: convError } = await supabaseServiceRole
+              .from('conversations')
+              .insert({
+                user_id: user.id,
+                contact_id: contactId,
+                status: 'active',
+                last_message_at: new Date().toISOString()
+              })
+              .select()
+              .single();
+
+            if (convError) throw convError;
+            conversationId = newConversation.id;
+          }
+
+          // 3. Save the message
+          let dbContent = message || (template_name ? `Template: ${template_name}` : '');
+
+          if (['image', 'video', 'audio', 'document'].includes(type) && media_url) {
+            dbContent = JSON.stringify({
+              [type]: { link: media_url },
+              caption: caption || message,
+              filename: filename
+            });
+          }
+
+          await supabaseServiceRole
+            .from('messages')
+            .insert({
+              conversation_id: conversationId,
+              whatsapp_message_id: result.messages?.[0]?.id,
+              content: dbContent,
+              direction: 'outbound',
+              message_type: template_name ? 'template' : type,
+              status: 'sent'
+            });
+
+        } catch (dbError) {
+          console.error("Error saving sent message to DB:", dbError);
+          // We don't fail the request since the message was sent to WhatsApp,
+          // but we log the error.
+        }
+
+        return new Response(JSON.stringify({
+          success: true,
+          message_id: result.messages?.[0]?.id
         }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
         });

@@ -13,6 +13,7 @@ export interface Message {
   status: 'pending' | 'sent' | 'delivered' | 'read' | 'failed';
   whatsapp_message_id: string | null;
   created_at: string;
+  metadata?: any;
 }
 
 export const useMessages = (conversationId: string | undefined) => {
@@ -28,7 +29,7 @@ export const useMessages = (conversationId: string | undefined) => {
         .select('*')
         .eq('conversation_id', conversationId)
         .order('created_at', { ascending: true });
-      
+
       if (error) throw error;
       return data as Message[];
     },
@@ -61,37 +62,74 @@ export const useMessages = (conversationId: string | undefined) => {
   }, [conversationId, user, queryClient]);
 
   const sendMessage = useMutation({
-    mutationFn: async ({ content, messageType = 'text' }: { content: string; messageType?: Message['message_type'] }) => {
+    mutationFn: async ({
+      content,
+      messageType = 'text',
+      mediaUrl,
+      filename
+    }: {
+      content: string;
+      messageType?: Message['message_type'] | 'audio' | 'video';
+      mediaUrl?: string;
+      filename?: string;
+    }) => {
       if (!conversationId) throw new Error('No conversation selected');
-      
-      const { data, error } = await supabase
-        .from('messages')
-        .insert({
-          conversation_id: conversationId,
-          content,
-          direction: 'outbound',
-          message_type: messageType,
-          status: 'sent',
-        })
-        .select()
-        .single();
-      
-      if (error) throw error;
-      
-      // Update conversation last_message_at
-      await supabase
+
+      // 1. Get the contact's phone number from the conversation
+      const { data: conversation, error: convError } = await supabase
         .from('conversations')
-        .update({ last_message_at: new Date().toISOString() })
-        .eq('id', conversationId);
-      
-      return data as Message;
+        .select('contact:contacts(phone_number)')
+        .eq('id', conversationId)
+        .single();
+
+      if (convError || !conversation?.contact) {
+        throw new Error('Could not find contact information for this conversation');
+      }
+
+      // @ts-ignore - Supabase types might verify the shape, but we know it's an object/array structure
+      const phoneNumber = conversation.contact.phone_number || (Array.isArray(conversation.contact) ? conversation.contact[0]?.phone_number : null);
+
+      if (!phoneNumber) {
+        throw new Error('Contact has no phone number');
+      }
+
+      // 2. Call the Edge Function to send the message
+      const { data, error } = await supabase.functions.invoke('whatsapp-api', {
+        body: {
+          action: 'send_message',
+          to: phoneNumber,
+          message: content,
+          type: messageType,
+          media_url: mediaUrl,
+          filename: filename
+        },
+      });
+
+      if (error) {
+        console.error('Edge function error:', error);
+        // Try to parse the response body if possible, though supabase client abstracts it
+        throw error;
+      }
+
+      // Keep in mind calling supabase.functions.invoke might return data: null and error: object on 4xx/5xx
+      // But sometimes it returns data with { error: ... } inside.
+
+      if (data?.error) {
+        throw new Error(typeof data.error === 'string' ? data.error : JSON.stringify(data.error));
+      }
+
+      return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['messages', conversationId] });
-      queryClient.invalidateQueries({ queryKey: ['conversations'] });
+      // Invalidate queries to refresh the list
+      // We add a small delay to allow the Edge Function to complete the DB insert
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ['messages', conversationId] });
+        queryClient.invalidateQueries({ queryKey: ['conversations'] });
+      }, 1000);
     },
     onError: (error: Error) => {
-      toast.error(error.message);
+      toast.error(`Failed to send: ${error.message}`);
     },
   });
 

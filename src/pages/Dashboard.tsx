@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { MessageSquare, Users, Clock, CheckCircle2, Lock, Sparkles } from 'lucide-react';
+import { Lock, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import StatCard from '@/components/dashboard/StatCard';
@@ -8,65 +8,47 @@ import ConversationsList from '@/components/dashboard/ConversationsList';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useUserRole } from '@/hooks/useUserRole';
 import { Badge } from '@/components/ui/badge';
+import { useDashboardStats } from '@/hooks/useDashboardStats';
 
-const stats = [
-  {
-    title: 'Total Conversations',
-    value: '1,284',
-    change: '+12.5%',
-    changeType: 'positive' as const,
-    icon: MessageSquare,
-  },
-  {
-    title: 'Active Contacts',
-    value: '3,721',
-    change: '+8.2%',
-    changeType: 'positive' as const,
-    icon: Users,
-  },
-  {
-    title: 'Avg. Response Time',
-    value: '2.4m',
-    change: '-18.3%',
-    changeType: 'positive' as const,
-    icon: Clock,
-  },
-  {
-    title: 'Resolution Rate',
-    value: '94.2%',
-    change: '+2.1%',
-    changeType: 'positive' as const,
-    icon: CheckCircle2,
-  },
-];
+const icons = {
+  chat: 'https://img.icons8.com/fluency/48/chat.png',
+  group: 'https://img.icons8.com/fluency/48/group.png',
+  bell: 'https://img.icons8.com/fluency/48/appointment-reminders.png', // bell is often named appointment-reminders or bell
+  comments: 'https://img.icons8.com/fluency/48/comments.png',
+  megaphone: 'https://img.icons8.com/fluency/48/megaphone.png',
+  clock: 'https://img.icons8.com/fluency/48/clock.png',
+  template: 'https://img.icons8.com/fluency/48/template.png',
+  export: 'https://img.icons8.com/fluency/48/export.png',
+  link: 'https://img.icons8.com/fluency/48/link.png',
+  whatsapp: 'https://img.icons8.com/fluency/48/whatsapp.png',
+};
 
-// Define which features require which plan tier
 const quickActions = [
   {
     label: 'Send broadcast message',
     description: 'Reach all contacts at once',
-    icon: MessageSquare,
-    requiredPlan: 'starter', // Free users can't access
+    icon: icons.megaphone,
+    requiredPlan: 'starter',
     path: '/dashboard/broadcasts',
   },
   {
     label: 'Create auto-response',
     description: 'Set up automated replies',
-    icon: Clock,
+    icon: icons.clock,
     requiredPlan: 'starter',
     path: '/dashboard/settings',
   },
   {
     label: 'Add new template',
     description: 'Create message templates',
-    icon: CheckCircle2,
-    requiredPlan: null, // Available to all
+    icon: icons.template,
+    requiredPlan: null,
     path: '/dashboard/settings',
   },
   {
     label: 'Export conversations',
     description: 'Download chat history',
-    icon: Users,
+    icon: icons.export,
     requiredPlan: 'starter',
     path: '/dashboard/conversations',
   },
@@ -76,11 +58,42 @@ const Dashboard = () => {
   const { subscription } = useSubscription();
   const { isAdmin } = useUserRole();
   const navigate = useNavigate();
+  const { data: statsData, isLoading: statsLoading } = useDashboardStats();
 
-  // Check if user has access to a feature based on their plan
+  const stats = [
+    {
+      title: 'Total Conversations',
+      value: statsLoading ? '...' : statsData?.totalConversations.toLocaleString() || '0',
+      change: 'Active',
+      changeType: 'neutral' as const,
+      icon: icons.chat,
+    },
+    {
+      title: 'Active Contacts',
+      value: statsLoading ? '...' : statsData?.totalContacts.toLocaleString() || '0',
+      change: 'Saved',
+      changeType: 'neutral' as const,
+      icon: icons.group,
+    },
+    {
+      title: 'Unread Messages',
+      value: statsLoading ? '...' : statsData?.unreadMessages.toLocaleString() || '0',
+      change: 'Needs attention',
+      changeType: 'negative' as const,
+      icon: icons.bell,
+    },
+    {
+      title: 'Total Messages',
+      value: statsLoading ? '...' : statsData?.totalMessages.toLocaleString() || '0',
+      change: 'Lifetime',
+      changeType: 'neutral' as const,
+      icon: icons.comments,
+    },
+  ];
+
   const hasAccess = (requiredPlan: string | null): boolean => {
     if (isAdmin) return true;
-    if (!requiredPlan) return true; // No plan required
+    if (!requiredPlan) return true;
 
     const plan = subscription?.plan?.name?.toLowerCase() || '';
     const planHierarchy = ['free', 'starter', 'professional', 'pro', 'enterprise'];
@@ -88,7 +101,6 @@ const Dashboard = () => {
     const userPlanIndex = planHierarchy.findIndex(p => plan.includes(p));
     const requiredIndex = planHierarchy.findIndex(p => p === requiredPlan);
 
-    // If user has no subscription or free plan, they're at index 0
     if (userPlanIndex === -1) return requiredIndex === -1 || requiredPlan === null;
 
     return userPlanIndex >= requiredIndex;
@@ -127,14 +139,14 @@ const Dashboard = () => {
             <FeatureCard
               title="Customize WhatsApp Link"
               description="Create shareable links & QR for your WA business number"
-              icon={MessageSquare}
+              icon={icons.link}
               path="/dashboard/whatsapp-link"
               delay={0.2}
             />
             <FeatureCard
               title="WhatsApp Website Button"
               description="Drive WhatsApp sales with personalised CTAs"
-              icon={CheckCircle2}
+              icon={icons.whatsapp}
               path="/dashboard/website-widget"
               delay={0.3}
             />
@@ -158,7 +170,6 @@ const Dashboard = () => {
             <h3 className="font-semibold text-foreground mb-4">Quick Actions</h3>
             <div className="space-y-3">
               {quickActions.map((action) => {
-                const Icon = action.icon;
                 const isLocked = !hasAccess(action.requiredPlan);
 
                 return (
@@ -180,7 +191,7 @@ const Dashboard = () => {
                         : 'bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground'
                       }
                     `}>
-                      <Icon className="h-4 w-4" />
+                      <img src={action.icon} alt={action.label} className="w-5 h-5 object-contain" />
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
