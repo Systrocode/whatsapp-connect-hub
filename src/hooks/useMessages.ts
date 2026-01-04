@@ -120,16 +120,53 @@ export const useMessages = (conversationId: string | undefined) => {
 
       return data;
     },
-    onSuccess: () => {
-      // Invalidate queries to refresh the list
-      // We add a small delay to allow the Edge Function to complete the DB insert
-      setTimeout(() => {
-        queryClient.invalidateQueries({ queryKey: ['messages', conversationId] });
-        queryClient.invalidateQueries({ queryKey: ['conversations'] });
-      }, 1000);
+    onMutate: async (newMsgParams) => {
+      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
+      await queryClient.cancelQueries({ queryKey: ['messages', conversationId] });
+
+      // Snapshot the previous value
+      const previousMessages = queryClient.getQueryData<Message[]>(['messages', conversationId]);
+
+      // Create optimistic message
+      const optimisticMessage: Message = {
+        id: `temp-${Date.now()}`,
+        conversation_id: conversationId!,
+        content: newMsgParams.content,
+        direction: 'outbound',
+        message_type: (newMsgParams.messageType as any) || 'text',
+        status: 'pending',
+        whatsapp_message_id: null,
+        created_at: new Date().toISOString(),
+      };
+
+      // Handle media content structure for optimistic render
+      if (['image', 'video', 'audio', 'document'].includes(newMsgParams.messageType || '')) {
+        optimisticMessage.content = JSON.stringify({
+          [newMsgParams.messageType || 'document']: { link: newMsgParams.mediaUrl },
+          caption: newMsgParams.content,
+          filename: newMsgParams.filename
+        });
+      }
+
+      // Optimistically update to the new value
+      queryClient.setQueryData<Message[]>(['messages', conversationId], (old) => {
+        return [...(old || []), optimisticMessage];
+      });
+
+      // Return a context object with the snapshotted value
+      return { previousMessages };
     },
-    onError: (error: Error) => {
-      toast.error(`Failed to send: ${error.message}`);
+    onError: (err, newMsg, context) => {
+      // If the mutation fails, use the context returned from onMutate to roll back
+      if (context?.previousMessages) {
+        queryClient.setQueryData(['messages', conversationId], context.previousMessages);
+      }
+      toast.error(`Failed to send: ${err.message}`);
+    },
+    onSettled: () => {
+      // Always refetch after error or success:
+      queryClient.invalidateQueries({ queryKey: ['messages', conversationId] });
+      queryClient.invalidateQueries({ queryKey: ['conversations'] });
     },
   });
 

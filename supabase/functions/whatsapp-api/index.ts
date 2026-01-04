@@ -9,7 +9,7 @@ const corsHeaders = {
 // Webhook verify token - should match what you set in Meta Dashboard
 const VERIFY_TOKEN = Deno.env.get('WHATSAPP_VERIFY_TOKEN') || "your_chosen_secret_verify_token";
 
-serve(async (req) => {
+serve(async (req: Request) => {
   const url = new URL(req.url);
 
   // 1. Handle CORS preflight
@@ -41,7 +41,17 @@ serve(async (req) => {
 
   // 3. Handle POST Requests (Webhooks from Meta & Dashboard actions)
   if (req.method === "POST") {
-    const payload = await req.json();
+    let payload: any = {};
+    const contentType = req.headers.get('content-type') || '';
+
+    if (contentType.includes('multipart/form-data')) {
+      const formData = await req.formData();
+      for (const [key, value] of formData.entries()) {
+        payload[key] = value;
+      }
+    } else {
+      payload = await req.json();
+    }
     console.log("Received webhook payload:", JSON.stringify(payload, null, 2));
 
     // Handle incoming WhatsApp webhooks from Meta
@@ -682,8 +692,7 @@ serve(async (req) => {
       }
 
       case 'update_profile_photo': {
-        const formData = await req.formData();
-        const file = formData.get('file');
+        const file = payload.file;
 
         if (!file || !(file instanceof File)) {
           return new Response(JSON.stringify({ error: 'No file uploaded' }), {

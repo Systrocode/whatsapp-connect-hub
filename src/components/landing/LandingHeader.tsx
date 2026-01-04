@@ -195,18 +195,24 @@ export function LandingHeader({ variant = 'default' }: { variant?: 'default' | '
                                             <NavigationMenuLink asChild>
                                                 <a
                                                     className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
-                                                    href="/"
+                                                    href="/tools/chat-button-generator"
                                                 >
-                                                    <BookIcon className="h-6 w-6 text-whatsapp" />
+                                                    <MessageSquare className="h-6 w-6 text-green-500" />
                                                     <div className="mb-2 mt-4 text-lg font-medium">
-                                                        Documentation
+                                                        Free WhatsApp Tools
                                                     </div>
                                                     <p className="text-sm leading-tight text-muted-foreground">
-                                                        Start integrating with our comprehensive guides.
+                                                        Generate WhatsApp buttons, links & QR codes for your site.
                                                     </p>
                                                 </a>
                                             </NavigationMenuLink>
                                         </li>
+                                        <ListItem title="Chat Button Generator" href="/tools/chat-button-generator">
+                                            Create a sticky chat widget.
+                                        </ListItem>
+                                        <ListItem title="Link Generator" href="/tools/whatsapp-link-generator">
+                                            Create WhatsApp links instantly.
+                                        </ListItem>
                                         <ListItem title="Blog" href="/blog">
                                             Latest updates and marketing tips.
                                         </ListItem>

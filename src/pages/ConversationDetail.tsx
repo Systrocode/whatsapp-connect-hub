@@ -120,7 +120,7 @@ const ConversationDetail = () => {
     e.preventDefault();
     if (!newMessage.trim()) return;
 
-    await sendMessage.mutateAsync({ content: newMessage.trim() });
+    sendMessage.mutate({ content: newMessage.trim() });
     setNewMessage('');
   };
 
