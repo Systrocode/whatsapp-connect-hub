@@ -1,11 +1,21 @@
 
 import { createClient } from '@supabase/supabase-js';
-import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs';
 
-// Load env vars
-dotenv.config({ path: path.resolve(process.cwd(), '.env') });
+// Load env vars manually
+const envPath = path.resolve(process.cwd(), '.env');
+if (fs.existsSync(envPath)) {
+    const envConfig = fs.readFileSync(envPath, 'utf-8');
+    envConfig.split('\n').forEach((line: string) => {
+        const match = line.match(/^([^=]+)=(.*)$/);
+        if (match) {
+            const key = match[1].trim();
+            const value = match[2].trim().replace(/^["']|["']$/g, ''); // Remove quotes if present
+            process.env[key] = value;
+        }
+    });
+}
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;

@@ -2,56 +2,40 @@
 
 A powerful dashboard for managing WhatsApp Business conversations, automating responses, and tracking analytics.
 
+## 📖 Documentation
+
+We have detailed documentation available in the `docs/` directory:
+
+- [**Architecture**](docs/ARCHITECTURE.md): High-level overview of the system design and tech stack.
+- [**Setup Guide**](docs/SETUP.md): Detailed instructions for local development and deployment.
+- [**Features**](docs/FEATURES.md): Breakdown of the application modules and code map.
+- [**API Reference**](docs/API.md): Documentation for the Supabase Edge Functions.
+
+## 🚀 Quick Start
+
+1. **Clone & Install**
+   ```bash
+   git clone <YOUR_REPO_URL>
+   cd whatsapp-connect-hub
+   npm install
+   ```
+
+2. **Configure Environment**
+   Copy `.env.example` to `.env` and fill in your Supabase credentials.
+   *(See [Setup Guide](docs/SETUP.md) for details)*
+
+3. **Run Locally**
+   ```bash
+   npm run dev
+   ```
+
 ## Tech Stack
 
 - **Framework**: [React](https://react.dev/) + [Vite](https://vitejs.dev/)
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 - **UI Components**: [shadcn/ui](https://ui.shadcn.com/)
-- **Icons**: [Lucide React](https://lucide.dev/)
-- **Database/Auth**: [Supabase](https://supabase.com/)
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js & npm installed
-
-### Installation
-
-1. Clone the repository:
-   ```bash
-   git clone <YOUR_REPO_URL>
-   ```
-
-2. Navigate to the project directory:
-   ```bash
-   cd whatsapp-connect-hub
-   ```
-
-3. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-4. Create a `.env` file in the root directory and add your Supabase credentials:
-   ```env
-   VITE_SUPABASE_URL=your_supabase_url
-   VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_key
-   ```
-
-5. Start the development server:
-   ```bash
-   npm run dev
-   ```
-
-## Features
-
-- **Smart Inbox**: Unified inbox for all WhatsApp conversations.
-- **Auto Responses**: Automated replies for common queries.
-- **Analytics**: Track message performance and engagement.
-- **Theme Support**: Light and Dark mode.
-- **Growth Tools**: WhatsApp link generator and website widget.
+- **Backend**: [Supabase](https://supabase.com/) (Auth, DB, Edge Functions)
 
 ## License
 

@@ -148,14 +148,12 @@ export function LandingFooter() {
 
                         {/* Trust Badges */}
                         <div className="flex flex-wrap justify-center lg:justify-end gap-6 opacity-70">
-                            <div className="flex items-center gap-2 bg-slate-900/30 px-3 py-1.5 rounded-lg border border-slate-800/50">
-                                <ShieldCheck className="w-4 h-4 text-green-500" />
-                                <span className="text-slate-400 font-medium text-xs">GDPR Compliant</span>
+                            <div title="GDPR Compliant">
+                                <img src="https://img.icons8.com/fluency/48/gdpr.png" alt="GDPR" className="w-12 h-12 hover:scale-110 transition-transform" />
                             </div>
 
-                            <div className="flex items-center gap-2 bg-slate-900/30 px-3 py-1.5 rounded-lg border border-slate-800/50">
-                                <Server className="w-4 h-4 text-purple-500" />
-                                <span className="text-slate-400 font-medium text-xs">SOC 2 Ready</span>
+                            <div title="SOC 2 Ready">
+                                <img src="https://img.icons8.com/fluency/48/cloud-storage.png" alt="SOC 2" className="w-12 h-12 hover:scale-110 transition-transform" />
                             </div>
                         </div>
                     </div>

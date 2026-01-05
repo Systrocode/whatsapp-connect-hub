@@ -302,16 +302,34 @@ const Index = () => {
                   </div>
 
                   {/* Chat Bubbles */}
-                  <div className="absolute top-24 right-4 md:right-12 bg-blue-50 dark:bg-blue-900/20 p-4 px-5 rounded-2xl rounded-tr-none shadow-sm border border-blue-100 max-w-[260px] text-left transform rotate-2 z-0">
+                  {/* Chat Bubbles */}
+                  <div className="absolute top-16 right-4 md:right-12 bg-blue-50 dark:bg-blue-900/20 p-4 px-5 rounded-2xl rounded-tr-none shadow-sm border border-blue-100 max-w-[260px] text-left transform rotate-2 z-0">
                     <p className="text-sm font-medium text-blue-800 dark:text-blue-300">How do I reset my password?</p>
                   </div>
 
-                  <div className="absolute top-44 left-4 md:left-12 bg-white dark:bg-card p-4 rounded-xl rounded-tl-none shadow-md border border-blue-100 max-w-[280px] text-left transform -rotate-1 z-10">
+                  <div className="absolute top-36 left-4 md:left-12 bg-white dark:bg-card p-4 rounded-xl rounded-tl-none shadow-md border border-blue-100 max-w-[280px] text-left transform -rotate-1 z-10">
                     <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">To reset your password, click <span className="font-semibold text-blue-500">'Forgot password'</span> on the login page.</p>
                   </div>
 
-                  <div className="absolute bottom-[-10px] right-8 bg-blue-50 dark:bg-blue-900/20 p-4 px-5 rounded-2xl rounded-tr-none shadow-sm border border-blue-100 max-w-[260px] text-left transform rotate-1 z-0">
-                    <p className="text-sm font-medium text-blue-800 dark:text-blue-300">Thanks! What's your return policy?</p>
+                  <div className="absolute top-64 right-8 bg-blue-50 dark:bg-blue-900/20 p-4 px-5 rounded-2xl rounded-tr-none shadow-sm border border-blue-100 max-w-[260px] text-left transform rotate-1 z-0">
+                    <p className="text-sm font-medium text-blue-800 dark:text-blue-300">Thanks! That worked perfectly.</p>
+                  </div>
+
+                  {/* Resolution Card Mockup */}
+                  <div className="absolute bottom-[-20px] left-1/2 -translate-x-1/2 bg-white dark:bg-card w-[90%] p-4 rounded-2xl shadow-xl border border-blue-100 flex items-center justify-between gap-3 z-20">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-green-50 rounded-full flex items-center justify-center text-xl text-green-600">
+                        <CheckCircle className="w-6 h-6" />
+                      </div>
+                      <div className="text-left">
+                        <div className="font-bold text-gray-900 dark:text-gray-100">Ticket Solved</div>
+                        <div className="text-xs text-muted-foreground">Automated by AI Agent</div>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-[10px] uppercase tracking-wider text-gray-500">CSAT</div>
+                      <div className="font-bold text-lg text-blue-600">5.0 ★</div>
+                    </div>
                   </div>
 
                 </div>
