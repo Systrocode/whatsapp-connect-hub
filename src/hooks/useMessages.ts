@@ -66,12 +66,16 @@ export const useMessages = (conversationId: string | undefined) => {
       content,
       messageType = 'text',
       mediaUrl,
-      filename
+      filename,
+      templateName,
+      templateParams
     }: {
       content: string;
-      messageType?: Message['message_type'] | 'audio' | 'video';
+      messageType?: Message['message_type'] | 'audio' | 'video' | 'template';
       mediaUrl?: string;
       filename?: string;
+      templateName?: string;
+      templateParams?: any[];
     }) => {
       if (!conversationId) throw new Error('No conversation selected');
 
@@ -101,7 +105,9 @@ export const useMessages = (conversationId: string | undefined) => {
           message: content,
           type: messageType,
           media_url: mediaUrl,
-          filename: filename
+          filename: filename,
+          template_name: templateName,
+          template_params: templateParams
         },
       });
 

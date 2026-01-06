@@ -12,6 +12,8 @@ import {
     Link as LinkIcon,
     FileText,
     Zap,
+    Briefcase,
+    Info,
     Smartphone,
     Globe,
     Users
@@ -256,26 +258,51 @@ export function LandingHeader({ variant = 'default' }: { variant?: 'default' | '
             </div>
 
             {/* Mobile Menu */}
+            {/* Mobile Menu */}
             {isMobileMenuOpen && (
-                <div className="lg:hidden absolute top-full left-0 right-0 bg-background border-b border-border p-4 flex flex-col gap-4 shadow-xl">
-                    <Link to="/pricing" className="text-sm font-medium py-2">Pricing</Link>
-                    <div className="space-y-3">
-                        <p className="text-xs font-semibold text-muted-foreground uppercase">Features</p>
-                        {features.slice(0, 4).map(f => (
-                            <div key={f.title} className="flex items-center gap-2 text-sm">
-                                <f.icon className="w-4 h-4 text-whatsapp" />
-                                {f.title}
-                            </div>
-                        ))}
-                    </div>
-                    <div className="h-px bg-border my-2" />
+                <div className="lg:hidden fixed inset-x-0 top-[60px] h-[calc(100vh-60px)] bg-background/95 backdrop-blur-xl p-6 flex flex-col gap-6 overflow-y-auto animate-in fade-in slide-in-from-top-5">
                     <div className="flex flex-col gap-2">
-                        <Link to="/auth">
-                            <Button variant="ghost" className="w-full justify-start">Sign in</Button>
-                        </Link>
-                        <Link to="/auth?mode=signup">
-                            <Button variant="whatsapp" className="w-full">Request a Quote</Button>
-                        </Link>
+                        <Link to="/pricing" className="text-lg font-medium py-3 border-b border-border">Pricing</Link>
+                    </div>
+
+                    <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Features</p>
+                            <Link to="/features" className="text-xs text-primary font-medium">View All</Link>
+                        </div>
+                        <div className="grid grid-cols-1 gap-3">
+                            {features.slice(0, 4).map(f => (
+                                <Link
+                                    key={f.title}
+                                    to={`/features/${f.title.toLowerCase().replace(/ /g, '-')}`}
+                                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors border border-transparent hover:border-border"
+                                >
+                                    <div className="p-2 bg-green-500/10 rounded-md">
+                                        <f.icon className="w-5 h-5 text-green-600" />
+                                    </div>
+                                    <span className="font-medium">{f.title}</span>
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="mt-auto pb-8 space-y-4">
+                        <div className="h-px bg-border" />
+                        <div className="flex flex-col gap-3">
+                            <Link to="/auth" className="w-full">
+                                <Button variant="outline" className="w-full h-12 text-base font-medium border-primary/20 hover:bg-primary/5 hover:text-primary">
+                                    Sign in
+                                </Button>
+                            </Link>
+                            <Link to="/auth?mode=signup" className="w-full">
+                                <Button variant="whatsapp" className="w-full h-12 text-base font-bold shadow-lg shadow-green-500/20">
+                                    Request a Quote
+                                </Button>
+                            </Link>
+                        </div>
+                        <p className="text-center text-xs text-muted-foreground">
+                            Join 10,000+ businesses growing on WhatsApp
+                        </p>
                     </div>
                 </div>
             )}

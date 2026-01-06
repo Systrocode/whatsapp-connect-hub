@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Send, Phone, MoreVertical, CheckCircle2, Clock, User, Paperclip, Loader2, Image as ImageIcon, FileText, Music } from 'lucide-react';
+import { ArrowLeft, Send, Phone, MoreVertical, CheckCircle2, Clock, User, Paperclip, Loader2, Image as ImageIcon, FileText, Music, LayoutTemplate } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
@@ -10,6 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useMessages } from '@/hooks/useMessages';
 import { useConversations } from '@/hooks/useConversations';
+import { useTemplates, MessageTemplate } from '@/hooks/useTemplates';
 import { Skeleton } from '@/components/ui/skeleton';
 import { format } from 'date-fns';
 import {
@@ -29,11 +30,32 @@ const ConversationDetail = () => {
   const { messages, isLoading: messagesLoading, error, sendMessage } = useMessages(id);
   const { conversations, updateConversation, markAsRead } = useConversations();
   const { updateContact } = useContacts();
+  const { templates } = useTemplates();
 
   const [newMessage, setNewMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleSendTemplate = async (template: MessageTemplate) => {
+    try {
+      // Basic sending without parameters for now
+      // If template requires parameters, this might fail or send placeholders.
+      // For MVP, we assume user selects templates that are ready to send or handles errors.
+
+      const content = `Template: ${template.name}`;
+
+      await sendMessage.mutateAsync({
+        content: content,
+        messageType: 'template',
+        templateName: template.name,
+        // templateParams: [] // Pass variables if we build a form for them
+      });
+      toast.success('Template sent');
+    } catch (e: any) {
+      // Error handled in hook
+    }
+  };
 
   // ... (keep handling functions same until return)
 
@@ -322,6 +344,41 @@ const ConversationDetail = () => {
                 onChange={handleFileSelect}
               // accept is set dynamically
               />
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="text-muted-foreground hover:text-foreground shrink-0 mb-1"
+                    title="Send Template (Required for new chats)"
+                  >
+                    <LayoutTemplate className="w-5 h-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-64 max-h-[300px] overflow-y-auto mb-2">
+                  <div className="p-2 text-xs font-semibold text-muted-foreground bg-muted/50 sticky top-0">
+                    Select Template
+                  </div>
+                  {templates?.length > 0 ? (
+                    templates.map((t) => (
+                      <DropdownMenuItem
+                        key={t.id}
+                        onClick={() => handleSendTemplate(t)}
+                        className="cursor-pointer flex flex-col items-start gap-1 py-2"
+                      >
+                        <span className="font-medium text-sm">{t.name}</span>
+                        <span className="text-[10px] text-muted-foreground truncate w-full">{t.content.substring(0, 50)}...</span>
+                      </DropdownMenuItem>
+                    ))
+                  ) : (
+                    <div className="p-2 text-xs text-center text-muted-foreground">
+                      No templates found
+                    </div>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button

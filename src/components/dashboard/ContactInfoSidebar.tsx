@@ -14,6 +14,13 @@ import {
     Briefcase,
     Info
 } from 'lucide-react';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -160,11 +167,15 @@ export const ContactInfoSidebar = ({ contact, onUpdate }: ContactInfoSidebarProp
                                     <div className="w-1.5 h-1.5 rounded-full bg-red-400" />
                                     Contact Owner
                                 </div>
-                                <select className="bg-transparent border-none text-right font-medium focus:ring-0 cursor-pointer text-muted-foreground">
-                                    <option>Select</option>
-                                    <option>You</option>
-                                    <option>Team Member</option>
-                                </select>
+                                <Select defaultValue="you">
+                                    <SelectTrigger className="h-7 w-[130px] text-xs bg-transparent border-none text-right font-medium focus:ring-0 shadow-none px-0 justify-end gap-1 text-muted-foreground hover:text-foreground data-[placeholder]:text-muted-foreground">
+                                        <SelectValue placeholder="Select" />
+                                    </SelectTrigger>
+                                    <SelectContent align="end">
+                                        <SelectItem value="you">You</SelectItem>
+                                        <SelectItem value="team">Team Member</SelectItem>
+                                    </SelectContent>
+                                </Select>
                             </div>
                             <div className="grid grid-cols-[100px_1fr] gap-2 items-center">
                                 <div className="flex items-center gap-1 text-muted-foreground">

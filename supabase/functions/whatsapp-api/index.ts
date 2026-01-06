@@ -575,7 +575,7 @@ serve(async (req: Request) => {
             });
           }
 
-          await supabaseServiceRole
+          const { error: insertError } = await supabaseServiceRole
             .from('messages')
             .insert({
               conversation_id: conversationId,
@@ -586,10 +586,20 @@ serve(async (req: Request) => {
               status: 'sent'
             });
 
+          if (insertError) {
+            console.error("Supabase Insert Error:", insertError);
+            throw insertError;
+          }
+
         } catch (dbError) {
           console.error("Error saving sent message to DB:", dbError);
-          // We don't fail the request since the message was sent to WhatsApp,
-          // but we log the error.
+          return new Response(JSON.stringify({
+            error: 'Message sent but failed to save to history',
+            details: dbError
+          }), {
+            status: 500,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
         }
 
         return new Response(JSON.stringify({
