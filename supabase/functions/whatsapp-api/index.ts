@@ -450,7 +450,7 @@ serve(async (req: Request) => {
         let messagePayload: any = {
           messaging_product: 'whatsapp',
           recipient_type: 'individual',
-          to: to,
+          to: to.replace(/\D/g, ''), // Remove non-numeric chars (like + or spaces)
         };
 
         if (template_name) {
@@ -719,10 +719,6 @@ serve(async (req: Request) => {
         }
 
         const appId = Deno.env.get('META_APP_ID');
-        // Note: Resumable upload uses App ID in URL: graph.facebook.com/{app_id}/uploads
-        // If we don't have App ID in env, we might fail. 
-        // Fallback: Use standard upload if allowed? No, Cloud API forces Resumable for Profile Pic usually.
-        // Actually, endpoint is: POST https://graph.facebook.com/v21.0/app/uploads
 
         // 1. Start Upload Session
         const startSessionUrl = new URL(`https://graph.facebook.com/v21.0/${appId || 'app'}/uploads`);
@@ -793,6 +789,103 @@ serve(async (req: Request) => {
         if (profileData.error) {
           console.error("Profile Picture Update Error:", profileData);
           return new Response(JSON.stringify({ error: profileData.error.message }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        return new Response(JSON.stringify({ success: true }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      case 'get_automation_config': {
+        const { data: settings } = await supabaseServiceRole
+          .from('whatsapp_settings')
+          .select('phone_number_id, access_token:access_token_encrypted')
+          .eq('user_id', user.id)
+          .single();
+
+        if (!settings?.phone_number_id || !settings?.access_token) {
+          return new Response(JSON.stringify({ error: 'WhatsApp not configured' }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        const response = await fetch(
+          `https://graph.facebook.com/v21.0/${settings.phone_number_id}/conversational_automation`,
+          {
+            headers: {
+              'Authorization': `Bearer ${settings.access_token}`,
+            },
+          }
+        );
+
+        const data = await response.json();
+
+        if (data.error) {
+          // Meta returns error if no config exists yet, we should simpler return empty defaults
+          console.warn('Meta API Warning (get automation):', data.error);
+          return new Response(JSON.stringify({
+            ice_breakers: [],
+            commands: [],
+            enable_welcome_message: false
+          }), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
+
+        return new Response(JSON.stringify(data.data?.[0] || {}), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      case 'update_automation_config': {
+        const { ice_breakers, commands, enable_welcome_message } = params;
+
+        const { data: settings } = await supabaseServiceRole
+          .from('whatsapp_settings')
+          .select('phone_number_id, access_token:access_token_encrypted')
+          .eq('user_id', user.id)
+          .single();
+
+        if (!settings?.phone_number_id || !settings?.access_token) {
+          return new Response(JSON.stringify({ error: 'WhatsApp not configured' }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        const payload: any = {
+          enable_welcome_message: !!enable_welcome_message,
+        };
+
+        if (ice_breakers && Array.isArray(ice_breakers)) {
+          payload.ice_breakers = ice_breakers;
+        }
+
+        if (commands && Array.isArray(commands)) {
+          payload.commands = commands;
+        }
+
+        const response = await fetch(
+          `https://graph.facebook.com/v21.0/${settings.phone_number_id}/conversational_automation`,
+          {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${settings.access_token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload)
+          }
+        );
+
+        const data = await response.json();
+
+        if (data.error) {
+          console.error('Meta API Error:', data.error);
+          return new Response(JSON.stringify({ error: data.error.message }), {
             status: 400,
             headers: { ...corsHeaders, 'Content-Type': 'application/json' }
           });
