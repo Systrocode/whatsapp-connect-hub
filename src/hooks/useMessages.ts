@@ -113,12 +113,25 @@ export const useMessages = (conversationId: string | undefined) => {
 
       if (error) {
         console.error('Edge function error:', error);
-        // Try to parse the response body if possible, though supabase client abstracts it
+
+        // Try to read the error body if it exists (FunctionsHttpError)
+        if (error instanceof Error && 'context' in error) {
+          // @ts-ignore
+          const response = error.context?.response;
+          if (response instanceof Response) {
+            try {
+              const errorData = await response.json();
+              if (errorData && errorData.error) {
+                throw new Error(errorData.error);
+              }
+            } catch (e) {
+              // Failed to parse JSON, stick to original error
+            }
+          }
+        }
+
         throw error;
       }
-
-      // Keep in mind calling supabase.functions.invoke might return data: null and error: object on 4xx/5xx
-      // But sometimes it returns data with { error: ... } inside.
 
       if (data?.error) {
         throw new Error(typeof data.error === 'string' ? data.error : JSON.stringify(data.error));
