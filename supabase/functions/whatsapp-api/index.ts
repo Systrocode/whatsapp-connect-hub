@@ -179,13 +179,13 @@ serve(async (req: Request) => {
 
           // Search for contact - checking with and without '+' prefix
           // This handles cases where user saved contact as "+123..." but webhook sends "123..."
-          let { data: existingContacts } = await supabaseServiceRole
+          const { data: existingContacts } = await supabaseServiceRole
             .from('contacts')
             .select('id, user_id, phone_number')
             .eq('user_id', userId)
             .or(`phone_number.eq.${senderPhone},phone_number.eq.+${senderPhone}`);
 
-          let existingContact = existingContacts?.[0];
+          const existingContact = existingContacts?.[0];
 
           let contactId: string;
 
@@ -214,7 +214,7 @@ serve(async (req: Request) => {
           }
 
           // 2. Find or create conversation
-          let { data: existingConversation } = await supabaseServiceRole
+          const { data: existingConversation } = await supabaseServiceRole
             .from('conversations')
             .select('id')
             .eq('contact_id', contactId)
@@ -447,7 +447,7 @@ serve(async (req: Request) => {
         }
 
         // Build message payload
-        let messagePayload: any = {
+        const messagePayload: any = {
           messaging_product: 'whatsapp',
           recipient_type: 'individual',
           to: to.replace(/\D/g, ''), // Remove non-numeric chars (like + or spaces)
@@ -457,7 +457,7 @@ serve(async (req: Request) => {
           messagePayload.type = 'template';
           messagePayload.template = {
             name: template_name,
-            language: { code: 'en' },
+            language: { code: params.language_code || 'en_US' },
             components: template_params || []
           };
         } else if (type === 'image') {
@@ -503,7 +503,7 @@ serve(async (req: Request) => {
         // --- Save to Database ---
         try {
           // 1. Find or create contact
-          let { data: existingContact } = await supabaseServiceRole
+          const { data: existingContact } = await supabaseServiceRole
             .from('contacts')
             .select('id')
             .eq('phone_number', to)
@@ -531,7 +531,7 @@ serve(async (req: Request) => {
           }
 
           // 2. Find or create conversation
-          let { data: existingConversation } = await supabaseServiceRole
+          const { data: existingConversation } = await supabaseServiceRole
             .from('conversations')
             .select('id')
             .eq('contact_id', contactId)
