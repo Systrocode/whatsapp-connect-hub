@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Send, Phone, MoreVertical, CheckCircle2, Clock, User, Paperclip, Loader2, Image as ImageIcon, FileText, Music, LayoutTemplate } from 'lucide-react';
+import { ArrowLeft, Send, Phone, MoreVertical, CheckCircle2, Clock, User, Paperclip, Loader2, Image as ImageIcon, FileText, Music, LayoutTemplate, Info } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
@@ -19,6 +19,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 import { WhatsAppMedia } from '@/components/dashboard/WhatsAppMedia';
 import { ContactInfoSidebar } from '@/components/dashboard/ContactInfoSidebar';
@@ -219,6 +220,17 @@ const ConversationDetail = () => {
               )}
             </div>
             <div className="flex items-center gap-1">
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="icon" className="lg:hidden text-muted-foreground">
+                    <Info className="w-5 h-5" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="p-0 border-l border-border w-80 sm:w-96">
+                  <ContactInfoSidebar contact={contact as any} onUpdate={handleUpdateContact} />
+                </SheetContent>
+              </Sheet>
+
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon">
@@ -434,7 +446,9 @@ const ConversationDetail = () => {
         </div>
 
         {/* Right Info Sidebar */}
-        <ContactInfoSidebar contact={contact as any} onUpdate={handleUpdateContact} />
+        <div className="hidden xl:block h-full border-l border-border">
+          <ContactInfoSidebar contact={contact as any} onUpdate={handleUpdateContact} />
+        </div>
 
       </div>
     </DashboardLayout>
