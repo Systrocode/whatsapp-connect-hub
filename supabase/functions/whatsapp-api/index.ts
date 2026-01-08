@@ -906,6 +906,98 @@ serve(async (req: Request) => {
         });
       }
 
+      case 'sync_templates': {
+        const { data: settings } = await supabaseServiceRole
+          .from('whatsapp_settings')
+          .select('business_account_id, access_token:access_token_encrypted, user_id')
+          .eq('user_id', user.id)
+          .single();
+
+        if (!settings?.business_account_id || !settings?.access_token) {
+          return new Response(JSON.stringify({ error: 'WhatsApp not configured (Missing WABA ID or Token)' }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        const wabaId = settings.business_account_id;
+
+        const response = await fetch(
+          `https://graph.facebook.com/v21.0/${wabaId}/message_templates?limit=100`,
+          {
+            headers: {
+              'Authorization': `Bearer ${settings.access_token}`,
+            }
+          }
+        );
+
+        const data = await response.json();
+
+        if (data.error) {
+          console.error('Meta Template Fetch Error:', data.error);
+          return new Response(JSON.stringify({ error: data.error.message }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+        }
+
+        const templates = data.data || [];
+        let count = 0;
+
+        // Get existing templates to map IDs if name matches
+        const { data: existingTemplates } = await supabaseServiceRole
+          .from('message_templates')
+          .select('id, name')
+          .eq('user_id', settings.user_id);
+
+        const nameToId = new Map(existingTemplates?.map((t: any) => [t.name, t.id]));
+
+        for (const t of templates) {
+          const bodyComponent = t.components.find((c: any) => c.type === 'BODY');
+          const content = bodyComponent?.text || '';
+          const isApproved = t.status === 'APPROVED';
+
+          // Skip if no content (e.g. only header/footer templates? rare)
+          if (!content) continue;
+
+          const payload: any = {
+            user_id: settings.user_id,
+            name: t.name,
+            category: t.category,
+            content: content,
+            is_approved: isApproved,
+            variables: [], // TODO: Parse variables
+            updated_at: new Date().toISOString()
+          };
+
+          // Parse Basic Variables {{1}}
+          const varMatches = content.match(/\{\{\d+\}\}/g);
+          if (varMatches) {
+            payload.variables = [...new Set(varMatches)]; // unique vars
+          }
+
+          const existingId = nameToId.get(t.name);
+          let error;
+
+          if (existingId) {
+            const res = await supabaseServiceRole
+              .from('message_templates')
+              .update(payload)
+              .eq('id', existingId);
+            error = res.error;
+          } else {
+            const res = await supabaseServiceRole
+              .from('message_templates')
+              .insert(payload);
+            error = res.error;
+          }
+
+          if (!error) count++;
+          else console.error('Template upsert error:', error);
+        }
+
+        return new Response(JSON.stringify({ success: true, count: count, total_fetched: templates.length }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
       case 'get_status': {
         // Get settings
         const { data: settings } = await supabaseServiceRole

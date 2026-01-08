@@ -9,11 +9,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { useTemplates } from '@/hooks/useTemplates';
-import { Plus, MessageSquare, Trash2, CheckCircle, Smartphone, Image as ImageIcon } from 'lucide-react';
+import { Plus, MessageSquare, Trash2, CheckCircle, Smartphone, Image as ImageIcon, RefreshCw } from 'lucide-react';
 import PhoneMockup from '@/components/PhoneMockup';
 
 export default function Templates() {
-    const { templates, isLoading, createTemplate, deleteTemplate } = useTemplates();
+    const { templates, isLoading, createTemplate, deleteTemplate, syncTemplates } = useTemplates();
     const [isCreateOpen, setIsCreateOpen] = useState(false);
     const [newTemplate, setNewTemplate] = useState({
         name: '',
@@ -58,109 +58,115 @@ export default function Templates() {
                             Create and manage WhatsApp templates
                         </p>
                     </div>
-                    <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-                        <DialogTrigger asChild>
-                            <Button>
-                                <Plus className="mr-2 h-4 w-4" />
-                                New Template
-                            </Button>
-                        </DialogTrigger>
-                        <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col p-0">
-                            <DialogHeader className="px-6 py-4 border-b">
-                                <DialogTitle>Create WhatsApp Template</DialogTitle>
-                                <DialogDescription>
-                                    Design your message template with headers, body, and buttons.
-                                </DialogDescription>
-                            </DialogHeader>
+                    <div className="flex gap-2">
+                        <Button variant="outline" onClick={() => syncTemplates.mutate()} disabled={syncTemplates.isPending}>
+                            <RefreshCw className={`mr-2 h-4 w-4 ${syncTemplates.isPending ? 'animate-spin' : ''}`} />
+                            Sync from Meta
+                        </Button>
+                        <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+                            <DialogTrigger asChild>
+                                <Button>
+                                    <Plus className="mr-2 h-4 w-4" />
+                                    New Template
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col p-0">
+                                <DialogHeader className="px-6 py-4 border-b">
+                                    <DialogTitle>Create WhatsApp Template</DialogTitle>
+                                    <DialogDescription>
+                                        Design your message template with headers, body, and buttons.
+                                    </DialogDescription>
+                                </DialogHeader>
 
-                            <div className="flex flex-1 overflow-hidden">
-                                {/* Form Side */}
-                                <div className="flex-1 p-6 space-y-6 overflow-y-auto border-r">
-                                    <div className="space-y-2">
-                                        <Label>Template Name</Label>
-                                        <Input
-                                            placeholder="e.g. welcome_offer"
-                                            value={newTemplate.name}
-                                            onChange={(e) => setNewTemplate({ ...newTemplate, name: e.target.value })}
+                                <div className="flex flex-1 overflow-hidden">
+                                    {/* Form Side */}
+                                    <div className="flex-1 p-6 space-y-6 overflow-y-auto border-r">
+                                        <div className="space-y-2">
+                                            <Label>Template Name</Label>
+                                            <Input
+                                                placeholder="e.g. welcome_offer"
+                                                value={newTemplate.name}
+                                                onChange={(e) => setNewTemplate({ ...newTemplate, name: e.target.value })}
+                                            />
+                                            <p className="text-xs text-muted-foreground">Lowercase only, use underscores.</p>
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <Label>Category</Label>
+                                            <Select
+                                                value={newTemplate.category}
+                                                onValueChange={(val) => setNewTemplate({ ...newTemplate, category: val })}
+                                            >
+                                                <SelectTrigger>
+                                                    <SelectValue />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="MARKETING">Marketing</SelectItem>
+                                                    <SelectItem value="UTILITY">Utility</SelectItem>
+                                                    <SelectItem value="AUTHENTICATION">Authentication</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <Label>Header (Optional)</Label>
+                                            <Select
+                                                value={newTemplate.headerType}
+                                                onValueChange={(val: any) => setNewTemplate({ ...newTemplate, headerType: val })}
+                                            >
+                                                <SelectTrigger>
+                                                    <SelectValue />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="NONE">None</SelectItem>
+                                                    <SelectItem value="IMAGE">Image / Media</SelectItem>
+                                                    <SelectItem value="TEXT">Text Header</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                            {newTemplate.headerType === 'IMAGE' && (
+                                                <div className="p-4 bg-muted/30 rounded-lg space-y-2 border border-dashed">
+                                                    <Label className="text-sm text-muted-foreground flex items-center gap-2">
+                                                        <ImageIcon className="w-4 h-4" /> Upload Sample Image (Preview)
+                                                    </Label>
+                                                    <Input type="file" accept="image/*" onChange={handleImageUpload} className="bg-background" />
+                                                    <p className="text-[10px] text-muted-foreground">
+                                                        This image is for preview only. You will need to upload the actual campaign image when sending.
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <Label>Body Text</Label>
+                                            <Textarea
+                                                rows={5}
+                                                placeholder="Hello {{1}}, check out our new offers!"
+                                                value={newTemplate.content}
+                                                onChange={(e) => setNewTemplate({ ...newTemplate, content: e.target.value })}
+                                            />
+                                            <p className="text-xs text-muted-foreground">Use {'{{1}}'}, {'{{2}}'} for variables.</p>
+                                        </div>
+                                    </div>
+
+                                    {/* Preview Side */}
+                                    <div className="w-[350px] bg-slate-50 p-6 flex flex-col items-center justify-center border-l bg-muted/10">
+                                        <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-2">
+                                            <Smartphone className="w-3 h-3" /> Live Preview
+                                        </h3>
+                                        <PhoneMockup
+                                            message={newTemplate.content || "Your message text..."}
+                                            image={newTemplate.headerType === 'IMAGE' ? (previewImage || "https://placehold.co/600x400/png?text=Header+Image") : undefined}
                                         />
-                                        <p className="text-xs text-muted-foreground">Lowercase only, use underscores.</p>
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <Label>Category</Label>
-                                        <Select
-                                            value={newTemplate.category}
-                                            onValueChange={(val) => setNewTemplate({ ...newTemplate, category: val })}
-                                        >
-                                            <SelectTrigger>
-                                                <SelectValue />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="MARKETING">Marketing</SelectItem>
-                                                <SelectItem value="UTILITY">Utility</SelectItem>
-                                                <SelectItem value="AUTHENTICATION">Authentication</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <Label>Header (Optional)</Label>
-                                        <Select
-                                            value={newTemplate.headerType}
-                                            onValueChange={(val: any) => setNewTemplate({ ...newTemplate, headerType: val })}
-                                        >
-                                            <SelectTrigger>
-                                                <SelectValue />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="NONE">None</SelectItem>
-                                                <SelectItem value="IMAGE">Image / Media</SelectItem>
-                                                <SelectItem value="TEXT">Text Header</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                        {newTemplate.headerType === 'IMAGE' && (
-                                            <div className="p-4 bg-muted/30 rounded-lg space-y-2 border border-dashed">
-                                                <Label className="text-sm text-muted-foreground flex items-center gap-2">
-                                                    <ImageIcon className="w-4 h-4" /> Upload Sample Image (Preview)
-                                                </Label>
-                                                <Input type="file" accept="image/*" onChange={handleImageUpload} className="bg-background" />
-                                                <p className="text-[10px] text-muted-foreground">
-                                                    This image is for preview only. You will need to upload the actual campaign image when sending.
-                                                </p>
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <Label>Body Text</Label>
-                                        <Textarea
-                                            rows={5}
-                                            placeholder="Hello {{1}}, check out our new offers!"
-                                            value={newTemplate.content}
-                                            onChange={(e) => setNewTemplate({ ...newTemplate, content: e.target.value })}
-                                        />
-                                        <p className="text-xs text-muted-foreground">Use {'{{1}}'}, {'{{2}}'} for variables.</p>
                                     </div>
                                 </div>
 
-                                {/* Preview Side */}
-                                <div className="w-[350px] bg-slate-50 p-6 flex flex-col items-center justify-center border-l bg-muted/10">
-                                    <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-2">
-                                        <Smartphone className="w-3 h-3" /> Live Preview
-                                    </h3>
-                                    <PhoneMockup
-                                        message={newTemplate.content || "Your message text..."}
-                                        image={newTemplate.headerType === 'IMAGE' ? (previewImage || "https://placehold.co/600x400/png?text=Header+Image") : undefined}
-                                    />
-                                </div>
-                            </div>
-
-                            <DialogFooter className="px-6 py-4 border-t bg-background">
-                                <Button variant="outline" onClick={() => setIsCreateOpen(false)}>Cancel</Button>
-                                <Button onClick={handleCreate} disabled={createTemplate.isPending || !newTemplate.name}>Submit for Approval</Button>
-                            </DialogFooter>
-                        </DialogContent>
-                    </Dialog>
+                                <DialogFooter className="px-6 py-4 border-t bg-background">
+                                    <Button variant="outline" onClick={() => setIsCreateOpen(false)}>Cancel</Button>
+                                    <Button onClick={handleCreate} disabled={createTemplate.isPending || !newTemplate.name}>Submit for Approval</Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
+                    </div>
                 </div>
 
                 {/* List of Templates */}
@@ -171,7 +177,7 @@ export default function Templates() {
                         <Card className="col-span-full py-12 text-center">
                             <CardContent>
                                 <MessageSquare className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
-                                <p className="text-muted-foreground">No templates yet. Create one!</p>
+                                <p className="text-muted-foreground">No templates found. Sync from Meta to get started!</p>
                             </CardContent>
                         </Card>
                     )}

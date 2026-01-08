@@ -115,5 +115,24 @@ export const useTemplates = () => {
     createTemplate,
     updateTemplate,
     deleteTemplate,
+    syncTemplates: useMutation({
+      mutationFn: async () => {
+        const { data, error } = await supabase.functions.invoke('whatsapp-api', {
+          body: { action: 'sync_templates' }
+        });
+
+        if (error) throw error;
+        if (data.error) throw new Error(data.error);
+
+        return data;
+      },
+      onSuccess: (data) => {
+        queryClient.invalidateQueries({ queryKey: ['templates'] });
+        toast.success(`Synced ${data.count} templates from Meta`);
+      },
+      onError: (error: Error) => {
+        toast.error(`Sync failed: ${error.message}`);
+      }
+    }),
   };
 };
