@@ -337,7 +337,7 @@ serve(async (req: Request) => {
         }
 
         // 1. Get Media URL
-        const mediaRes = await fetch(`https://graph.facebook.com/v18.0/${media_id}`, {
+        const mediaRes = await fetch(`https://graph.facebook.com/v21.0/${media_id}`, {
           headers: { 'Authorization': `Bearer ${settings.access_token}` }
         });
         const mediaJson = await mediaRes.json();
@@ -479,7 +479,7 @@ serve(async (req: Request) => {
 
         // Send via WhatsApp API
         const response = await fetch(
-          `https://graph.facebook.com/v18.0/${settings.phone_number_id}/messages`,
+          `https://graph.facebook.com/v21.0/${settings.phone_number_id}/messages`,
           {
             method: 'POST',
             headers: {
