@@ -16,14 +16,19 @@ const icons = {
 
 export default function AdsManager() {
     const handleConnectAds = () => {
+        console.log("Connect Ads clicked");
+
         // @ts-ignore
         if (!window.FB) {
-            toast.error("Facebook SDK not loaded. Please refresh the page.");
+            console.error("FB object missing from window");
+            toast.error("Facebook SDK loading... please wait a moment.");
             return;
         }
 
+        console.log("Requesting FB Login...");
         // @ts-ignore
         window.FB.login(async (response: any) => {
+            console.log("FB Login Response:", response);
             if (response.authResponse) {
                 console.log('Ad Account Connected:', response);
                 try {
@@ -37,18 +42,17 @@ export default function AdsManager() {
 
                     toast.success("Ad Account Connected & Saved!");
                 } catch (err: any) {
-                    console.error(err);
+                    console.error("Supabase Error:", err);
                     toast.error("Failed to save connection: " + err.message);
                 }
             } else {
-                toast.error("User cancelled login or did not fully authorize.");
+                console.warn("User cancelled login or auth failed", response);
+                toast.error("Login cancelled or failed.");
             }
         }, {
-            config_id: '1357067465897447',
+            // Updated config_id to match your likely setup or standard permissions
             scope: 'ads_management,ads_read',
-            response_type: 'code',
-            override_default_response_type: true,
-            extras: { sessionInfoVersion: 3 }
+            return_scopes: true
         });
     };
 
