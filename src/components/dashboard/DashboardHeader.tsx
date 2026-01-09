@@ -14,7 +14,7 @@ import {
 import { useDashboardStats } from '@/hooks/useDashboardStats';
 import { useConversations } from '@/hooks/useConversations';
 
-const DashboardHeader = () => {
+const DashboardHeader = ({ onMenuClick }: { onMenuClick?: () => void }) => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
 
@@ -34,7 +34,15 @@ const DashboardHeader = () => {
   const userEmail = user?.email || 'User';
 
   return (
-    <header className="h-16 border-b border-border bg-card flex items-center justify-between px-6">
+    <header className="h-16 border-b border-border bg-card flex items-center justify-between px-4 sm:px-6">
+      {/* Mobile Menu Button */}
+      <button
+        onClick={onMenuClick}
+        className="md:hidden p-2 -ml-2 mr-2 text-muted-foreground hover:text-foreground"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-menu"><line x1="4" x2="20" y1="12" y2="12" /><line x1="4" x2="20" y1="6" y2="6" /><line x1="4" x2="20" y1="18" y2="18" /></svg>
+      </button>
+
       {/* Search */}
       <div className="relative max-w-md flex-1">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />

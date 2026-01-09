@@ -16,7 +16,7 @@ export const FacebookSDK = () => {
         };
 
         (function (d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0];
+            let js, fjs = d.getElementsByTagName(s)[0];
             if (d.getElementById(id)) { return; }
             js = d.createElement(s) as HTMLScriptElement; js.id = id;
             js.src = "https://connect.facebook.net/en_US/sdk.js";

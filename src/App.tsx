@@ -31,7 +31,6 @@ const FlowBuilder = lazy(() => import("./pages/FlowBuilder"));
 const Templates = lazy(() => import("./pages/Templates"));
 const Integrations = lazy(() => import("./pages/Integrations"));
 const Tools = lazy(() => import("./pages/Tools"));
-const WhatsAppLink = lazy(() => import("./pages/WhatsAppLink"));
 const WebsiteWidget = lazy(() => import("./pages/WebsiteWidget"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Blog = lazy(() => import("./pages/Blog"));
@@ -120,7 +119,6 @@ const App = () => (
                 <Route path="/dashboard/templates" element={<ProtectedRoute><Templates /></ProtectedRoute>} />
                 <Route path="/dashboard/integrations" element={<ProtectedRoute><Integrations /></ProtectedRoute>} />
                 <Route path="/dashboard/tools" element={<ProtectedRoute><Tools /></ProtectedRoute>} />
-                <Route path="/dashboard/whatsapp-link" element={<ProtectedRoute><WhatsAppLink /></ProtectedRoute>} />
                 <Route path="/dashboard/website-widget" element={<ProtectedRoute><WebsiteWidget /></ProtectedRoute>} />
                 {/* Admin Routes */}
                 <Route path="/dashboard/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />

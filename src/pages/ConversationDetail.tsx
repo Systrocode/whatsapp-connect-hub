@@ -179,277 +179,279 @@ const ConversationDetail = () => {
   }
 
   return (
-    <DashboardLayout>
-      <div className="flex h-[calc(100vh-7rem)] overflow-hidden bg-background rounded-lg border border-border shadow-sm">
+    <DashboardLayout shouldScroll={false} noPadding={true}>
+      <div className="flex flex-col h-full lg:p-4">
+        <div className="flex-1 flex overflow-hidden bg-background lg:rounded-lg lg:border border-border lg:shadow-sm">
 
-        {/* Main Chat Area */}
-        <div className="flex-1 flex flex-col min-w-0">
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex items-center justify-between p-4 border-b border-border bg-background z-10"
-          >
-            <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => navigate('/dashboard/conversations')}
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </Button>
-              {contact ? (
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                    <span className="text-sm font-semibold text-primary">
-                      {contact.name?.[0]?.toUpperCase() || contact.phone_number[0]}
-                    </span>
+          {/* Main Chat Area */}
+          <div className="flex-1 flex flex-col min-w-0">
+            {/* Header */}
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex items-center justify-between p-4 border-b border-border bg-background z-10"
+            >
+              <div className="flex items-center gap-4">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => navigate('/dashboard/conversations')}
+                >
+                  <ArrowLeft className="w-5 h-5" />
+                </Button>
+                {contact ? (
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                      <span className="text-sm font-semibold text-primary">
+                        {contact.name?.[0]?.toUpperCase() || contact.phone_number[0]}
+                      </span>
+                    </div>
+                    <div>
+                      <h2 className="font-semibold text-foreground">
+                        {contact.name || 'Unknown'}
+                      </h2>
+                      <p className="text-sm text-muted-foreground flex items-center gap-1">
+                        <Phone className="w-3 h-3" />
+                        {contact.phone_number}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h2 className="font-semibold text-foreground">
-                      {contact.name || 'Unknown'}
-                    </h2>
-                    <p className="text-sm text-muted-foreground flex items-center gap-1">
-                      <Phone className="w-3 h-3" />
-                      {contact.phone_number}
-                    </p>
+                ) : (
+                  <Skeleton className="h-10 w-40" />
+                )}
+              </div>
+              <div className="flex items-center gap-1">
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button variant="ghost" size="icon" className="lg:hidden text-muted-foreground">
+                      <Info className="w-5 h-5" />
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent side="right" className="p-0 border-l border-border w-80 sm:w-96">
+                    <ContactInfoSidebar contact={contact as any} onUpdate={handleUpdateContact} />
+                  </SheetContent>
+                </Sheet>
+
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                      <MoreVertical className="w-5 h-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => handleStatusChange('active')}>
+                      <CheckCircle2 className="w-4 h-4 mr-2 text-green-500" />
+                      Mark as Active
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleStatusChange('waiting')}>
+                      <Clock className="w-4 h-4 mr-2 text-yellow-500" />
+                      Mark as Waiting
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleStatusChange('resolved')}>
+                      <CheckCircle2 className="w-4 h-4 mr-2 text-blue-500" />
+                      Mark as Resolved
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </motion.div>
+
+            {/* Messages */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/50 dark:bg-transparent">
+              {messagesLoading ? (
+                <div className="space-y-4">
+                  {[...Array(5)].map((_, i) => (
+                    <div key={i} className={`flex ${i % 2 === 0 ? 'justify-start' : 'justify-end'}`}>
+                      <Skeleton className="h-12 w-64 rounded-2xl" />
+                    </div>
+                  ))}
+                </div>
+              ) : messages.length === 0 ? (
+                <div className="flex flex-col items-center justify-center h-full text-center">
+                  <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
+                    <User className="w-8 h-8 text-muted-foreground" />
                   </div>
+                  <h3 className="font-medium text-foreground mb-1">No messages yet</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Send a message to start the conversation
+                  </p>
                 </div>
               ) : (
-                <Skeleton className="h-10 w-40" />
-              )}
-            </div>
-            <div className="flex items-center gap-1">
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button variant="ghost" size="icon" className="lg:hidden text-muted-foreground">
-                    <Info className="w-5 h-5" />
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="right" className="p-0 border-l border-border w-80 sm:w-96">
-                  <ContactInfoSidebar contact={contact as any} onUpdate={handleUpdateContact} />
-                </SheetContent>
-              </Sheet>
-
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon">
-                    <MoreVertical className="w-5 h-5" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => handleStatusChange('active')}>
-                    <CheckCircle2 className="w-4 h-4 mr-2 text-green-500" />
-                    Mark as Active
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => handleStatusChange('waiting')}>
-                    <Clock className="w-4 h-4 mr-2 text-yellow-500" />
-                    Mark as Waiting
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => handleStatusChange('resolved')}>
-                    <CheckCircle2 className="w-4 h-4 mr-2 text-blue-500" />
-                    Mark as Resolved
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          </motion.div>
-
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/50 dark:bg-transparent">
-            {messagesLoading ? (
-              <div className="space-y-4">
-                {[...Array(5)].map((_, i) => (
-                  <div key={i} className={`flex ${i % 2 === 0 ? 'justify-start' : 'justify-end'}`}>
-                    <Skeleton className="h-12 w-64 rounded-2xl" />
-                  </div>
-                ))}
-              </div>
-            ) : messages.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-full text-center">
-                <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
-                  <User className="w-8 h-8 text-muted-foreground" />
-                </div>
-                <h3 className="font-medium text-foreground mb-1">No messages yet</h3>
-                <p className="text-sm text-muted-foreground">
-                  Send a message to start the conversation
-                </p>
-              </div>
-            ) : (
-              messages.map((message, index) => (
-                <motion.div
-                  key={message.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.02 }}
-                  className={`flex ${message.direction === 'outbound' ? 'justify-end' : 'justify-start'
-                    }`}
-                >
-                  <div
-                    className={`max-w-[70%] rounded-2xl px-4 py-2 shadow-sm ${message.direction === 'outbound'
-                      ? 'bg-primary text-primary-foreground rounded-br-md'
-                      : 'bg-white dark:bg-muted text-foreground rounded-bl-md border border-border/50'
+                messages.map((message, index) => (
+                  <motion.div
+                    key={message.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.02 }}
+                    className={`flex ${message.direction === 'outbound' ? 'justify-end' : 'justify-start'
                       }`}
                   >
-                    {['image', 'video', 'audio', 'document'].includes(message.message_type || '') ? (() => {
-                      try {
-                        const parsed = JSON.parse(message.content);
+                    <div
+                      className={`max-w-[70%] rounded-2xl px-4 py-2 shadow-sm ${message.direction === 'outbound'
+                        ? 'bg-primary text-primary-foreground rounded-br-md'
+                        : 'bg-white dark:bg-muted text-foreground rounded-bl-md border border-border/50'
+                        }`}
+                    >
+                      {['image', 'video', 'audio', 'document'].includes(message.message_type || '') ? (() => {
+                        try {
+                          const parsed = JSON.parse(message.content);
 
-                        // Handle Image
-                        if (parsed.image) {
-                          const mediaId = parsed.image.id;
-                          const mediaUrl = parsed.image.link;
-                          const caption = parsed.caption;
-                          if (mediaId || mediaUrl) {
-                            return <WhatsAppMedia mediaId={mediaId} mediaUrl={mediaUrl} caption={caption} />;
+                          // Handle Image
+                          if (parsed.image) {
+                            const mediaId = parsed.image.id;
+                            const mediaUrl = parsed.image.link;
+                            const caption = parsed.caption;
+                            if (mediaId || mediaUrl) {
+                              return <WhatsAppMedia mediaId={mediaId} mediaUrl={mediaUrl} caption={caption} />;
+                            }
                           }
+
+                          // Handle other media types gracefully
+                          if (parsed.video) return <div className="flex items-center gap-2 p-2 bg-background/20 rounded">🎥 Video</div>;
+                          if (parsed.audio) return <div className="flex items-center gap-2 p-2 bg-background/20 rounded">🎵 Audio</div>;
+                          if (parsed.document) return <div className="flex items-center gap-2 p-2 bg-background/20 rounded">📄 Document: {parsed.filename || 'File'}</div>;
+
+                        } catch (e) {
+                          // Legacy message or text
                         }
 
-                        // Handle other media types gracefully
-                        if (parsed.video) return <div className="flex items-center gap-2 p-2 bg-background/20 rounded">🎥 Video</div>;
-                        if (parsed.audio) return <div className="flex items-center gap-2 p-2 bg-background/20 rounded">🎵 Audio</div>;
-                        if (parsed.document) return <div className="flex items-center gap-2 p-2 bg-background/20 rounded">📄 Document: {parsed.filename || 'File'}</div>;
-
-                      } catch (e) {
-                        // Legacy message or text
-                      }
-
-                      // Fallback
-                      return (
-                        <div className="flex items-center gap-2 text-sm italic text-muted-foreground/80">
-                          <span>📷</span>
-                          <span>{message.content}</span>
-                        </div>
-                      );
-                    })() : (
-                      <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
-                    )}
-                    <div className={`flex items-center justify-end gap-1 mt-1 ${message.direction === 'outbound' ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>
-                      <p className="text-[10px]">
-                        {format(new Date(message.created_at), 'HH:mm')}
-                      </p>
-                      {message.direction === 'outbound' && (
-                        <span className="text-[10px]">
-                          {message.status === 'read' ? '✓✓' : message.status === 'delivered' ? '✓✓' : '✓'}
-                        </span>
+                        // Fallback
+                        return (
+                          <div className="flex items-center gap-2 text-sm italic text-muted-foreground/80">
+                            <span>📷</span>
+                            <span>{message.content}</span>
+                          </div>
+                        );
+                      })() : (
+                        <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
                       )}
+                      <div className={`flex items-center justify-end gap-1 mt-1 ${message.direction === 'outbound' ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>
+                        <p className="text-[10px]">
+                          {format(new Date(message.created_at), 'HH:mm')}
+                        </p>
+                        {message.direction === 'outbound' && (
+                          <span className="text-[10px]">
+                            {message.status === 'read' ? '✓✓' : message.status === 'delivered' ? '✓✓' : '✓'}
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </motion.div>
-              ))
-            )}
-            <div ref={messagesEndRef} />
-          </div>
+                  </motion.div>
+                ))
+              )}
+              <div ref={messagesEndRef} />
+            </div>
 
-          {/* Message Input */}
-          <div className="p-4 border-t border-border bg-background">
-            <motion.form
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              onSubmit={handleSendMessage}
-              className="flex gap-2 items-end"
-            >
-              <input
-                type="file"
-                ref={fileInputRef}
-                className="hidden"
-                onChange={handleFileSelect}
-              // accept is set dynamically
-              />
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="text-muted-foreground hover:text-foreground shrink-0 mb-1"
-                    title="Send Template (Required for new chats)"
-                  >
-                    <LayoutTemplate className="w-5 h-5" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-64 max-h-[300px] overflow-y-auto mb-2">
-                  <div className="p-2 text-xs font-semibold text-muted-foreground bg-muted/50 sticky top-0">
-                    Select Template
-                  </div>
-                  {templates?.length > 0 ? (
-                    templates.map((t) => (
-                      <DropdownMenuItem
-                        key={t.id}
-                        onClick={() => handleSendTemplate(t)}
-                        className="cursor-pointer flex flex-col items-start gap-1 py-2"
-                      >
-                        <span className="font-medium text-sm">{t.name}</span>
-                        <span className="text-[10px] text-muted-foreground truncate w-full">{t.content.substring(0, 50)}...</span>
-                      </DropdownMenuItem>
-                    ))
-                  ) : (
-                    <div className="p-2 text-xs text-center text-muted-foreground">
-                      No templates found
-                    </div>
-                  )}
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    disabled={isUploading || sendMessage.isPending}
-                    className="text-muted-foreground hover:text-foreground shrink-0 mb-1"
-                  >
-                    {isUploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Paperclip className="w-5 h-5" />}
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56 mb-2">
-                  <DropdownMenuItem onClick={() => triggerFileInput('image/jpeg,image/png,video/mp4,video/3gpp')} className="cursor-pointer gap-2 py-3">
-                    <ImageIcon className="w-5 h-5 text-purple-500" />
-                    <span className="text-base">Photos & Videos</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => triggerFileInput('application/*,text/*')} className="cursor-pointer gap-2 py-3">
-                    <FileText className="w-5 h-5 text-indigo-500" />
-                    <span className="text-base">Document</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => triggerFileInput('audio/*')} className="cursor-pointer gap-2 py-3">
-                    <Music className="w-5 h-5 text-orange-500" />
-                    <span className="text-base">Audio</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <div className="flex-1 bg-muted/30 rounded-2xl border border-transparent focus-within:border-primary/20 focus-within:bg-background transition-all">
-                <Textarea
-                  placeholder="Type a message..."
-                  value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
-                  className="min-h-[44px] max-h-32 border-0 bg-transparent focus-visible:ring-0 resize-none py-3"
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault();
-                      handleSendMessage(e);
-                    }
-                  }}
-                />
-              </div>
-              <Button
-                type="submit"
-                variant="whatsapp"
-                size="icon"
-                className="h-11 w-11 rounded-full shrink-0 shadow-md"
-                disabled={!newMessage.trim() || sendMessage.isPending}
+            {/* Message Input */}
+            <div className="p-4 border-t border-border bg-background">
+              <motion.form
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                onSubmit={handleSendMessage}
+                className="flex gap-2 items-end"
               >
-                <Send className="w-5 h-5 ml-0.5" />
-              </Button>
-            </motion.form>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  className="hidden"
+                  onChange={handleFileSelect}
+                // accept is set dynamically
+                />
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="text-muted-foreground hover:text-foreground shrink-0 mb-1"
+                      title="Send Template (Required for new chats)"
+                    >
+                      <LayoutTemplate className="w-5 h-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-64 max-h-[300px] overflow-y-auto mb-2">
+                    <div className="p-2 text-xs font-semibold text-muted-foreground bg-muted/50 sticky top-0">
+                      Select Template
+                    </div>
+                    {templates?.length > 0 ? (
+                      templates.map((t) => (
+                        <DropdownMenuItem
+                          key={t.id}
+                          onClick={() => handleSendTemplate(t)}
+                          className="cursor-pointer flex flex-col items-start gap-1 py-2"
+                        >
+                          <span className="font-medium text-sm">{t.name}</span>
+                          <span className="text-[10px] text-muted-foreground truncate w-full">{t.content.substring(0, 50)}...</span>
+                        </DropdownMenuItem>
+                      ))
+                    ) : (
+                      <div className="p-2 text-xs text-center text-muted-foreground">
+                        No templates found
+                      </div>
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      disabled={isUploading || sendMessage.isPending}
+                      className="text-muted-foreground hover:text-foreground shrink-0 mb-1"
+                    >
+                      {isUploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Paperclip className="w-5 h-5" />}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56 mb-2">
+                    <DropdownMenuItem onClick={() => triggerFileInput('image/jpeg,image/png,video/mp4,video/3gpp')} className="cursor-pointer gap-2 py-3">
+                      <ImageIcon className="w-5 h-5 text-purple-500" />
+                      <span className="text-base">Photos & Videos</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => triggerFileInput('application/*,text/*')} className="cursor-pointer gap-2 py-3">
+                      <FileText className="w-5 h-5 text-indigo-500" />
+                      <span className="text-base">Document</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => triggerFileInput('audio/*')} className="cursor-pointer gap-2 py-3">
+                      <Music className="w-5 h-5 text-orange-500" />
+                      <span className="text-base">Audio</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <div className="flex-1 bg-muted/30 rounded-2xl border border-transparent focus-within:border-primary/20 focus-within:bg-background transition-all">
+                  <Textarea
+                    placeholder="Type a message..."
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    className="min-h-[44px] max-h-32 border-0 bg-transparent focus-visible:ring-0 resize-none py-3"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSendMessage(e);
+                      }
+                    }}
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  variant="whatsapp"
+                  size="icon"
+                  className="h-11 w-11 rounded-full shrink-0 shadow-md"
+                  disabled={!newMessage.trim() || sendMessage.isPending}
+                >
+                  <Send className="w-5 h-5 ml-0.5" />
+                </Button>
+              </motion.form>
+            </div>
           </div>
-        </div>
 
-        {/* Right Info Sidebar */}
-        <div className="hidden xl:block h-full border-l border-border">
-          <ContactInfoSidebar contact={contact as any} onUpdate={handleUpdateContact} />
-        </div>
+          {/* Right Info Sidebar */}
+          <div className="hidden xl:block h-full border-l border-border">
+            <ContactInfoSidebar contact={contact as any} onUpdate={handleUpdateContact} />
+          </div>
 
+        </div>
       </div>
     </DashboardLayout>
   );

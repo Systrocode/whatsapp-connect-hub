@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from "sonner";
 
 interface AuthContextType {
   user: User | null;
@@ -40,6 +41,24 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setSession(session);
         setUser(session?.user ?? null);
         setIsLoading(false);
+
+        if (event === 'SIGNED_IN' && session?.user?.email) {
+          // Fire and forget login alert
+          supabase.functions.invoke('send-login-alert', {
+            body: {
+              email: session.user.email,
+              userAgent: navigator.userAgent
+            }
+          }).then(({ error }) => {
+            if (error) {
+              console.error('Failed to send login alert:', error);
+              toast.error("Login alert failed to send: " + (error.message || error));
+            }
+          }).catch(error => {
+            console.error('Failed to send login alert:', error);
+            toast.error("Login alert system error: " + error.message);
+          });
+        }
       }
     );
 
