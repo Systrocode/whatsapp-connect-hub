@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import basicSsl from "@vitejs/plugin-basic-ssl";
 
-// https://vitejs.dev/config/
+// https://vitejs.dev/config/ -- Updated to trigger reload
 export default defineConfig(({ mode }) => ({
   server: {
     host: "::",

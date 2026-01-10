@@ -17,6 +17,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from 'sonner';
 import { ConversationalAutomation } from '@/components/settings/ConversationalAutomation';
+import TeamSettings from './settings/TeamSettings';
 
 const Settings = () => {
   const { user } = useAuth();
@@ -129,6 +130,7 @@ const Settings = () => {
             <TabsTrigger value="account">Account & API</TabsTrigger>
             <TabsTrigger value="whatsapp_profile">WhatsApp Public Profile</TabsTrigger>
             <TabsTrigger value="automation">Automation & Chat</TabsTrigger>
+            <TabsTrigger value="team">My Team</TabsTrigger>
             <TabsTrigger value="notifications">Notifications</TabsTrigger>
           </TabsList>
 
@@ -348,6 +350,10 @@ const Settings = () => {
 
           <TabsContent value="automation">
             <ConversationalAutomation />
+          </TabsContent>
+
+          <TabsContent value="team">
+            <TeamSettings />
           </TabsContent>
         </Tabs>
       </div>

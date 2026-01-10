@@ -157,51 +157,29 @@ export default function AffiliateProgram() {
                     </div>
                 </section>
 
-                {/* Join Form */}
+                {/* Join Program CTA */}
                 <section id="join" className="py-24 px-6 bg-slate-50 dark:bg-slate-900/30">
-                    <div className="max-w-xl mx-auto bg-white dark:bg-card p-8 rounded-3xl shadow-xl border border-slate-100 dark:border-slate-800">
-                        <div className="text-center mb-8">
-                            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">Join Affiliate Program</h2>
-                            <p className="text-slate-500 dark:text-slate-400">Start earning commissions today.</p>
+                    <div className="max-w-xl mx-auto bg-white dark:bg-card p-12 rounded-3xl shadow-xl border border-slate-100 dark:border-slate-800 text-center">
+                        <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto text-green-600 mb-8">
+                            <TrendingUp className="w-10 h-10" />
                         </div>
 
-                        <form className="space-y-4" onSubmit={(e) => {
-                            e.preventDefault();
-                            const formData = new FormData(e.currentTarget);
-                            const subject = `Affiliate Application: ${formData.get('first_name')} ${formData.get('last_name')}`;
-                            const body = `Name: ${formData.get('first_name')} ${formData.get('last_name')}\nEmail: ${formData.get('email')}\nWebsite: ${formData.get('website')}\nPromotion Plan: ${formData.get('promo')}`;
-                            window.location.href = `mailto:affiliates@wabusiness.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-                        }}>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="space-y-1">
-                                    <label className="text-xs font-semibold uppercase tracking-wider text-slate-500">First Name</label>
-                                    <input name="first_name" type="text" className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:ring-2 focus:ring-purple-500 outline-none" placeholder="John" required />
-                                </div>
-                                <div className="space-y-1">
-                                    <label className="text-xs font-semibold uppercase tracking-wider text-slate-500">Last Name</label>
-                                    <input name="last_name" type="text" className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:ring-2 focus:ring-purple-500 outline-none" placeholder="Doe" required />
-                                </div>
-                            </div>
+                        <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">Start Earning Today</h2>
+                        <p className="text-lg text-slate-500 dark:text-slate-400 mb-8 max-w-sm mx-auto">
+                            Join our affiliate program instantly. No approval wait time. Sign up, get your link, and start earning.
+                        </p>
 
-                            <div className="space-y-1">
-                                <label className="text-xs font-semibold uppercase tracking-wider text-slate-500">Email Address</label>
-                                <input name="email" type="email" className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:ring-2 focus:ring-purple-500 outline-none" placeholder="john@gmail.com" required />
-                            </div>
-
-                            <div className="space-y-1">
-                                <label className="text-xs font-semibold uppercase tracking-wider text-slate-500">Website / Social Profile</label>
-                                <input name="website" type="url" className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:ring-2 focus:ring-purple-500 outline-none" placeholder="https://instagram.com/john" required />
-                            </div>
-
-                            <div className="space-y-1">
-                                <label className="text-xs font-semibold uppercase tracking-wider text-slate-500">How will you promote us?</label>
-                                <textarea name="promo" className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:ring-2 focus:ring-purple-500 outline-none h-24 resize-none" placeholder="I have a blog about marketing tools..." required></textarea>
-                            </div>
-
-                            <Button type="submit" className="w-full py-6 text-lg font-bold bg-purple-600 hover:bg-purple-700 text-white rounded-xl shadow-lg hover:shadow-purple-500/25 transition-all mt-4">
-                                Submit Application
+                        <div className="space-y-4">
+                            <Button size="lg" className="w-full py-8 text-xl font-bold bg-purple-600 hover:bg-purple-700 text-white rounded-xl shadow-lg hover:shadow-purple-500/25 transition-all" asChild>
+                                <Link to="/auth?tab=signup&redirect=/dashboard/affiliate">
+                                    Join Affiliate Program Now
+                                </Link>
                             </Button>
-                        </form>
+
+                            <p className="text-sm text-slate-400">
+                                Already have an account? <Link to="/auth?redirect=/dashboard/affiliate" className="text-purple-600 hover:underline">Log in</Link>
+                            </p>
+                        </div>
                     </div>
                 </section>
 

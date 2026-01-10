@@ -8,32 +8,33 @@ import { motion } from "framer-motion";
 const plans = [
     {
         name: "Starter",
-        price: "0",
+        price: "1,999",
         description: "Perfect for small businesses just starting out.",
         features: [
+            "3 Users Included",
             "1,000 Free Conversations/mo",
             "Standard Support",
             "Broadcast Campaigns",
             "Basic Automation",
             "Unlimited Contacts"
         ],
-        cta: "Request a Quote",
+        cta: "Get Started",
         variant: "outline"
     },
     {
         name: "Growth",
-        price: "49",
+        price: "4,499",
         description: "For growing teams that need more power.",
         features: [
+            "5 Users Included",
             "10,000 Conversations/mo",
             "Priority Support",
             "Advanced Flow Builder",
             "AI Chatbot Integration",
-            "Shopify & CRM Integration",
             "Team Inbox (5 Agents)"
         ],
         popular: true,
-        cta: "Request a Quote",
+        cta: "Get Started",
         variant: "whatsapp"
     },
     {
@@ -41,12 +42,12 @@ const plans = [
         price: "Custom",
         description: "Custom solutions for large organizations.",
         features: [
+            "10+ Users Included",
             "Unlimited Conversations",
             "Dedicated Account Manager",
             "Custom Import/Export",
             "SLA & Priority Support",
-            "On-premise Deployment",
-            "Unlimited Agents"
+            "On-premise Deployment"
         ],
         cta: "Contact Sales",
         variant: "outline"
@@ -93,7 +94,9 @@ const Pricing = () => {
                                     <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
                                     <p className="text-muted-foreground mb-6">{plan.description}</p>
                                     <div className="flex items-baseline gap-1">
-                                        <span className="text-4xl font-bold">${plan.price}</span>
+                                        <span className="text-4xl font-bold">
+                                            {plan.price !== "Custom" && "₹"}{plan.price}
+                                        </span>
                                         {plan.price !== "Custom" && <span className="text-muted-foreground">/month</span>}
                                     </div>
                                 </div>

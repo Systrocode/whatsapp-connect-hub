@@ -148,16 +148,18 @@ serve(async (req: Request) => {
 
           // Find the user who owns this WhatsApp number
           let userId: string | null = null;
+          let accessToken: string | null = null;
 
           if (phoneNumberId) {
             const { data: whatsappSettings } = await supabaseServiceRole
               .from('whatsapp_settings')
-              .select('user_id')
+              .select('user_id, access_token:access_token_encrypted')
               .eq('phone_number_id', phoneNumberId)
               .single();
 
             if (whatsappSettings) {
               userId = whatsappSettings.user_id;
+              accessToken = whatsappSettings.access_token;
               console.log("Found user for phone_number_id:", phoneNumberId, "User ID:", userId);
             }
           }
@@ -166,7 +168,7 @@ serve(async (req: Request) => {
             console.log("No user found by phone_number_id, trying fallback...");
             const { data: whatsappSettings } = await supabaseServiceRole
               .from('whatsapp_settings')
-              .select('user_id')
+              .select('user_id, access_token:access_token_encrypted')
               .limit(1)
               .single();
 
@@ -175,6 +177,7 @@ serve(async (req: Request) => {
               return new Response("NO_SETTINGS", { status: 200, headers: corsHeaders });
             }
             userId = whatsappSettings.user_id;
+            accessToken = whatsappSettings.access_token;
           }
 
           // Search for contact - checking with and without '+' prefix
@@ -280,6 +283,67 @@ serve(async (req: Request) => {
             console.error("Error saving message:", msgError);
           } else {
             console.log("Message saved successfully for conversation:", conversationId);
+
+            // 4. Trigger Automation Flows
+            if (messageType === 'text' && accessToken) {
+              // Fetch active flows
+              const { data: flows } = await supabaseServiceRole
+                .from('flows')
+                .select('*')
+                .eq('user_id', userId)
+                .eq('is_active', true);
+
+              if (flows && flows.length > 0) {
+                for (const flow of flows) {
+                  // Check trigger
+                  if (flow.trigger_keywords && flow.trigger_keywords.some((k: string) => content.toLowerCase().includes(k.toLowerCase()))) {
+                    console.log(`Triggering Flow: ${flow.name}`);
+
+                    // Naive Flow Execution: Find the first 'message' node
+                    // TODO: Implement full graph traversal (Trigger -> Next Node)
+                    const messageNode = flow.data?.nodes?.find((n: any) => n.type === 'message' || n.type === 'messageNode');
+
+                    if (messageNode && messageNode.data?.content) {
+                      const responseText = messageNode.data.content;
+
+                      // Send Response
+                      const replyRes = await fetch(
+                        `https://graph.facebook.com/v21.0/${value.metadata.phone_number_id}/messages`,
+                        {
+                          method: 'POST',
+                          headers: {
+                            'Authorization': `Bearer ${accessToken}`,
+                            'Content-Type': 'application/json',
+                          },
+                          body: JSON.stringify({
+                            messaging_product: 'whatsapp',
+                            to: senderPhone,
+                            type: 'text',
+                            text: { body: responseText }
+                          }),
+                        }
+                      );
+
+                      if (replyRes.ok) {
+                        const replyJson = await replyRes.json();
+                        // Save Bot Reply to DB
+                        await supabaseServiceRole.from('messages').insert({
+                          conversation_id: conversationId,
+                          whatsapp_message_id: replyJson.messages?.[0]?.id,
+                          content: responseText,
+                          direction: 'outbound',
+                          message_type: 'text',
+                          status: 'sent'
+                        });
+                        console.log(`Flow reply sent: ${responseText}`);
+                      } else {
+                        console.error("Failed to send flow reply");
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
 

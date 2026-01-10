@@ -12,7 +12,7 @@ import { useMessages } from '@/hooks/useMessages';
 import { useConversations } from '@/hooks/useConversations';
 import { useTemplates, MessageTemplate } from '@/hooks/useTemplates';
 import { Skeleton } from '@/components/ui/skeleton';
-import { format } from 'date-fns';
+import { format, isToday, isYesterday } from 'date-fns';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -168,6 +168,21 @@ const ConversationDetail = () => {
     }
   };
 
+  const groupedMessages = messages.reduce((groups: { date: string; messages: typeof messages }[], message) => {
+    const date = new Date(message.created_at);
+    let dateLabel = format(date, 'MMMM d, yyyy');
+    if (isToday(date)) dateLabel = 'Today';
+    else if (isYesterday(date)) dateLabel = 'Yesterday';
+
+    const lastGroup = groups[groups.length - 1];
+    if (lastGroup && lastGroup.date === dateLabel) {
+      lastGroup.messages.push(message);
+    } else {
+      groups.push({ date: dateLabel, messages: [message] });
+    }
+    return groups;
+  }, []);
+
   if (!id) {
     return (
       <DashboardLayout>
@@ -277,66 +292,74 @@ const ConversationDetail = () => {
                   </p>
                 </div>
               ) : (
-                messages.map((message, index) => (
-                  <motion.div
-                    key={message.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.02 }}
-                    className={`flex ${message.direction === 'outbound' ? 'justify-end' : 'justify-start'
-                      }`}
-                  >
-                    <div
-                      className={`max-w-[70%] rounded-2xl px-4 py-2 shadow-sm ${message.direction === 'outbound'
-                        ? 'bg-primary text-primary-foreground rounded-br-md'
-                        : 'bg-white dark:bg-muted text-foreground rounded-bl-md border border-border/50'
-                        }`}
-                    >
-                      {['image', 'video', 'audio', 'document'].includes(message.message_type || '') ? (() => {
-                        try {
-                          const parsed = JSON.parse(message.content);
-
-                          // Handle Image
-                          if (parsed.image) {
-                            const mediaId = parsed.image.id;
-                            const mediaUrl = parsed.image.link;
-                            const caption = parsed.caption;
-                            if (mediaId || mediaUrl) {
-                              return <WhatsAppMedia mediaId={mediaId} mediaUrl={mediaUrl} caption={caption} />;
-                            }
-                          }
-
-                          // Handle other media types gracefully
-                          if (parsed.video) return <div className="flex items-center gap-2 p-2 bg-background/20 rounded">🎥 Video</div>;
-                          if (parsed.audio) return <div className="flex items-center gap-2 p-2 bg-background/20 rounded">🎵 Audio</div>;
-                          if (parsed.document) return <div className="flex items-center gap-2 p-2 bg-background/20 rounded">📄 Document: {parsed.filename || 'File'}</div>;
-
-                        } catch (e) {
-                          // Legacy message or text
-                        }
-
-                        // Fallback
-                        return (
-                          <div className="flex items-center gap-2 text-sm italic text-muted-foreground/80">
-                            <span>📷</span>
-                            <span>{message.content}</span>
-                          </div>
-                        );
-                      })() : (
-                        <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
-                      )}
-                      <div className={`flex items-center justify-end gap-1 mt-1 ${message.direction === 'outbound' ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>
-                        <p className="text-[10px]">
-                          {format(new Date(message.created_at), 'HH:mm')}
-                        </p>
-                        {message.direction === 'outbound' && (
-                          <span className="text-[10px]">
-                            {message.status === 'read' ? '✓✓' : message.status === 'delivered' ? '✓✓' : '✓'}
-                          </span>
-                        )}
-                      </div>
+                groupedMessages.map((group) => (
+                  <div key={group.date} className="relative">
+                    <div className="flex justify-center my-6 sticky top-2 z-10 pointer-events-none">
+                      <span className="bg-secondary/80 backdrop-blur-sm text-[10px] font-medium px-3 py-1 rounded-full text-secondary-foreground shadow-sm border border-border/50 select-none">
+                        {group.date}
+                      </span>
                     </div>
-                  </motion.div>
+                    {group.messages.map((message) => (
+                      <motion.div
+                        key={message.id}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.2 }}
+                        className={`flex mb-2 ${message.direction === 'outbound' ? 'justify-end' : 'justify-start'}`}
+                      >
+                        <div
+                          className={`max-w-[85%] sm:max-w-[70%] rounded-2xl px-4 py-2 shadow-sm ${message.direction === 'outbound'
+                            ? 'bg-primary text-primary-foreground rounded-br-none'
+                            : 'bg-white dark:bg-muted text-foreground rounded-bl-none border border-border/50'
+                            }`}
+                        >
+                          {['image', 'video', 'audio', 'document'].includes(message.message_type || '') ? (() => {
+                            try {
+                              const parsed = JSON.parse(message.content);
+
+                              // Handle Image
+                              if (parsed.image) {
+                                const mediaId = parsed.image.id;
+                                const mediaUrl = parsed.image.link;
+                                const caption = parsed.caption;
+                                if (mediaId || mediaUrl) {
+                                  return <WhatsAppMedia mediaId={mediaId} mediaUrl={mediaUrl} caption={caption} />;
+                                }
+                              }
+
+                              // Handle other media types gracefully
+                              if (parsed.video) return <div className="flex items-center gap-2 p-2 bg-black/10 rounded">🎥 Video</div>;
+                              if (parsed.audio) return <div className="flex items-center gap-2 p-2 bg-black/10 rounded">🎵 Audio</div>;
+                              if (parsed.document) return <div className="flex items-center gap-2 p-2 bg-black/10 rounded">📄 Document: {parsed.filename || 'File'}</div>;
+
+                            } catch (e) {
+                              // Legacy message or text
+                            }
+
+                            // Fallback
+                            return (
+                              <div className="flex items-center gap-2 text-sm italic opacity-80">
+                                <span>📷</span>
+                                <span>{message.content}</span>
+                              </div>
+                            );
+                          })() : (
+                            <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
+                          )}
+                          <div className={`flex items-center justify-end gap-1 mt-1 ${message.direction === 'outbound' ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>
+                            <p className="text-[10px]">
+                              {format(new Date(message.created_at), 'HH:mm')}
+                            </p>
+                            {message.direction === 'outbound' && (
+                              <span className="text-[10px]">
+                                {message.status === 'read' ? '✓✓' : message.status === 'delivered' ? '✓✓' : '✓'}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
                 ))
               )}
               <div ref={messagesEndRef} />

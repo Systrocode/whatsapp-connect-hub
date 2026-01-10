@@ -25,6 +25,8 @@ const icons = {
   whatsapp: 'https://img.icons8.com/fluency/48/whatsapp.png',
   ads: 'https://img.icons8.com/fluency/48/commercial.png',
   flow: 'https://img.icons8.com/fluency/48/flow-chart.png',
+  affiliates: 'https://img.icons8.com/fluency/48/money-bag.png',
+  invoice: 'https://img.icons8.com/fluency/48/invoice.png',
 };
 
 const navItems = [
@@ -37,8 +39,10 @@ const navItems = [
   { icon: icons.ads, label: 'Ads Manager', path: '/dashboard/ads' },
   { icon: icons.flow, label: 'Flow Builder', path: '/dashboard/flows' },
   { icon: icons.analytics, label: 'Analytics', path: '/dashboard/analytics' },
+  { icon: icons.affiliates, label: 'Affiliates', path: '/dashboard/affiliate' },
   { icon: icons.tools, label: 'Tools', path: '/dashboard/tools' },
   { icon: icons.integrations, label: 'Integrations', path: '/dashboard/integrations' },
+  { icon: icons.invoice, label: 'Invoices', path: '/dashboard/invoices' },
   { icon: icons.settings, label: 'Settings', path: '/dashboard/settings' },
 ];
 
@@ -47,6 +51,7 @@ const adminItems = [
   { icon: icons.users, label: 'User Management', path: '/dashboard/admin/users' },
   { icon: icons.templates, label: 'Templates', path: '/dashboard/admin/templates' },
   { icon: icons.subscriptions, label: 'Subscriptions', path: '/dashboard/admin/subscriptions' },
+  { icon: icons.invoice, label: 'Invoices (Admin)', path: '/dashboard/admin/invoices' },
   { icon: icons.blog, label: 'Blog Manager', path: '/dashboard/admin/blog' },
 ];
 
