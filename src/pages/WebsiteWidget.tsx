@@ -76,8 +76,8 @@ const WebsiteWidget = () => {
                                 <div className="bg-white text-black px-4 py-2 rounded-full shadow-lg text-sm font-medium animate-fade-in shadow-black/5">
                                     {welcomeMessage}
                                 </div>
-                                <div className="w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform cursor-pointer text-white">
-                                    <MessageCircle className="w-8 h-8" />
+                                <div className="rounded-full shadow-lg hover:scale-105 transition-transform cursor-pointer">
+                                    <img src="https://img.icons8.com/color/96/whatsapp--v1.png" alt="WhatsApp" className="w-14 h-14" />
                                 </div>
                             </div>
                         </CardContent>

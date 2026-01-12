@@ -143,7 +143,7 @@ const Dashboard = () => {
               title="Customize WhatsApp Link"
               description="Create shareable links & QR for your WA business number"
               icon={icons.link}
-              path="/dashboard/whatsapp-link"
+              path="/dashboard/tools"
               delay={0.2}
             />
             <FeatureCard

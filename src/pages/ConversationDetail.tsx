@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Send, Phone, MoreVertical, CheckCircle2, Clock, User, Paperclip, Loader2, Image as ImageIcon, FileText, Music, LayoutTemplate, Info } from 'lucide-react';
+import { ArrowLeft, Send, Phone, MoreVertical, CheckCircle2, Clock, User, Paperclip, Loader2, Image as ImageIcon, FileText, Music, LayoutTemplate, Info, Check, CheckCheck } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
@@ -352,7 +352,13 @@ const ConversationDetail = () => {
                             </p>
                             {message.direction === 'outbound' && (
                               <span className="text-[10px]">
-                                {message.status === 'read' ? '✓✓' : message.status === 'delivered' ? '✓✓' : '✓'}
+                                {message.status === 'read' ? (
+                                  <CheckCheck className="w-3 h-3 text-blue-500" />
+                                ) : message.status === 'delivered' ? (
+                                  <CheckCheck className="w-3 h-3 text-muted-foreground" />
+                                ) : (
+                                  <Check className="w-3 h-3 text-muted-foreground" />
+                                )}
                               </span>
                             )}
                           </div>
@@ -463,7 +469,11 @@ const ConversationDetail = () => {
                   className="h-11 w-11 rounded-full shrink-0 shadow-md"
                   disabled={!newMessage.trim() || sendMessage.isPending}
                 >
-                  <Send className="w-5 h-5 ml-0.5" />
+                  <img
+                    src="https://img.icons8.com/color/48/whatsapp--v1.png"
+                    alt="Send"
+                    className="w-6 h-6"
+                  />
                 </Button>
               </motion.form>
             </div>
@@ -476,7 +486,7 @@ const ConversationDetail = () => {
 
         </div>
       </div>
-    </DashboardLayout>
+    </DashboardLayout >
   );
 };
 

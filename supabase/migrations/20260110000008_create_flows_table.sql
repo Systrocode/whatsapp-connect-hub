@@ -1,3 +1,6 @@
+-- Enable moddatetime extension
+create extension if not exists moddatetime schema extensions;
+
 -- Create flows table for storing chatbot logic
 create table public.flows (
   id uuid default gen_random_uuid() primary key,
@@ -32,4 +35,4 @@ create policy "Users can delete their own flows"
 
 -- Trigger to update updated_at
 create trigger handle_updated_at before update on public.flows
-  for each row execute procedure moddatetime (updated_at);
+  for each row execute procedure extensions.moddatetime (updated_at);

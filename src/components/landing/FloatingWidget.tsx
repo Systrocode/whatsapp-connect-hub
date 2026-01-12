@@ -47,15 +47,12 @@ export const FloatingWidget = () => {
                 whileTap={{ scale: 0.9 }}
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
-                className="w-16 h-16 bg-[#25D366] rounded-full flex items-center justify-center shadow-[0_4px_14px_0_rgba(37,211,102,0.39)] hover:shadow-[0_6px_20px_rgba(37,211,102,0.23)] transition-all cursor-pointer relative group"
+                className="rounded-full shadow-lg hover:shadow-xl transition-all cursor-pointer relative group"
             >
-                <MessageCircle className="w-8 h-8 text-white fill-white transition-transform duration-300 group-hover:scale-110" />
+                <img src="https://img.icons8.com/color/96/whatsapp--v1.png" alt="WhatsApp" className="w-16 h-16" />
 
-                {/* Ping Animation */}
-                <div className="absolute inset-0 rounded-full bg-[#25D366] opacity-30 animate-ping pointer-events-none"></div>
-
-                {/* Badge if needed */}
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-white dark:border-slate-900"></div>
+                {/* Badge */}
+                <div className="absolute top-0 right-0 w-4 h-4 bg-red-500 rounded-full border-2 border-white dark:border-slate-900"></div>
             </motion.a>
         </div>
     );
