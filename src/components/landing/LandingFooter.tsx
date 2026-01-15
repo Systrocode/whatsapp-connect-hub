@@ -154,9 +154,7 @@ export function LandingFooter() {
                                 <img src="https://img.icons8.com/fluency/48/gdpr.png" alt="GDPR" className="w-12 h-12 hover:scale-110 transition-transform" />
                             </div>
 
-                            <div title="SOC 2 Ready">
-                                <img src="https://img.icons8.com/fluency/48/cloud-storage.png" alt="SOC 2" className="w-12 h-12 hover:scale-110 transition-transform" />
-                            </div>
+
                         </div>
                     </div>
 

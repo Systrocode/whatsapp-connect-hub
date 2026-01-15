@@ -34,7 +34,7 @@ export default function TermsAndPrivacy() {
                         transition={{ delay: 0.2 }}
                         className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto"
                     >
-                        Your trust is our top priority. We are committed to protecting your data and adhering to global privacy standards including GDPR, CCPA, and PIPEDA.
+                        Your trust is our top priority. We are committed to protecting your data and adhering to global privacy standards including GDPR and CCPA.
                     </motion.p>
                 </div>
             </section>
@@ -91,9 +91,9 @@ export default function TermsAndPrivacy() {
                                         If you are located in the EU, you have the right to access, correct, delete, and port your data. We act as a Data Processor while you are the Data Controller of your customer data. We fully support DPA (Data Processing Agreements) upon request.
                                     </p>
 
-                                    <h3>4. USA (CCPA/CPRA) & Canada (PIPEDA)</h3>
+                                    <h3>4. USA (CCPA/CPRA)</h3>
                                     <p>
-                                        We comply with US and Canadian privacy laws. We provide mechanisms for you to opt-out of collection and request data deletion ("Right to be Forgotten").
+                                        We comply with US privacy laws. We provide mechanisms for you to opt-out of collection and request data deletion ("Right to be Forgotten").
                                     </p>
                                 </div>
                             </TabsContent>
@@ -166,14 +166,6 @@ export default function TermsAndPrivacy() {
                                         <li className="flex items-start gap-3">
                                             <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
                                             <span>CCPA (California Consumer Privacy Act)</span>
-                                        </li>
-                                        <li className="flex items-start gap-3">
-                                            <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
-                                            <span>PIPEDA (Canada)</span>
-                                        </li>
-                                        <li className="flex items-start gap-3">
-                                            <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
-                                            <span>SOC 2 Type II (Provider Level)</span>
                                         </li>
                                     </ul>
                                 </div>
