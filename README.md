@@ -1,4 +1,4 @@
-# WA Business - WhatsApp Management Dashboard
+# Avelo - WhatsApp Management Dashboard
 
 A powerful dashboard for managing WhatsApp Business conversations, automating responses, and tracking analytics.
 
@@ -39,4 +39,4 @@ We have detailed documentation available in the `docs/` directory:
 
 ## License
 
-All rights reserved. © 2024 WA Business Dashboard.
+All rights reserved. © 2024 Avelo Dashboard.

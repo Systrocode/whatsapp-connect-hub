@@ -57,6 +57,7 @@ const IntegrationPage = lazy(() => import("./pages/IntegrationPage"));
 const MobileAppPage = lazy(() => import("./pages/MobileAppPage"));
 const InvoicesPage = lazy(() => import("./pages/InvoicesPage"));
 const AffiliateDashboard = lazy(() => import("./pages/affiliates/AffiliateDashboard"));
+const HelpSupport = lazy(() => import("./pages/dashboard/HelpSupport"));
 const JoinTeam = lazy(() => import("./pages/JoinTeam"));
 
 // Tools Pages
@@ -138,6 +139,7 @@ const App = () => {
                   <Route path="/dashboard/tools" element={<ProtectedRoute><Tools /></ProtectedRoute>} />
                   <Route path="/dashboard/website-widget" element={<ProtectedRoute><WebsiteWidget /></ProtectedRoute>} />
                   <Route path="/dashboard/affiliate" element={<ProtectedRoute><AffiliateDashboard /></ProtectedRoute>} />
+                  <Route path="/dashboard/help" element={<ProtectedRoute><HelpSupport /></ProtectedRoute>} />
                   {/* Admin Routes */}
                   <Route path="/dashboard/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
                   <Route path="/dashboard/admin/users" element={<AdminRoute><AdminUsers /></AdminRoute>} />

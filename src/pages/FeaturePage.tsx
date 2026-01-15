@@ -791,7 +791,7 @@ const renderFeatureVisual = (title: string, Icon: any, visualType?: string, desc
                         <div className="w-8 h-8 bg-[#00E785] rounded-xl flex items-center justify-center">
                             <span className="font-bold text-slate-900 text-lg">W</span>
                         </div>
-                        <span className="font-bold text-xl text-slate-900 tracking-tight">WA Business</span>
+                        <span className="font-bold text-xl text-slate-900 tracking-tight">Avelo</span>
                     </div>
 
                     {/* Benefit Ticks */}
@@ -2103,7 +2103,7 @@ const renderFeatureVisual = (title: string, Icon: any, visualType?: string, desc
                 {/* Chat Header */}
                 <div className="bg-slate-800 p-4 flex items-center gap-3 text-white">
                     <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center font-bold">W</div>
-                    <div className="text-sm font-medium">WA Business</div>
+                    <div className="text-sm font-medium">Avelo</div>
                 </div>
                 {/* Chat Area */}
                 <div className="bg-[#e5ddd5] dark:bg-slate-800 inset-0 h-[400px] p-4 space-y-4 relative">
@@ -2434,7 +2434,7 @@ const FeaturePage = () => {
             <section className="py-12 bg-pink-50/50 dark:bg-slate-900/50 border-y border-pink-100 dark:border-slate-800">
                 <div className="container mx-auto text-center">
                     <p className="text-slate-600 dark:text-slate-400 font-medium mb-8">
-                        Growth-focused marketing teams trust WA Business to unlock WhatsApp's potential
+                        Growth-focused marketing teams trust Avelo to unlock WhatsApp's potential
                     </p>
                     <div className="flex flex-wrap justify-center items-center gap-12 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon" className="h-8 w-auto" />

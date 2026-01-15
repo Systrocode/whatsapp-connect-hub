@@ -137,7 +137,7 @@ export const INTEGRATIONS_DATA: Record<string, Integration> = {
         ],
         steps: [
             { title: "Setup Extension", description: "Install the WhatsApp extension from Zoho Marketplace." },
-            { title: "Authenticate", description: "Link your WA Business phone number." },
+            { title: "Authenticate", description: "Link your Avelo phone number." },
             { title: "Configure", description: "Set up your notification preferences." }
         ]
     },
@@ -209,7 +209,7 @@ export const INTEGRATIONS_DATA: Record<string, Integration> = {
         ],
         steps: [
             { title: "Download Plugin", description: "Get the plugin from your WordPress dashboard." },
-            { title: "Connect API", description: "Enter your WA Business API keys." },
+            { title: "Connect API", description: "Enter your Avelo API keys." },
             { title: "Go Live", description: "Start sending automated notifications immediately." }
         ]
     },

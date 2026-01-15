@@ -21,7 +21,7 @@ const BrandingPage = () => {
                             Brand Assets
                         </div>
                         <h1 className="text-4xl md:text-6xl font-black text-slate-900 dark:text-white mb-6 tracking-tight">
-                            WA Business <span className="text-green-600">Brand Kit</span>
+                            Avelo <span className="text-green-600">Brand Kit</span>
                         </h1>
                         <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
                             Our brand is our story. Here are the tools, guidelines, and assets you need to communicate our identity effectively and consistently.
@@ -124,7 +124,7 @@ const BrandingPage = () => {
                                 Our Logo
                             </h2>
                             <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
-                                The WA Business logo represents connection and simplicity. Please ensure you use the logo with ample whitespace and avoid modifying its colors or proportions.
+                                The Avelo logo represents connection and simplicity. Please ensure you use the logo with ample whitespace and avoid modifying its colors or proportions.
                             </p>
                             <Button variant="outline" className="w-full justify-between group">
                                 Download Assets <Download className="w-4 h-4 text-slate-400 group-hover:text-slate-900" />
@@ -139,7 +139,7 @@ const BrandingPage = () => {
                                         <div className="w-10 h-10 bg-[#00E785] rounded-xl flex items-center justify-center">
                                             <MessageSquare className="w-5 h-5 text-slate-900 fill-current" />
                                         </div>
-                                        <span className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">WA Business</span>
+                                        <span className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Avelo</span>
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-2 gap-6">
@@ -149,7 +149,7 @@ const BrandingPage = () => {
                                             <div className="w-8 h-8 bg-[#00E785] rounded-lg flex items-center justify-center">
                                                 <MessageSquare className="w-4 h-4 text-slate-900 fill-current" />
                                             </div>
-                                            <span className="text-lg font-bold text-white tracking-tight">WA Business</span>
+                                            <span className="text-lg font-bold text-white tracking-tight">Avelo</span>
                                         </div>
                                     </div>
                                     <div className="bg-white border p-8 rounded-2xl flex items-center justify-center">
@@ -169,7 +169,7 @@ const BrandingPage = () => {
                                     <div className="w-10 h-10 bg-[#00E785] rounded-xl flex items-center justify-center">
                                         <MessageSquare className="w-5 h-5 text-slate-900 fill-current" />
                                     </div>
-                                    <span className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">WA Business</span>
+                                    <span className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Avelo</span>
                                 </div>
                             </div>
                         </div>
@@ -236,7 +236,7 @@ const BrandingPage = () => {
                                     <div className="w-10 h-10 bg-[#00E785] rounded-xl flex items-center justify-center">
                                         <MessageSquare className="w-5 h-5 text-slate-900 fill-current" />
                                     </div>
-                                    <span className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">WA Business</span>
+                                    <span className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Avelo</span>
                                 </div>
                             </div>
                             <p className="text-sm text-slate-600 dark:text-slate-400 pl-1">
@@ -253,7 +253,7 @@ const BrandingPage = () => {
                                     <div className="w-10 h-10 bg-[#00E785] rounded-xl flex items-center justify-center">
                                         <MessageSquare className="w-5 h-5 text-slate-900 fill-current" />
                                     </div>
-                                    <span className="text-2xl font-bold text-white tracking-tight">WA Business</span>
+                                    <span className="text-2xl font-bold text-white tracking-tight">Avelo</span>
                                 </div>
                             </div>
                             <p className="text-sm text-slate-600 dark:text-slate-400 pl-1">
@@ -272,7 +272,7 @@ const BrandingPage = () => {
                                     <div className="w-10 h-10 bg-red-500 rounded-xl flex items-center justify-center">
                                         <MessageSquare className="w-5 h-5 text-white fill-current" />
                                     </div>
-                                    <span className="text-2xl font-bold text-red-500 tracking-tight">WA Business</span>
+                                    <span className="text-2xl font-bold text-red-500 tracking-tight">Avelo</span>
                                 </div>
                                 <div className="absolute inset-0 flex items-center justify-center">
                                     <div className="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-bold">Never change colors</div>
@@ -292,7 +292,7 @@ const BrandingPage = () => {
                                     <div className="w-10 h-10 bg-[#00E785] rounded-xl flex items-center justify-center">
                                         <MessageSquare className="w-5 h-5 text-slate-900 fill-current" />
                                     </div>
-                                    <span className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">WA Business</span>
+                                    <span className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Avelo</span>
                                 </div>
                                 <div className="absolute inset-0 flex items-center justify-center">
                                     <div className="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-bold">Do not stretch</div>
@@ -314,7 +314,7 @@ const BrandingPage = () => {
                         <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500 rounded-full blur-[100px] opacity-20"></div>
 
                         <div className="relative z-10">
-                            <h2 className="text-3xl font-bold text-white mb-6">Start Building with WA Business</h2>
+                            <h2 className="text-3xl font-bold text-white mb-6">Start Building with Avelo</h2>
                             <p className="text-slate-300 text-lg mb-8 max-w-md mx-auto">
                                 Download all the logos, fonts, and assets in one organized ZIP file.
                             </p>

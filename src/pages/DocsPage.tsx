@@ -63,7 +63,7 @@ const DocsPage = () => {
                 </div>
                 <h1 className="text-4xl font-black text-slate-900 dark:text-white mb-4">Introduction</h1>
                 <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
-                    Welcome to the WA Business API documentation. Our REST API allows you to programmatically send messages, manage contacts, and integrate WhatsApp capabilities directly into your applications.
+                    Welcome to the Avelo API documentation. Our REST API allows you to programmatically send messages, manage contacts, and integrate WhatsApp capabilities directly into your applications.
                 </p>
 
                 <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-4 rounded-r-lg my-6">
@@ -72,7 +72,7 @@ const DocsPage = () => {
                         <div>
                             <h4 className="font-bold text-blue-900 dark:text-blue-100">Base URL</h4>
                             <code className="text-sm text-blue-800 dark:text-blue-300 font-mono mt-1 block">
-                                https://api.wabusiness.com/v1
+                                https://api.avelo.in/v1
                             </code>
                         </div>
                     </div>
@@ -99,7 +99,7 @@ const DocsPage = () => {
                     <div className="relative rounded-xl overflow-hidden shadow-2xl bg-[#1e1e1e]">
                         <div className="absolute top-3 right-3 z-10">
                             <button
-                                onClick={() => handleCopy('curl -X GET https://api.wabusiness.com/v1/profile \\\n  -H "Authorization: Bearer YOUR_API_TOKEN"')}
+                                onClick={() => handleCopy('curl -X GET https://api.avelo.in/v1/profile \\\n  -H "Authorization: Bearer YOUR_API_TOKEN"')}
                                 className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-colors"
                             >
                                 {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
@@ -107,7 +107,7 @@ const DocsPage = () => {
                         </div>
                         <CodeBlock
                             language="bash"
-                            code={`curl -X GET https://api.wabusiness.com/v1/profile \\
+                            code={`curl -X GET https://api.avelo.in/v1/profile \\
   -H "Authorization: Bearer YOUR_API_TOKEN"`}
                         />
                     </div>

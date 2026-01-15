@@ -149,7 +149,7 @@ export default function CareersPage() {
                             </div>
                             <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">Customer Success</h3>
                             <p className="text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">
-                                Be the face of WA Business. Help our clients succeed by providing world-class support, onboarding, and strategic advice.
+                                Be the face of Avelo. Help our clients succeed by providing world-class support, onboarding, and strategic advice.
                             </p>
                             <div className="flex gap-2 flex-wrap">
                                 <span className="px-3 py-1 bg-slate-100 dark:bg-slate-900 rounded-full text-xs font-medium text-slate-600 dark:text-slate-300">Support</span>

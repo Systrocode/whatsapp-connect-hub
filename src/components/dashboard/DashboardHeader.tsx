@@ -1,5 +1,5 @@
 import { Bell, Search, ChevronDown, LogOut } from 'lucide-react';
-import { ModeToggle } from '@/components/ui/mode-toggle';
+
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
@@ -111,7 +111,7 @@ const DashboardHeader = ({ onMenuClick }: { onMenuClick?: () => void }) => {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <ModeToggle />
+
 
         {/* User menu */}
         <DropdownMenu>

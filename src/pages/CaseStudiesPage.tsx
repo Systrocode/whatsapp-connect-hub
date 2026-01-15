@@ -149,7 +149,7 @@ export default function CaseStudiesPage() {
                         transition={{ delay: 0.1 }}
                         className="text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto"
                     >
-                        Detailed analysis of how businesses transformed their customer engagement with WA Business
+                        Detailed analysis of how businesses transformed their customer engagement with Avelo
                     </motion.p>
                 </div>
             </section>

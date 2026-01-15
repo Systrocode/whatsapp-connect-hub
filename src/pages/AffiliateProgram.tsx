@@ -21,7 +21,7 @@ export default function AffiliateProgram() {
 
                         <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
                             Earn money by promoting <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">WA Business</span>
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">Avelo</span>
                         </h1>
 
                         <p className="text-xl text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
@@ -116,7 +116,7 @@ export default function AffiliateProgram() {
                                     </div>
                                 </div>
                                 <p className="mt-6 text-sm text-slate-400 italic">
-                                    "Promoting WA Business is the easiest passive income I've ever made. The product sells itself!"
+                                    "Promoting Avelo is the easiest passive income I've ever made. The product sells itself!"
                                 </p>
                             </div>
                         </div>
@@ -150,7 +150,7 @@ export default function AffiliateProgram() {
                             <AccordionItem value="item-4">
                                 <AccordionTrigger>Can I run ads?</AccordionTrigger>
                                 <AccordionContent>
-                                    You can run ads to your own content, but you are not permitted to bid on our brand keywords (WA Business, etc.) in search engines.
+                                    You can run ads to your own content, but you are not permitted to bid on our brand keywords (Avelo, etc.) in search engines.
                                 </AccordionContent>
                             </AccordionItem>
                         </Accordion>

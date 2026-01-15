@@ -43,7 +43,7 @@ export default function ReviewsPage() {
             verified: true,
             helpful: 47,
             title: "Game changer for our e-commerce business",
-            content: "WA Business completely transformed how we engage with customers. The cart recovery feature alone recovered over $50K in the first month. The platform is intuitive, the support team is responsive, and the ROI is incredible. Highly recommend!",
+            content: "Avelo completely transformed how we engage with customers. The cart recovery feature alone recovered over $50K in the first month. The platform is intuitive, the support team is responsive, and the ROI is incredible. Highly recommend!",
             pros: ["Easy to use", "Excellent ROI", "Great support"],
             cons: []
         },
@@ -75,7 +75,7 @@ export default function ReviewsPage() {
             verified: true,
             helpful: 52,
             title: "Best customer engagement platform we've used",
-            content: "After trying 3 other platforms, WA Business is by far the best. The broadcast campaigns have 96% open rates compared to 18% with email. Customer support response time dropped from 6 hours to under 30 minutes. Worth every penny.",
+            content: "After trying 3 other platforms, Avelo is by far the best. The broadcast campaigns have 96% open rates compared to 18% with email. Customer support response time dropped from 6 hours to under 30 minutes. Worth every penny.",
             pros: ["High engagement rates", "Fast implementation", "Detailed analytics"],
             cons: []
         },
@@ -107,7 +107,7 @@ export default function ReviewsPage() {
             verified: true,
             helpful: 29,
             title: "Great platform with room for improvement",
-            content: "Overall very satisfied with WA Business. The WhatsApp catalog feature made it easy for customers to browse and order. Sales increased by 120% in 3 months. Would love to see more customization options for the catalog layout.",
+            content: "Overall very satisfied with Avelo. The WhatsApp catalog feature made it easy for customers to browse and order. Sales increased by 120% in 3 months. Would love to see more customization options for the catalog layout.",
             pros: ["Catalog feature", "Sales growth", "Customer convenience"],
             cons: ["Limited catalog customization"]
         },
@@ -139,7 +139,7 @@ export default function ReviewsPage() {
             verified: true,
             helpful: 44,
             title: "Member engagement has never been better",
-            content: "We use WA Business to send class schedules, workout tips, and personalized training reminders. Member retention increased by 50% and class attendance is up 65%. The platform is easy to use and the support team helped us set everything up quickly.",
+            content: "We use Avelo to send class schedules, workout tips, and personalized training reminders. Member retention increased by 50% and class attendance is up 65%. The platform is easy to use and the support team helped us set everything up quickly.",
             pros: ["Member retention", "Easy setup", "Excellent support"],
             cons: []
         },
@@ -155,7 +155,7 @@ export default function ReviewsPage() {
             verified: true,
             helpful: 31,
             title: "Solid platform for customer support",
-            content: "We've been using WA Business for 6 months now. The AI chatbot handles technical queries well and the team inbox makes collaboration easy. Customer satisfaction scores improved significantly. Only wish there were more integrations with other tools.",
+            content: "We've been using Avelo for 6 months now. The AI chatbot handles technical queries well and the team inbox makes collaboration easy. Customer satisfaction scores improved significantly. Only wish there were more integrations with other tools.",
             pros: ["AI chatbot", "Team collaboration", "Customer satisfaction"],
             cons: ["Limited integrations"]
         },
@@ -187,7 +187,7 @@ export default function ReviewsPage() {
             verified: true,
             helpful: 42,
             title: "Elevated our guest experience",
-            content: "We use WA Business for booking confirmations, check-in reminders, and concierge services. Guests appreciate the instant communication and personalized service. Our guest satisfaction scores increased from 4.2 to 4.8 stars.",
+            content: "We use Avelo for booking confirmations, check-in reminders, and concierge services. Guests appreciate the instant communication and personalized service. Our guest satisfaction scores increased from 4.2 to 4.8 stars.",
             pros: ["Guest experience", "Personalization", "Satisfaction scores"],
             cons: []
         }
@@ -234,7 +234,7 @@ export default function ReviewsPage() {
                         transition={{ delay: 0.1 }}
                         className="text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto"
                     >
-                        See what our customers have to say about their experience with WA Business
+                        See what our customers have to say about their experience with Avelo
                     </motion.p>
                 </div>
             </section>

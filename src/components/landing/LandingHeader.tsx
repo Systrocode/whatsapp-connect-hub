@@ -119,7 +119,7 @@ export function LandingHeader({ variant = 'default' }: { variant?: 'default' | '
                     <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
                         <MessageSquare className="w-4 h-4 text-primary-foreground" />
                     </div>
-                    <span className={cn("text-lg font-bold", isDark ? "text-white" : "text-foreground")}>WA Business</span>
+                    <span className={cn("text-lg font-bold", isDark ? "text-white" : "text-foreground")}>Avelo</span>
                 </Link>
 
                 {/* Desktop Navigation */}
@@ -220,7 +220,7 @@ export function LandingHeader({ variant = 'default' }: { variant?: 'default' | '
                                             Latest updates and marketing tips.
                                         </ListItem>
                                         <ListItem title="Case Studies" href="/case-studies">
-                                            See how others grow with WA Business.
+                                            See how others grow with Avelo.
                                         </ListItem>
                                         <ListItem title="Help Center" href="/help">
                                             Get support for your questions.

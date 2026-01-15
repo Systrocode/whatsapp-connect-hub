@@ -21,12 +21,12 @@ export default function AffiliatePage() {
             answer: "We use Partnerstack to manage payouts. We will send payouts monthly, and then you can withdraw using PayPal or your Bank account."
         },
         {
-            question: "How to promote WA Business?",
-            answer: "You can promote WA Business through your website, blog, social media channels, email newsletters, or any other marketing channels you have access to. We provide marketing materials and resources to help you succeed."
+            question: "How to promote Avelo?",
+            answer: "You can promote Avelo through your website, blog, social media channels, email newsletters, or any other marketing channels you have access to. We provide marketing materials and resources to help you succeed."
         },
         {
             question: "Can affiliates use Google or Facebook ads to acquire customers?",
-            answer: "Yes, affiliates can use paid advertising channels like Google Ads and Facebook Ads to promote WA Business and acquire customers. However, please ensure you follow our brand guidelines and advertising policies."
+            answer: "Yes, affiliates can use paid advertising channels like Google Ads and Facebook Ads to promote Avelo and acquire customers. However, please ensure you follow our brand guidelines and advertising policies."
         },
         {
             question: "Do I get a commission on the usage?",
@@ -75,7 +75,7 @@ export default function AffiliatePage() {
         {
             number: "03",
             title: "Promote",
-            description: "Share WA Business with your audience using our resources"
+            description: "Share Avelo with your audience using our resources"
         },
         {
             number: "04",
@@ -97,7 +97,7 @@ export default function AffiliatePage() {
                         className="text-5xl md:text-7xl font-bold text-slate-900 dark:text-white mb-6 tracking-tight"
                     >
                         The easiest way to<br />
-                        <span className="text-green-500">partner with WA Business</span>
+                        <span className="text-green-500">partner with Avelo</span>
                     </motion.h1>
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}
@@ -105,7 +105,7 @@ export default function AffiliatePage() {
                         transition={{ delay: 0.1 }}
                         className="text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto mb-12"
                     >
-                        partner with WA Business and earn a generous recurring commission.
+                        partner with Avelo and earn a generous recurring commission.
                     </motion.p>
                     <motion.a
                         initial={{ opacity: 0, y: 20 }}
@@ -177,7 +177,7 @@ export default function AffiliatePage() {
                         viewport={{ once: true }}
                         className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white text-center mb-4"
                     >
-                        Why become a WA Business affiliate?
+                        Why become an Avelo affiliate?
                     </motion.h2>
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}
@@ -186,7 +186,7 @@ export default function AffiliatePage() {
                         transition={{ delay: 0.1 }}
                         className="text-lg text-slate-600 dark:text-slate-400 text-center mb-16 max-w-4xl mx-auto"
                     >
-                        WA Business is the world's favourite WhatsApp Business API platform, serving over 8,000 customers across
+                        Avelo is the world's favourite WhatsApp Business API platform, serving over 8,000 customers across
                         more than 100 countries. Join our network of over 5,000 affiliates and help businesses thrive with
                         our advanced WhatsApp API platform.
                     </motion.p>
@@ -244,7 +244,7 @@ export default function AffiliatePage() {
                         transition={{ delay: 0.1 }}
                         className="text-lg text-slate-600 dark:text-slate-400 mb-16"
                     >
-                        Join the ranks of successful WA Business affiliates
+                        Join the ranks of successful Avelo affiliates
                     </motion.p>
 
                     <motion.div
@@ -288,7 +288,7 @@ export default function AffiliatePage() {
                         transition={{ delay: 0.1 }}
                         className="text-lg text-slate-600 dark:text-slate-400 text-center mb-12"
                     >
-                        Popular questions about the WA Business Affiliate Program
+                        Popular questions about the Avelo Affiliate Program
                     </motion.p>
 
                     <div className="space-y-4">
@@ -340,7 +340,7 @@ export default function AffiliatePage() {
                         viewport={{ once: true }}
                         className="text-4xl md:text-5xl font-bold text-white mb-6"
                     >
-                        Become a WA Business affiliate today!
+                        Become an Avelo affiliate today!
                     </motion.h2>
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}

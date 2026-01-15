@@ -131,7 +131,7 @@ const Pricing = () => {
                         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto text-left">
                             <div className="p-6 rounded-xl bg-muted/30">
                                 <h3 className="font-semibold mb-2">How can I see the platform in action?</h3>
-                                <p className="text-muted-foreground text-sm">We recommend booking a personalized demo with our team to see how WA Business can work for you.</p>
+                                <p className="text-muted-foreground text-sm">We recommend booking a personalized demo with our team to see how Avelo can work for you.</p>
                             </div>
                             <div className="p-6 rounded-xl bg-muted/30">
                                 <h3 className="font-semibold mb-2">Can I change plans later?</h3>

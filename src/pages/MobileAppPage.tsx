@@ -64,7 +64,7 @@ const MobileAppPage = () => {
                                 transition={{ delay: 0.2 }}
                                 className="text-xl text-slate-600 dark:text-slate-400 mb-10 max-w-xl mx-auto lg:mx-0 leading-relaxed"
                             >
-                                Manage WhatsApp conversations, track analytics, and run campaigns from anywhere. The WA Business mobile app is being built for speed and simplicity.
+                                Manage WhatsApp conversations, track analytics, and run campaigns from anywhere. The Avelo mobile app is being built for speed and simplicity.
                             </motion.p>
 
                             <motion.div
@@ -109,7 +109,7 @@ const MobileAppPage = () => {
                                 <div className="w-full h-full bg-slate-50 relative overflow-hidden flex flex-col">
                                     {/* App Header */}
                                     <div className="bg-[#075E54] h-20 pt-8 px-4 flex items-center justify-between text-white shadow-md z-10">
-                                        <span className="font-bold text-lg">WA Business</span>
+                                        <span className="font-bold text-lg">Avelo</span>
                                         <div className="w-8 h-8 rounded-full bg-white/20 overflow-hidden">
                                             <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=60" alt="Profile" className="w-full h-full object-cover" />
                                         </div>

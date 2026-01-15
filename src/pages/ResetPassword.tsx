@@ -81,7 +81,7 @@ const ResetPassword = () => {
           <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
             <MessageSquare className="w-5 h-5 text-primary-foreground" />
           </div>
-          <span className="text-xl font-bold text-foreground">WA Business</span>
+          <span className="text-xl font-bold text-foreground">Avelo</span>
         </div>
 
         <div className="mb-8">

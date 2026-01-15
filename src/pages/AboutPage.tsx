@@ -65,7 +65,7 @@ export default function AboutPage() {
                         transition={{ delay: 0.1 }}
                         className="text-5xl md:text-7xl font-bold text-slate-900 dark:text-white mb-8 tracking-tight"
                     >
-                        About <span className="text-green-500">WA Business</span>
+                        About <span className="text-green-500">Avelo</span>
                     </motion.h1>
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}
@@ -110,7 +110,7 @@ export default function AboutPage() {
                     >
                         <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-8">Our Story</h2>
                         <p className="text-slate-600 dark:text-slate-400 mb-6">
-                            Founded in 2024, WA Business started with a simple observation: Customers prefer chatting over calling or emailing, but businesses lacked the tools to manage these conversations effectively at scale.
+                            Founded in 2024, Avelo started with a simple observation: Customers prefer chatting over calling or emailing, but businesses lacked the tools to manage these conversations effectively at scale.
                         </p>
                         <p className="text-slate-600 dark:text-slate-400">
                             What began as a simple automated reply tool has grown into a comprehensive customer engagement platform. Today, we empower thousands of businesses to market, sell, and support their customers directly on WhatsApp, the world's most popular messaging app.

@@ -15,7 +15,7 @@ export default function PartnerProgram() {
                     <div className="max-w-4xl mx-auto text-center space-y-6">
                         <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full text-sm font-semibold mb-6">
                             <Handshake className="w-4 h-4" />
-                            <span>WA Business Partner Program</span>
+                            <span>Avelo Partner Program</span>
                         </div>
 
                         <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
@@ -76,7 +76,7 @@ export default function PartnerProgram() {
                                 </div>
                                 <h3 className="text-xl font-bold mb-4 text-slate-900 dark:text-white">Solution Partner</h3>
                                 <p className="text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
-                                    For agencies and consultancies. Sell, implement, and customize WA Business for your clients.
+                                    For agencies and consultancies. Sell, implement, and customize Avelo for your clients.
                                 </p>
                                 <ul className="space-y-3 mb-8">
                                     <li className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
@@ -120,7 +120,7 @@ export default function PartnerProgram() {
                                 </div>
                                 <h3 className="text-xl font-bold mb-4 text-slate-900 dark:text-white">Affiliate Partner</h3>
                                 <p className="text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
-                                    For influencers and content creators. Refer WA Business and earn for every signup.
+                                    For influencers and content creators. Refer Avelo and earn for every signup.
                                 </p>
                                 <ul className="space-y-3 mb-8">
                                     <li className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
@@ -142,7 +142,7 @@ export default function PartnerProgram() {
                 <section className="bg-slate-900 text-white py-24 px-6 relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-green-900/20 to-transparent pointer-events-none" />
                     <div className="max-w-6xl mx-auto relative z-10">
-                        <h2 className="text-3xl md:text-4xl font-bold mb-16 text-center">Why Partner with WA Business?</h2>
+                        <h2 className="text-3xl md:text-4xl font-bold mb-16 text-center">Why Partner with Avelo?</h2>
 
                         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
                             <div className="space-y-4">

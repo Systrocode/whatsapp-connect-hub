@@ -8,7 +8,7 @@ export function LandingFooter() {
             {/* Top CTA Section */}
             <div className="text-center mb-16 px-4">
                 <h2 className="text-4xl md:text-6xl font-bold text-slate-900 dark:text-white mb-10 tracking-tight">
-                    Grow Better with WA Business today
+                    Grow Better with Avelo today
                 </h2>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                     <a
@@ -132,7 +132,7 @@ export function LandingFooter() {
                                 <div className="w-10 h-10 rounded-xl bg-green-500 flex items-center justify-center">
                                     <MessageSquare className="w-6 h-6 text-white fill-current" />
                                 </div>
-                                <span className="text-3xl font-bold tracking-tight">WA Business</span>
+                                <span className="text-3xl font-bold tracking-tight">Avelo</span>
                             </Link>
                             <p className="text-slate-500 text-base mb-8 font-medium">Business Messaging made simple</p>
 
@@ -159,7 +159,7 @@ export function LandingFooter() {
                     </div>
 
                     <div className="mt-12 pt-8 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-medium text-slate-600">
-                        <p>© {new Date().getFullYear()} WA Business. All rights reserved.</p>
+                        <p>© {new Date().getFullYear()} Avelo. All rights reserved.</p>
                         <div className="flex gap-6">
                             <SocialLink href="https://twitter.com" icon={Twitter} />
                             <SocialLink href="https://linkedin.com" icon={Linkedin} />
@@ -169,7 +169,7 @@ export function LandingFooter() {
                     </div>
                 </footer>
             </div>
-        </div>
+        </div >
     );
 }
 

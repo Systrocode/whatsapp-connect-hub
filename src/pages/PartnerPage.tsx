@@ -39,7 +39,7 @@ export default function PartnerPage() {
                         transition={{ delay: 0.1 }}
                         className="text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto mb-12"
                     >
-                        WA Business is the world's favourite WhatsApp Business platform, with over 8000+ customers across 100+ countries.
+                        Avelo is the world's favourite WhatsApp Business platform, with over 8000+ customers across 100+ countries.
                         With 165+ active partners worldwide, we help businesses grow with our state-of-the-art customer engagement
                         software built on WhatsApp's API.
                     </motion.p>
@@ -64,7 +64,7 @@ export default function PartnerPage() {
                                 Solution Partner: Sell, Implement, Customize
                             </h2>
                             <p className="text-lg text-slate-600 dark:text-slate-400">
-                                Earn recurring commissions and add revenue channels with WA Business products. Leverage your technical
+                                Earn recurring commissions and add revenue channels with Avelo products. Leverage your technical
                                 sales capabilities to delight businesses globally.
                             </p>
                             <ul className="space-y-4">
@@ -101,11 +101,11 @@ export default function PartnerPage() {
                                 <Zap className="w-8 h-8 text-white" />
                             </div>
                             <h2 className="text-3xl font-bold text-slate-900 dark:text-white">
-                                Technology Partner: Integrate WA Business
+                                Technology Partner: Integrate Avelo
                             </h2>
                             <p className="text-lg text-slate-600 dark:text-slate-400">
                                 Build with us. Grow with us. Accelerate your business success by integrating your solution
-                                with the WA Business platform.
+                                with the Avelo platform.
                             </p>
                             <ul className="space-y-4">
                                 <li className="flex items-start gap-3">

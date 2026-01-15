@@ -1,12 +1,16 @@
+// @ts-ignore
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+// @ts-ignore
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.7.1";
+
+declare const Deno: any;
 
 const corsHeaders = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-serve(async (req) => {
+serve(async (req: Request) => {
     if (req.method === "OPTIONS") {
         return new Response("ok", { headers: corsHeaders });
     }
@@ -57,9 +61,9 @@ serve(async (req) => {
               "Authorization": `Bearer ${RESEND_API_KEY}`,
             },
             body: JSON.stringify({
-              from: "WA Business <onboarding@yourdomain.com>",
+              from: "Avelo <onboarding@avelo.in>",
               to: invite.email,
-              subject: `Join ${invite.team?.name} on WA Business`,
+              subject: `Join ${invite.team?.name} on Avelo`,
               html: `
                 <h2>You've been invited!</h2>
                 <p>You have been invited to join the team <strong>${invite.team?.name}</strong>.</p>
@@ -85,7 +89,7 @@ serve(async (req) => {
             }
         );
 
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error processing invite:", error);
         return new Response(
             JSON.stringify({ error: error.message }),

@@ -259,7 +259,7 @@ export default function SupportPage() {
                                 Balancing AI with <span className="text-green-500">Human Touch</span>
                             </h2>
                             <p className="text-lg text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">
-                                AI should enhance speed & efficiency of service organizations, not replace human connection. WA Business AI-support agent is trained to be empathetic, multilingual, and context-aware.
+                                AI should enhance speed & efficiency of service organizations, not replace human connection. Avelo AI-support agent is trained to be empathetic, multilingual, and context-aware.
                             </p>
                             <ul className="space-y-4">
                                 {[

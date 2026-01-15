@@ -9,7 +9,7 @@ import { QuoteRequestDialog } from '@/components/landing/QuoteRequestDialog';
 import { LandingHeader } from '@/components/landing/LandingHeader';
 import { LandingFooter } from '@/components/landing/LandingFooter';
 import { FloatingWidget } from '@/components/landing/FloatingWidget';
-import { ModeToggle } from '@/components/ui/mode-toggle';
+
 
 const Index = () => {
   const [isDemoDialogOpen, setIsDemoDialogOpen] = useState(false);

@@ -20,13 +20,13 @@ export default function ClientStoriesPage() {
             logo: "US",
             color: "purple",
             challenge: "UrbanStyle was struggling with 65% cart abandonment rate and low customer engagement through traditional email marketing.",
-            solution: "Implemented WA Business for automated cart recovery messages, order updates, and personalized product recommendations via WhatsApp.",
+            solution: "Implemented Avelo for automated cart recovery messages, order updates, and personalized product recommendations via WhatsApp.",
             results: [
                 { metric: "Cart Recovery", value: "+42%" },
                 { metric: "Customer Engagement", value: "+85%" },
                 { metric: "Repeat Purchases", value: "+60%" }
             ],
-            quote: "WA Business transformed our customer communication. We recovered thousands in abandoned carts and our customers love the instant WhatsApp updates.",
+            quote: "Avelo transformed our customer communication. We recovered thousands in abandoned carts and our customers love the instant WhatsApp updates.",
             author: "Sarah Chen",
             role: "Head of E-commerce",
             image: "👩‍💼"
@@ -80,7 +80,7 @@ export default function ClientStoriesPage() {
                 { metric: "Customer Churn", value: "-35%" },
                 { metric: "NPS Score", value: "+40 points" }
             ],
-            quote: "WA Business helped us build stronger relationships with our customers. The instant support and proactive updates made all the difference.",
+            quote: "Avelo helped us build stronger relationships with our customers. The instant support and proactive updates made all the difference.",
             author: "Michael Rodriguez",
             role: "VP of Customer Success",
             image: "👨‍💼"
@@ -125,7 +125,7 @@ export default function ClientStoriesPage() {
 
     const testimonials = [
         {
-            quote: "The ROI we've seen from WA Business is incredible. Our customer engagement metrics are through the roof.",
+            quote: "The ROI we've seen from Avelo is incredible. Our customer engagement metrics are through the roof.",
             author: "David Kim",
             role: "CEO, TechStart Inc",
             image: "👨‍💻"
@@ -137,7 +137,7 @@ export default function ClientStoriesPage() {
             image: "👩‍💼"
         },
         {
-            quote: "Our customers prefer WhatsApp over email. WA Business made it easy to meet them where they are.",
+            quote: "Our customers prefer WhatsApp over email. Avelo made it easy to meet them where they are.",
             author: "James Wilson",
             role: "Founder, LocalBiz",
             image: "👨‍🚀"
@@ -177,7 +177,7 @@ export default function ClientStoriesPage() {
                         transition={{ delay: 0.1 }}
                         className="text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto mb-16"
                     >
-                        Discover how businesses across industries are transforming customer engagement with WA Business
+                        Discover how businesses across industries are transforming customer engagement with Avelo
                     </motion.p>
 
                     {/* Stats */}

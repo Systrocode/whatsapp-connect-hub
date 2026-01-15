@@ -1,4 +1,4 @@
-import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { NavLink, Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
@@ -103,7 +103,7 @@ const DashboardSidebar = () => {
       <div className="p-6 border-b border-sidebar-border">
         <div className="flex items-center gap-3">
           <img src={icons.whatsapp} alt="Logo" className="w-8 h-8" />
-          <span className="text-lg font-bold text-sidebar-foreground">WA Business</span>
+          <span className="text-lg font-bold text-sidebar-foreground">Avelo</span>
         </div>
       </div>
 
@@ -127,10 +127,13 @@ const DashboardSidebar = () => {
 
       {/* Bottom section */}
       <div className="p-4 border-t border-sidebar-border space-y-1">
-        <button className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-all duration-200 w-full">
+        <Link
+          to="/dashboard/help"
+          className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-all duration-200 w-full"
+        >
           <img src={icons.help} alt="Help" className="w-5 h-5 object-contain opacity-70" />
           Help & Support
-        </button>
+        </Link>
         <button
           onClick={handleSignOut}
           className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-sidebar-foreground/70 hover:bg-destructive/20 hover:text-destructive transition-all duration-200 w-full"

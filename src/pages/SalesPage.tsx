@@ -349,7 +349,7 @@ export default function SalesPage() {
                                     Respond instantly. Cut First Response Time by 3x.
                                 </h3>
                                 <p className="text-slate-600 dark:text-slate-400">
-                                    Drowning in leads? Reps stretched thin? WA Business AI bot engages prospects instantly, answers FAQs 24/7, and captures leads even when your team is offline.
+                                    Drowning in leads? Reps stretched thin? Avelo AI bot engages prospects instantly, answers FAQs 24/7, and captures leads even when your team is offline.
                                 </p>
                             </div>
 
@@ -517,7 +517,7 @@ export default function SalesPage() {
                             ))}
                         </div>
                         <blockquote className="text-2xl md:text-3xl font-medium leading-relaxed mb-8">
-                            "Since switching to WA Business for our sales outreach, our abandoned cart recovery rate has jumped by 45%. It's a game changer for our Q4 strategy."
+                            "Since switching to Avelo for our sales outreach, our abandoned cart recovery rate has jumped by 45%. It's a game changer for our Q4 strategy."
                         </blockquote>
                         <div>
                             <div className="font-bold text-lg">Alex Johnson</div>

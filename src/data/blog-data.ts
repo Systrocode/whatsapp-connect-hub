@@ -116,7 +116,7 @@ The WhatsApp Business API unlocks enterprise-grade features:
 4.  **Integration:** Connect WhatsApp to your CRM, Shopify store, or other tools.
 
 ## The Verdict
-If you are handling more than 50 messages a day or want to recover abandoned carts automatically, the investment in the API (and a platform like WA Business) pays for itself in saved time and increased revenue.
+If you are handling more than 50 messages a day or want to recover abandoned carts automatically, the investment in the API (and a platform like Avelo) pays for itself in saved time and increased revenue.
         `,
         image: "https://images.unsplash.com/photo-1664575602276-acd073f104c1?auto=format&fit=crop&q=80&w=2000",
         category: "Guides",
@@ -165,11 +165,11 @@ Stop letting sales slip away. Switch your recovery strategy to the channel your 
         id: "5",
         title: "Case Study: How Urban Styles Increased Revenue by 40%",
         slug: "case-study-urban-styles",
-        excerpt: "A deep dive into how a fashion brand used WA Business to transform their customer engagement strategy.",
+        excerpt: "A deep dive into how a fashion brand used Avelo to transform their customer engagement strategy.",
         content: `
 # From Zero to Hero: Urban Styles' Journey
 
-**Urban Styles**, a rising streetwear brand, was struggling with low email engagement and high customer acquisition costs. They turned to WA Business to pivot their strategy to a WhatsApp-first approach.
+**Urban Styles**, a rising streetwear brand, was struggling with low email engagement and high customer acquisition costs. They turned to Avelo to pivot their strategy to a WhatsApp-first approach.
 
 ## The Strategy
 They implemented three key automations:
@@ -202,7 +202,7 @@ They implemented three key automations:
         content: `
 # Say Goodbye to Clunky External Forms
 
-We are thrilled to announce the launch of **Interactive Flows** support in WA Business. 
+We are thrilled to announce the launch of **Interactive Flows** support in Avelo. 
 
 ## What are Flows?
 Flows are a new way to capture structured data from your customers. Instead of trading 10 messages back and forth to get a name, email, and budget, you can now pop up a native form directly in the chat.

@@ -68,7 +68,7 @@ export default function InvoicesPage() {
       Amount: ${invoice.currency} ${invoice.amount.toFixed(2)}
       
       Thank you for your business!
-      WA Business Team
+      Avelo Team
     `;
 
         const blob = new Blob([content], { type: 'text/plain' });

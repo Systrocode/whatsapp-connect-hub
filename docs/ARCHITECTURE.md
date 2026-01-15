@@ -1,7 +1,7 @@
 # System Architecture
 
 ## Overview
-WA Business (WhatsApp Connect Hub) is a modern, full-stack web application designed to help businesses manage their WhatsApp communications. It serves as a unified inbox, marketing automation tool, and CRM client.
+Avelo (WhatsApp Connect Hub) is a modern, full-stack web application designed to help businesses manage their WhatsApp communications. It serves as a unified inbox, marketing automation tool, and CRM client.
 
 ## Tech Stack
 

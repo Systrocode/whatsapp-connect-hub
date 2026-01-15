@@ -36,7 +36,7 @@ export default function MarketingPage() {
                                 <span className="text-green-500">WhatsApp Marketing</span>
                             </h1>
                             <p className="text-xl text-slate-600 dark:text-slate-400">
-                                Capture leads, automate engagement, and drive loyalty. WA Business makes WhatsApp Marketing work smarter for your business.
+                                Capture leads, automate engagement, and drive loyalty. Avelo makes WhatsApp Marketing work smarter for your business.
                             </p>
                             <div className="flex flex-wrap gap-4">
 
@@ -70,7 +70,7 @@ export default function MarketingPage() {
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
                                 <p className="text-white text-sm font-medium p-6">
-                                    Growth-focused marketing teams trust WA Business
+                                    Growth-focused marketing teams trust Avelo
                                 </p>
                             </div>
                         </motion.div>
@@ -417,7 +417,7 @@ export default function MarketingPage() {
                             </motion.div>
                         </div>
 
-                        {/* Center - WA Business Logo */}
+                        {/* Center - Avelo Logo */}
                         <motion.div
                             initial={{ opacity: 0, scale: 0.8 }}
                             whileInView={{ opacity: 1, scale: 1 }}
@@ -431,7 +431,7 @@ export default function MarketingPage() {
                                     alt="WhatsApp Business"
                                     className="w-12 h-12"
                                 />
-                                <span className="text-2xl font-bold text-slate-900 dark:text-white">WA Business</span>
+                                <span className="text-2xl font-bold text-slate-900 dark:text-white">Avelo</span>
                             </div>
                         </motion.div>
 
@@ -648,7 +648,7 @@ export default function MarketingPage() {
                         transition={{ delay: 0.1 }}
                         className="text-xl text-slate-600 dark:text-slate-400 text-center mb-16"
                     >
-                        Go further than just WhatsApp broadcasts with WA Business designed for Marketers
+                        Go further than just WhatsApp broadcasts with Avelo designed for Marketers
                     </motion.p>
 
                     <div className="grid md:grid-cols-3 gap-8">

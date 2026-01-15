@@ -57,7 +57,7 @@ export default function TermsAndPrivacy() {
                                         <h2 className="text-2xl font-bold m-0 text-slate-900 dark:text-white">Privacy Policy</h2>
                                     </div>
                                     <p className="text-lg text-slate-600 dark:text-slate-300">
-                                        At WA Business, we take your privacy seriously. This policy is designed to be clear, transparent, and strict about how we handle—and don't handle—your data.
+                                        At Avelo, we take your privacy seriously. This policy is designed to be clear, transparent, and strict about how we handle—and don't handle—your data.
                                     </p>
 
                                     <div className="my-8 p-6 bg-green-50 dark:bg-green-900/10 rounded-xl border border-green-100 dark:border-green-900/20">
@@ -105,7 +105,7 @@ export default function TermsAndPrivacy() {
                                         <h2 className="text-2xl font-bold m-0 text-slate-900 dark:text-white">Terms of Service</h2>
                                     </div>
                                     <p className="text-lg text-slate-600 dark:text-slate-300">
-                                        By using WA Business, you agree to these terms. We believe in fair usage and transparent pricing.
+                                        By using Avelo, you agree to these terms. We believe in fair usage and transparent pricing.
                                     </p>
 
                                     <h3>1. Acceptable Use</h3>
@@ -125,7 +125,7 @@ export default function TermsAndPrivacy() {
 
                                     <h3>4. Liability</h3>
                                     <p>
-                                        WA Business is provided "as is". We are not liable for lost profits or data resulting from the use of our service, to the extent permitted by law.
+                                        Avelo is provided "as is". We are not liable for lost profits or data resulting from the use of our service, to the extent permitted by law.
                                     </p>
                                 </div>
                             </TabsContent>
