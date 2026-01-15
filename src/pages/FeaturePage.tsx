@@ -4,6 +4,7 @@ import { useParams, Navigate, Link } from "react-router-dom";
 import { LandingHeader } from "@/components/landing/LandingHeader";
 import { LandingFooter } from "@/components/landing/LandingFooter";
 import { Button } from "@/components/ui/button";
+import { QuoteRequestDialog } from "@/components/landing/QuoteRequestDialog";
 import {
     ArrowRight, CheckCircle, Bot, Play, MessageSquare, MessageCircle,
     BarChart3, Users, Zap, ShoppingCart, FileText,
@@ -2324,11 +2325,11 @@ const FeaturePage = () => {
                                         Book Demo
                                     </Button>
                                 </a>
-                                <Link to="/auth">
+                                <QuoteRequestDialog>
                                     <Button size="xl" variant="outline" className="rounded-full h-14 px-8 border-2 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white font-semibold hover:bg-slate-50 dark:hover:bg-slate-900">
                                         Request a Quote
                                     </Button>
-                                </Link>
+                                </QuoteRequestDialog>
                             </div>
                         </motion.div>
 

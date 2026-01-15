@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { LandingHeader } from "@/components/landing/LandingHeader";
 import { LandingFooter } from "@/components/landing/LandingFooter";
+import { QuoteRequestDialog } from "@/components/landing/QuoteRequestDialog";
 import { ArrowRight, TrendingUp, DollarSign, Users, Zap, ShoppingCart, Heart, MessageSquare, Calendar } from "lucide-react";
 
 export default function MarketingPage() {
@@ -48,9 +49,11 @@ export default function MarketingPage() {
                                     <Calendar className="w-5 h-5" />
                                     Book Demo
                                 </a>
-                                <Link to="/auth" className="border-2 border-slate-300 dark:border-slate-700 hover:border-green-500 dark:hover:border-green-500 text-slate-900 dark:text-white font-bold py-4 px-8 rounded-lg transition-colors">
-                                    Request a Quote
-                                </Link>
+                                <QuoteRequestDialog>
+                                    <button className="border-2 border-slate-300 dark:border-slate-700 hover:border-green-500 dark:hover:border-green-500 text-slate-900 dark:text-white font-bold py-4 px-8 rounded-lg transition-colors">
+                                        Request a Quote
+                                    </button>
+                                </QuoteRequestDialog>
                             </div>
                         </motion.div>
 

@@ -18,6 +18,7 @@ import {
     Globe,
     Users
 } from "lucide-react";
+import { QuoteRequestDialog } from "./QuoteRequestDialog";
 import { Button } from "@/components/ui/button";
 
 import {
@@ -242,9 +243,9 @@ export function LandingHeader({ variant = 'default' }: { variant?: 'default' | '
                         <Link to="/auth">
                             <Button variant="ghost" size="sm" className={cn(isDark && "text-white hover:text-white hover:bg-white/10")}>Sign in</Button>
                         </Link>
-                        <Link to="/auth?mode=signup">
+                        <QuoteRequestDialog>
                             <Button variant="whatsapp" size="sm">Request a Quote</Button>
-                        </Link>
+                        </QuoteRequestDialog>
                     </div>
 
                     {/* Mobile Menu Button */}
@@ -294,11 +295,13 @@ export function LandingHeader({ variant = 'default' }: { variant?: 'default' | '
                                     Sign in
                                 </Button>
                             </Link>
-                            <Link to="/auth?mode=signup" className="w-full">
-                                <Button variant="whatsapp" className="w-full h-12 text-base font-bold shadow-lg shadow-green-500/20">
-                                    Request a Quote
-                                </Button>
-                            </Link>
+                            <div className="w-full">
+                                <QuoteRequestDialog>
+                                    <Button variant="whatsapp" className="w-full h-12 text-base font-bold shadow-lg shadow-green-500/20">
+                                        Request a Quote
+                                    </Button>
+                                </QuoteRequestDialog>
+                            </div>
                         </div>
                         <p className="text-center text-xs text-muted-foreground">
                             Join 10,000+ businesses growing on WhatsApp

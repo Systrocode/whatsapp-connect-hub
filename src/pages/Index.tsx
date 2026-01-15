@@ -3,7 +3,9 @@ import { motion } from 'framer-motion';
 import { MessageSquare, ArrowRight, CheckCircle, Users, Clock, TrendingUp, Send, Calendar, Instagram, Facebook, MessageCircle, Phone, Check, MoreHorizontal, ArrowDown, Sparkles, Heart, Zap, Megaphone, Bot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
+
 import { BookDemoDialog } from '@/components/landing/BookDemoDialog';
+import { QuoteRequestDialog } from '@/components/landing/QuoteRequestDialog';
 import { LandingHeader } from '@/components/landing/LandingHeader';
 import { LandingFooter } from '@/components/landing/LandingFooter';
 import { FloatingWidget } from '@/components/landing/FloatingWidget';
@@ -60,7 +62,7 @@ const Index = () => {
                   Book Demo
                 </Button>
               </a>
-              <Link to="/auth">
+              <QuoteRequestDialog>
                 <Button
                   variant="outline"
                   size="xl"
@@ -68,7 +70,7 @@ const Index = () => {
                 >
                   Request a Quote
                 </Button>
-              </Link>
+              </QuoteRequestDialog>
             </div>
 
             {/* Trusted By Strip */}

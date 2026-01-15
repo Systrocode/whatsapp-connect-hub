@@ -52,7 +52,7 @@ const handler = async (req: Request): Promise<Response> => {
         if (error) {
             console.error("Resend error:", error);
             return new Response(JSON.stringify({ error }), {
-                status: 400,
+                status: 200,
                 headers: { ...corsHeaders, "Content-Type": "application/json" },
             });
         }
@@ -64,7 +64,7 @@ const handler = async (req: Request): Promise<Response> => {
     } catch (error: any) {
         console.error("Error:", error);
         return new Response(JSON.stringify({ error: error.message }), {
-            status: 500,
+            status: 200,
             headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
     }

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { MessageSquare, Twitter, Linkedin, Facebook, Instagram, Apple, Play, ShieldCheck, Lock, Server, Calendar } from "lucide-react";
+import { QuoteRequestDialog } from "./QuoteRequestDialog";
 
 export function LandingFooter() {
     return (
@@ -19,12 +20,13 @@ export function LandingFooter() {
                         <Calendar className="w-5 h-5" />
                         Book Demo
                     </a>
-                    <Link
-                        to="/auth"
-                        className="px-8 py-4 rounded-full border-2 border-slate-900 dark:border-white text-slate-900 dark:text-white font-bold text-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors w-full sm:w-auto inline-block text-center"
-                    >
-                        Request a Quote
-                    </Link>
+                    <QuoteRequestDialog>
+                        <button
+                            className="px-8 py-4 rounded-full border-2 border-slate-900 dark:border-white text-slate-900 dark:text-white font-bold text-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors w-full sm:w-auto inline-block text-center cursor-pointer"
+                        >
+                            Request a Quote
+                        </button>
+                    </QuoteRequestDialog>
                 </div>
             </div>
 

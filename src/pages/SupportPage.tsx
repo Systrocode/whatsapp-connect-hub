@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { QuoteRequestDialog } from "@/components/landing/QuoteRequestDialog";
 
 export default function SupportPage() {
     return (
@@ -78,12 +79,13 @@ export default function SupportPage() {
                             <Calendar className="w-5 h-5" />
                             Book Demo
                         </a>
-                        <Link
-                            to="/auth"
-                            className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white border-2 border-slate-200 dark:border-slate-800 hover:border-green-500 dark:hover:border-green-500 font-bold py-4 px-8 rounded-xl transition-colors"
-                        >
-                            Request a Quote
-                        </Link>
+                        <QuoteRequestDialog>
+                            <button
+                                className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white border-2 border-slate-200 dark:border-slate-800 hover:border-green-500 dark:hover:border-green-500 font-bold py-4 px-8 rounded-xl transition-colors"
+                            >
+                                Request a Quote
+                            </button>
+                        </QuoteRequestDialog>
                     </motion.div>
                 </div>
             </section>
