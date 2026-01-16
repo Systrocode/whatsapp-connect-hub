@@ -23,19 +23,17 @@ serve(async (req: Request) => {
             `client_id=${Deno.env.get('META_APP_ID')}&` +
             `client_secret=${Deno.env.get('META_APP_SECRET')}&` +
             `code=${code}` +
-            `&redirect_uri=${req.headers.get('origin')}/dashboard/ads` // Usually generic or empty for SDK login? SDK login via code doesn't strictly need redirect_uri if using postmessage flow, but sometimes it does.
-            // Actually, FB.login with response_type='code' usually works without redirect_uri or with current page.
-            // I'll omit redirect_uri initially or use '' if it fails.
+            `&redirect_uri=` // Leave empty for JS SDK code exchange
         );
-
-        // Note: For SDK generated codes, redirect_uri usually needs to match or be empty.
-        // I will try WITHOUT redirect_uri first.
 
         const tokenData = await tokenResponse.json();
         console.log("Token response:", tokenData);
 
         const { access_token, error: tokenError } = tokenData;
-        if (tokenError) throw new Error(tokenError.message || 'Token exchange failed');
+        if (tokenError) {
+            console.error("Token Error:", JSON.stringify(tokenError));
+            throw new Error(tokenError.message || 'Token exchange failed');
+        }
 
         // Get First Ad Account (MVP)
         const adAccountsResponse = await fetch(
@@ -76,7 +74,7 @@ serve(async (req: Request) => {
         console.error("Error:", error);
         return new Response(JSON.stringify({ error: (error as Error).message }), {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-            status: 400,
+            status: 200, // Return 200 with error body so client parses it
         })
     }
 })
