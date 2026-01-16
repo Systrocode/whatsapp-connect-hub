@@ -35,7 +35,7 @@ export default function AdsManager() {
                 (async () => {
                     try {
                         const { data, error } = await supabase.functions.invoke('ads-connect', {
-                            body: { code: response.authResponse.code }
+                            body: { access_token: response.authResponse.accessToken }
                         });
 
                         if (error || (data && data.error)) {

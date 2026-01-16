@@ -14,16 +14,16 @@ serve(async (req: Request) => {
     if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
 
     try {
-        const { code } = await req.json()
+        const { access_token: shortLivedToken } = await req.json();
 
-        console.log("Exchanging code for token...");
+        console.log("Exchanging short-lived token for long-lived token...");
 
         const tokenResponse = await fetch(
             `https://graph.facebook.com/v21.0/oauth/access_token?` +
+            `grant_type=fb_exchange_token&` +
             `client_id=${Deno.env.get('META_APP_ID')}&` +
             `client_secret=${Deno.env.get('META_APP_SECRET')}&` +
-            `code=${code}` +
-            `&redirect_uri=` // Leave empty for JS SDK code exchange
+            `fb_exchange_token=${shortLivedToken}`
         );
 
         const tokenData = await tokenResponse.json();
