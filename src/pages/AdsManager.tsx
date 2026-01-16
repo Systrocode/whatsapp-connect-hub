@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -15,6 +16,34 @@ const icons = {
 };
 
 export default function AdsManager() {
+    const [isConnected, setIsConnected] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+
+    const checkConnection = async () => {
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) return;
+
+            const { data, error } = await supabase
+                .from('whatsapp_settings')
+                .select('ad_account_id')
+                .eq('user_id', user.id)
+                .single();
+
+            if ((data as any)?.ad_account_id) {
+                setIsConnected(true);
+            }
+        } catch (error) {
+            console.error("Error checking connection:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        checkConnection();
+    }, []);
+
     const handleConnectAds = () => {
         console.log("Connect Ads clicked");
 
@@ -43,6 +72,8 @@ export default function AdsManager() {
                         }
 
                         toast.success("Ad Account Connected & Saved!");
+                        setIsConnected(true);
+                        checkConnection(); // Refresh details
                     } catch (err: any) {
                         console.error("Supabase Error:", err);
                         toast.error("Failed to save connection: " + err.message);
@@ -67,10 +98,12 @@ export default function AdsManager() {
                         <h1 className="text-3xl font-bold tracking-tight">Ads Manager</h1>
                         <p className="text-muted-foreground mt-1">Create and manage Click-to-WhatsApp ads on Facebook & Instagram.</p>
                     </div>
-                    <Button className="bg-[#1877F2] hover:bg-[#1864D0] shadow-md transition-all hover:scale-105">
-                        <Plus className="w-4 h-4 mr-2" />
-                        Create Ad Campaign
-                    </Button>
+                    {isConnected && (
+                        <Button className="bg-[#1877F2] hover:bg-[#1864D0] shadow-md transition-all hover:scale-105">
+                            <Plus className="w-4 h-4 mr-2" />
+                            Create Ad Campaign
+                        </Button>
+                    )}
                 </div>
 
                 {/* Stats Row */}
@@ -124,9 +157,16 @@ export default function AdsManager() {
                     <p className="text-muted-foreground max-w-sm mb-6">
                         You haven't launched any ads yet. Start a campaign to drive traffic to your WhatsApp Business number.
                     </p>
-                    <Button onClick={handleConnectAds} variant="outline" className="border-[#1877F2] text-[#1877F2] hover:bg-[#1877F2]/5">
-                        Connect Ad Account
-                    </Button>
+                    {!isConnected ? (
+                        <Button onClick={handleConnectAds} variant="outline" className="border-[#1877F2] text-[#1877F2] hover:bg-[#1877F2]/5">
+                            Connect Ad Account
+                        </Button>
+                    ) : (
+                        <Button className="bg-[#1877F2] hover:bg-[#1864D0]">
+                            <Plus className="w-4 h-4 mr-2" />
+                            Create First Campaign
+                        </Button>
+                    )}
                 </Card>
             </div>
         </DashboardLayout>
