@@ -15,9 +15,12 @@ const icons = {
     empty: 'https://img.icons8.com/fluency/96/commercial.png',
 };
 
+import { CreateCampaignDialog } from "@/components/campaigns/CreateCampaignDialog";
+
 export default function AdsManager() {
     const [isConnected, setIsConnected] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [isCreateOpen, setIsCreateOpen] = useState(false);
 
     const checkConnection = async () => {
         try {
@@ -99,7 +102,10 @@ export default function AdsManager() {
                         <p className="text-muted-foreground mt-1">Create and manage Click-to-WhatsApp ads on Facebook & Instagram.</p>
                     </div>
                     {isConnected && (
-                        <Button className="bg-[#1877F2] hover:bg-[#1864D0] shadow-md transition-all hover:scale-105">
+                        <Button
+                            onClick={() => setIsCreateOpen(true)}
+                            className="bg-[#1877F2] hover:bg-[#1864D0] shadow-md transition-all hover:scale-105"
+                        >
                             <Plus className="w-4 h-4 mr-2" />
                             Create Ad Campaign
                         </Button>
@@ -162,12 +168,17 @@ export default function AdsManager() {
                             Connect Ad Account
                         </Button>
                     ) : (
-                        <Button className="bg-[#1877F2] hover:bg-[#1864D0]">
+                        <Button
+                            onClick={() => setIsCreateOpen(true)}
+                            className="bg-[#1877F2] hover:bg-[#1864D0]"
+                        >
                             <Plus className="w-4 h-4 mr-2" />
                             Create First Campaign
                         </Button>
                     )}
                 </Card>
+
+                <CreateCampaignDialog open={isCreateOpen} onOpenChange={setIsCreateOpen} />
             </div>
         </DashboardLayout>
     );
