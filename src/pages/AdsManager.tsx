@@ -27,24 +27,27 @@ export default function AdsManager() {
 
         console.log("Requesting FB Login...");
         // @ts-ignore
-        window.FB.login(async (response: any) => {
+        // @ts-ignore
+        window.FB.login((response: any) => {
             console.log("FB Login Response:", response);
             if (response.authResponse) {
                 console.log('Ad Account Connected:', response);
-                try {
-                    const { data, error } = await supabase.functions.invoke('ads-connect', {
-                        body: { code: response.authResponse.code }
-                    });
+                (async () => {
+                    try {
+                        const { data, error } = await supabase.functions.invoke('ads-connect', {
+                            body: { code: response.authResponse.code }
+                        });
 
-                    if (error || (data && data.error)) {
-                        throw new Error(error?.message || data?.error);
+                        if (error || (data && data.error)) {
+                            throw new Error(error?.message || data?.error);
+                        }
+
+                        toast.success("Ad Account Connected & Saved!");
+                    } catch (err: any) {
+                        console.error("Supabase Error:", err);
+                        toast.error("Failed to save connection: " + err.message);
                     }
-
-                    toast.success("Ad Account Connected & Saved!");
-                } catch (err: any) {
-                    console.error("Supabase Error:", err);
-                    toast.error("Failed to save connection: " + err.message);
-                }
+                })();
             } else {
                 console.warn("User cancelled login or auth failed", response);
                 toast.error("Login cancelled or failed.");
