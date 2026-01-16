@@ -164,10 +164,9 @@ export function LandingFooter() {
                     <div className="mt-12 pt-8 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-medium text-slate-600">
                         <p>© {new Date().getFullYear()} Avelo. All rights reserved.</p>
                         <div className="flex gap-6">
-                            <SocialLink href="https://twitter.com" icon={Twitter} />
-                            <SocialLink href="https://linkedin.com" icon={Linkedin} />
-                            <SocialLink href="https://instagram.com" icon={Instagram} />
-                            <SocialLink href="https://facebook.com" icon={Facebook} />
+                            <SocialLink href="https://x.com/getavelo" icon={Twitter} />
+                            <SocialLink href="https://www.linkedin.com/company/connectwithavelo" icon={Linkedin} />
+                            <SocialLink href="https://www.instagram.com/connectwithavelo" icon={Instagram} />
                         </div>
                     </div>
                 </footer>

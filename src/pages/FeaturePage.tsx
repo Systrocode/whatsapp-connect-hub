@@ -157,7 +157,7 @@ const pages: Record<string, PageData> = {
         description: "Scale your business with the reliable, secure, and official WhatsApp Business API. Verified green tick support included.",
         icon: (props: any) => <img src="https://img.icons8.com/3d-fluency/94/approval.png" alt="API" {...props} />,
         benefits: ["Green Tick Verification", "High Throughput", "99.9% Uptime SLA", "Official Meta Partner"],
-        stats: [{ label: "Uptime", value: "99.99%" }, { label: "Throughput", value: "500/sec" }],
+        stats: [{ label: "Uptime", value: "99.99%" }, { label: "Throughput", value: "500/sec" }, { label: "Scalability", value: "Unlimited" }],
         sections: [
             {
                 title: "Scale Without Limits",
@@ -2522,9 +2522,9 @@ const FeaturePage = () => {
             {data.stats && (
                 <section className="bg-slate-900 text-white py-16 px-6">
                     <div className="container mx-auto max-w-6xl">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div className="flex flex-wrap justify-center gap-8 px-4">
                             {data.stats.map((stat, i) => (
-                                <div key={i} className="text-center p-6 rounded-2xl bg-white/5 border border-white/10">
+                                <div key={i} className="text-center p-6 rounded-2xl bg-white/5 border border-white/10 w-full md:flex-1 md:max-w-sm mx-auto">
                                     <div className="text-4xl md:text-5xl font-extrabold text-green-400 mb-2">{stat.value}</div>
                                     <div className="text-sm md:text-base text-slate-400 uppercase tracking-wider font-medium">{stat.label}</div>
                                 </div>
