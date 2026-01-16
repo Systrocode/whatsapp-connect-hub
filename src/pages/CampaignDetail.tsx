@@ -1,10 +1,10 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { 
-  ArrowLeft, 
-  Eye, 
-  MousePointer, 
-  DollarSign, 
+import {
+  ArrowLeft,
+  Eye,
+  MousePointer,
+  DollarSign,
   Users,
   TrendingUp,
   Target,
@@ -97,7 +97,7 @@ const CampaignDetail = () => {
     },
     {
       title: "Spend",
-      value: insights?.spend ? `$${insights.spend}` : "—",
+      value: insights?.spend ? `₹${insights.spend}` : "—",
       icon: DollarSign,
       color: "text-amber-500",
     },
@@ -115,7 +115,7 @@ const CampaignDetail = () => {
     },
     {
       title: "CPC",
-      value: insights?.cpc ? `$${insights.cpc}` : "—",
+      value: insights?.cpc ? `₹${insights.cpc}` : "—",
       icon: Target,
       color: "text-amber-500",
     },
@@ -206,28 +206,28 @@ const CampaignDetail = () => {
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Daily Budget</span>
                 <span className="font-medium">
-                  {campaign.daily_budget ? `$${Number(campaign.daily_budget).toFixed(2)}` : "Not set"}
+                  {campaign.daily_budget ? `₹${Number(campaign.daily_budget).toFixed(2)}` : "Not set"}
                 </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Lifetime Budget</span>
                 <span className="font-medium">
-                  {campaign.lifetime_budget ? `$${Number(campaign.lifetime_budget).toFixed(2)}` : "Not set"}
+                  {campaign.lifetime_budget ? `₹${Number(campaign.lifetime_budget).toFixed(2)}` : "Not set"}
                 </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Start Date</span>
                 <span className="font-medium">
-                  {campaign.start_date 
-                    ? new Date(campaign.start_date).toLocaleDateString() 
+                  {campaign.start_date
+                    ? new Date(campaign.start_date).toLocaleDateString()
                     : "Not set"}
                 </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">End Date</span>
                 <span className="font-medium">
-                  {campaign.end_date 
-                    ? new Date(campaign.end_date).toLocaleDateString() 
+                  {campaign.end_date
+                    ? new Date(campaign.end_date).toLocaleDateString()
                     : "Ongoing"}
                 </span>
               </div>

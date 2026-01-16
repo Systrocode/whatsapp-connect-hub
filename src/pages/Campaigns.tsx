@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { 
-  Plus, 
-  Megaphone, 
-  TrendingUp, 
-  DollarSign, 
+import {
+  Plus,
+  Megaphone,
+  TrendingUp,
+  DollarSign,
   MousePointer,
   Eye,
   MoreVertical,
@@ -56,7 +56,7 @@ const statusColors: Record<string, string> = {
 const Campaigns = () => {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
-  
+
   const { campaigns, isLoading, updateStatus, deleteCampaign, isDeleting } = useCampaigns();
   const { data: adAccount } = useAdAccount();
 
@@ -144,7 +144,7 @@ const Campaigns = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {adAccount?.currency || "$"}{totalSpend.toFixed(2)}
+                  {adAccount?.currency || "₹"}{totalSpend.toFixed(2)}
                 </div>
               </CardContent>
             </Card>
@@ -232,8 +232,8 @@ const Campaigns = () => {
                         {campaign.objective.replace("OUTCOME_", "").replace(/_/g, " ")}
                       </TableCell>
                       <TableCell>
-                        {campaign.daily_budget 
-                          ? `$${Number(campaign.daily_budget).toFixed(2)}`
+                        {campaign.daily_budget
+                          ? `₹${Number(campaign.daily_budget).toFixed(2)}`
                           : "—"
                         }
                       </TableCell>

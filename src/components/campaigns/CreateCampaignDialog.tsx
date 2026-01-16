@@ -138,18 +138,18 @@ export function CreateCampaignDialog({ open, onOpenChange }: CreateCampaignDialo
               name="dailyBudget"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Daily Budget (USD)</FormLabel>
+                  <FormLabel>Daily Budget (INR)</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
-                      step="0.01"
-                      min="1"
-                      placeholder="10.00"
+                      step="1"
+                      min="85"
+                      placeholder="500.00"
                       {...field}
                     />
                   </FormControl>
                   <FormDescription>
-                    Minimum $1/day. Leave empty to set later.
+                    Minimum ₹85/day. Leave empty to set later.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

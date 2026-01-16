@@ -11,7 +11,7 @@ const icons = {
     spend: 'https://img.icons8.com/fluency/48/money-bag.png',
     messages: 'https://img.icons8.com/fluency/48/chat-message.png',
     impressions: 'https://img.icons8.com/fluency/48/visible.png',
-    cost: 'https://img.icons8.com/fluency/48/price-tag-usd.png',
+    cost: 'https://img.icons8.com/fluency/48/rupee.png',
     empty: 'https://img.icons8.com/fluency/96/commercial.png',
 };
 
