@@ -128,24 +128,27 @@ export function LandingFooter() {
                     {/* Bottom Bar */}
                     <div className="pt-12 border-t border-slate-900 flex flex-col lg:flex-row items-end justify-between gap-10">
                         <div className="w-full lg:w-auto">
-                            <Link to="/" className="flex items-center gap-3 mb-6 text-white group">
-                                <div className="w-10 h-10 rounded-xl bg-green-500 flex items-center justify-center">
-                                    <MessageSquare className="w-6 h-6 text-white fill-current" />
-                                </div>
-                                <span className="text-3xl font-bold tracking-tight">Avelo</span>
-                            </Link>
-                            <p className="text-slate-500 text-base mb-8 font-medium">Business Messaging made simple</p>
+                            <div className="flex flex-wrap items-center gap-6 mb-6">
+                                <Link to="/" className="flex items-center gap-2 text-white group">
+                                    <img
+                                        src="/logos/avelo logo.png"
+                                        alt="Avelo"
+                                        className="h-10 w-auto object-contain grayscale invert brightness-200 mix-blend-screen transition-all duration-300 hover:scale-105 hover:brightness-[1.2]"
+                                    />
+                                </Link>
 
-                            <div className="flex flex-wrap items-center gap-8 opacity-60 hover:opacity-100 transition-opacity">
-                                <div className="flex items-center gap-3 bg-slate-900/50 px-4 py-2 rounded-lg border border-slate-800">
-                                    <img src="/logos/meta.svg" alt="Meta" className="h-6 w-auto brightness-0 invert" />
-                                    <div className="h-8 w-px bg-slate-800"></div>
+                                <div className="h-8 w-px bg-slate-800 hidden sm:block"></div>
+
+                                <div className="flex items-center gap-3 bg-slate-900/50 px-3 py-1.5 rounded-lg border border-slate-800 opacity-80 hover:opacity-100 transition-opacity">
+                                    <img src="/logos/meta.svg" alt="Meta" className="h-5 w-auto brightness-0 invert" />
+                                    <div className="h-6 w-px bg-slate-800"></div>
                                     <div className="flex flex-col justify-center">
-                                        <span className="text-white font-bold text-xs leading-none mb-1">Meta</span>
-                                        <span className="text-slate-400 font-medium text-[10px] leading-none uppercase tracking-wide">Tech Partner</span>
+                                        <span className="text-white font-bold text-[10px] leading-none mb-0.5">Meta</span>
+                                        <span className="text-slate-400 font-medium text-[9px] leading-none uppercase tracking-wide">Tech Provider</span>
                                     </div>
                                 </div>
                             </div>
+                            <p className="text-slate-500 text-base mb-8 font-medium">Business Messaging made simple</p>
                         </div>
 
                         {/* Trust Badges */}

@@ -23,6 +23,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Plus, Pencil, Trash2, Globe, Loader2, Image as ImageIcon } from "lucide-react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
+import { BLOG_POSTS } from "@/data/blog-data";
 
 interface Post {
     id: string;
@@ -135,6 +136,30 @@ const AdminBlog = () => {
             image_url: "",
             published: false
         });
+    };
+
+    const handleSeed = async () => {
+        if (!confirm("This will seed the database with demo posts. Continue?")) return;
+        try {
+            setLoading(true);
+            const payload = BLOG_POSTS.map(post => ({
+                title: post.title,
+                slug: post.slug,
+                content: post.content,
+                excerpt: post.excerpt,
+                image_url: post.image,
+                published: true,
+            }));
+
+            const { error } = await supabase.from('posts').insert(payload);
+            if (error) throw error;
+            toast.success("Demo posts seeded successfully!");
+            fetchPosts();
+        } catch (error: any) {
+            console.error(error);
+            toast.error("Failed to seed posts: " + error.message);
+            setLoading(false);
+        }
     };
 
     const openEdit = (post: Post) => {
@@ -284,7 +309,13 @@ const AdminBlog = () => {
                             ) : posts.length === 0 ? (
                                 <TableRow>
                                     <TableCell colSpan={4} className="h-24 text-center text-muted-foreground">
-                                        No posts found. Create your first one!
+                                        <div className="flex flex-col items-center gap-2">
+                                            <p>No posts found. Create your first one!</p>
+                                            <Button variant="outline" size="sm" onClick={handleSeed}>
+                                                <Loader2 className="w-4 h-4 mr-2" />
+                                                Seed Demo Data
+                                            </Button>
+                                        </div>
                                     </TableCell>
                                 </TableRow>
                             ) : (

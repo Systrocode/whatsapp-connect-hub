@@ -100,11 +100,12 @@ const DashboardSidebar = () => {
   return (
     <aside className="w-64 min-h-screen bg-sidebar flex flex-col border-r border-sidebar-border">
       {/* Logo */}
-      <div className="p-6 border-b border-sidebar-border">
-        <div className="flex items-center gap-3">
-          <img src={icons.whatsapp} alt="Logo" className="w-8 h-8" />
-          <span className="text-lg font-bold text-sidebar-foreground">Avelo</span>
-        </div>
+      <div className="p-4 border-b border-sidebar-border h-[88px] flex items-center justify-center">
+        <img
+          src="/logos/avelo logo.png"
+          alt="Logo"
+          className="h-16 w-auto object-contain mix-blend-multiply brightness-105 contrast-110 dark:mix-blend-screen dark:grayscale dark:invert dark:brightness-200"
+        />
       </div>
 
       {/* Navigation */}

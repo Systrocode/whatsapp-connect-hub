@@ -114,9 +114,15 @@ const HelpSupport = () => {
                         <div>
                             <h3 className="font-semibold text-lg mb-1">Email Us</h3>
                             <p className="text-sm text-muted-foreground mb-3">Get a response within 24 hours.</p>
-                            <a href="mailto:support@avelo.in" className="text-sm font-medium text-purple-600 flex items-center gap-1 hover:underline">
-                                support@avelo.in <ExternalLink className="w-3 h-3" />
-                            </a>
+                            <div className="flex flex-col gap-2 mt-1">
+                                <a href="mailto:support@avelo.in" className="text-sm font-medium text-purple-600 flex items-center gap-1 hover:underline">
+                                    support@avelo.in <ExternalLink className="w-3 h-3" />
+                                </a>
+                                <div className="text-xs text-muted-foreground mt-1">Sales & Billing:</div>
+                                <a href="mailto:sales@avelo.in" className="text-sm font-medium text-purple-600 flex items-center gap-1 hover:underline">
+                                    sales@avelo.in <ExternalLink className="w-3 h-3" />
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

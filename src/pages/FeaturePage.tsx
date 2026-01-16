@@ -151,6 +151,64 @@ const pages: Record<string, PageData> = {
         ]
     },
 
+    "official-api": {
+        title: "Official WhatsApp API",
+        subtitle: "Enterprise-Grade Infrastructure",
+        description: "Scale your business with the reliable, secure, and official WhatsApp Business API. Verified green tick support included.",
+        icon: (props: any) => <img src="https://img.icons8.com/3d-fluency/94/approval.png" alt="API" {...props} />,
+        benefits: ["Green Tick Verification", "High Throughput", "99.9% Uptime SLA", "Official Meta Partner"],
+        stats: [{ label: "Uptime", value: "99.99%" }, { label: "Throughput", value: "500/sec" }],
+        sections: [
+            {
+                title: "Scale Without Limits",
+                description: "Seamlessly handle millions of messages. Our infrastructure auto-scales to meet your campaign demands.",
+                icon: (props: any) => <img src="https://img.icons8.com/3d-fluency/94/server.png" alt="Server" {...props} />
+            }
+        ]
+    },
+    "team-inbox": {
+        title: "Shared Team Inbox",
+        subtitle: "Collaborate on Support",
+        description: "One number, multiple agents. Assign chats, leave internal notes, and resolve queries faster together.",
+        icon: (props: any) => <img src="https://img.icons8.com/3d-fluency/94/conference-call.png" alt="Inbox" {...props} />,
+        benefits: ["Role-based Access", "Collision Detection", "Internal Notes", "Performance Metrics"],
+        sections: [
+            {
+                title: "Zero Context Switching",
+                description: "View customer history, orders, and tags right next to the chat window.",
+                icon: (props: any) => <img src="https://img.icons8.com/3d-fluency/94/dashboard.png" alt="Context" {...props} />
+            }
+        ]
+    },
+    "flow-builder": {
+        title: "Visual Flow Builder",
+        subtitle: "Automate Without Code",
+        description: "Build robust chatbots and automation flows with a simple drag-and-drop interface. No coding skills required.",
+        icon: (props: any) => <img src="https://img.icons8.com/3d-fluency/94/flow-chart.png" alt="Flow" {...props} />,
+        benefits: ["Drag & Drop", "Pre-built Templates", "Logic Branching", "A/B Testing"],
+        sections: [
+            {
+                title: "Visual Logic",
+                description: "See your entire automation at a glance. Connect blocks to create complex conversational journeys.",
+                icon: (props: any) => <img src="https://img.icons8.com/3d-fluency/94/mind-map.png" alt="Logic" {...props} />
+            }
+        ]
+    },
+    "analytics": {
+        title: "Advanced Analytics",
+        subtitle: "Data-Driven Decisions",
+        description: "Get deep insights into your campaign performance, support team efficiency, and customer engagement metrics.",
+        icon: (props: any) => <img src="https://img.icons8.com/3d-fluency/94/positive-dynamic.png" alt="Analytics" {...props} />,
+        benefits: ["Real-time Dashboards", "Exportable Reports", "Conversation Insights", "ROI Tracking"],
+        sections: [
+            {
+                title: "Monitor Growth",
+                description: "Track message delivery, read rates, and button clicks in real-time.",
+                icon: (props: any) => <img src="https://img.icons8.com/3d-fluency/94/bar-chart.png" alt="Growth" {...props} />
+            }
+        ]
+    },
+
     // Integrations
     "shopify": {
         title: "Shopify Integration",
@@ -165,6 +223,20 @@ const pages: Record<string, PageData> = {
         description: "Send instant payment receipts and failed payment reminders on WhatsApp automatically.",
         icon: (props: any) => <img src="https://img.icons8.com/3d-fluency/94/bank-cards.png" alt="Razorpay" {...props} />,
         benefits: ["Payment Receipts", "Failed Payment Recovery", "Subscription Alerts", "Invoice Sharing"]
+    },
+    "webhooks": {
+        title: "Webhooks Integration",
+        subtitle: "Connect Any Stack",
+        description: "Receive real-time events from WhatsApp directly to your server. Trigger actions in your own apps instantly.",
+        icon: (props: any) => <img src="https://img.icons8.com/3d-fluency/94/api-settings.png" alt="Webhooks" {...props} />,
+        benefits: ["Real-time Events", "Secure Payload", "Custom Headers", "Retries"]
+    },
+    "crm-sync": {
+        title: "CRM Synchronization",
+        subtitle: "Unified Customer Data",
+        description: "Keep your data in sync with bidirectional integration for Salesforce, HubSpot, Zoho, and more.",
+        icon: (props: any) => <img src="https://img.icons8.com/3d-fluency/94/cloud-sync.png" alt="CRM" {...props} />,
+        benefits: ["Two-way Sync", "Field Mapping", "Activity Logging", "Auto-Lead Gen"]
     }
 };
 

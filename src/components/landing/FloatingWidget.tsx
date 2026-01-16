@@ -27,7 +27,11 @@ export const FloatingWidget = () => {
                         <div className="bg-[#075E54] p-4 flex items-center justify-between text-white">
                             <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm">
-                                    <img src="/logos/avelo-logo.png" alt="Avelo" className="w-6 h-6 object-contain brightness-0 invert" />
+                                    <img
+                                        src="/logos/Logomark.png"
+                                        alt="Avelo"
+                                        className="w-full h-full object-cover rounded-full"
+                                    />
                                 </div>
                                 <div>
                                     <h3 className="font-bold text-base leading-tight">Avelo Support</h3>

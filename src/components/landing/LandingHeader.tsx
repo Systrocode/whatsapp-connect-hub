@@ -109,17 +109,14 @@ export function LandingHeader({ variant = 'default' }: { variant?: 'default' | '
             className={cn(
                 "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b",
                 isScrolled
-                    ? "bg-background/80 backdrop-blur-md border-border py-2"
-                    : "bg-transparent border-transparent py-4"
+                    ? "bg-white dark:bg-slate-900 shadow-sm border-border py-2"
+                    : "bg-white dark:bg-slate-900 border-transparent py-4"
             )}
         >
             <div className="container mx-auto px-4 sm:px-6 flex items-center justify-between">
                 {/* Logo */}
                 <Link to="/" className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
-                        <MessageSquare className="w-4 h-4 text-primary-foreground" />
-                    </div>
-                    <span className={cn("text-lg font-bold", isDark ? "text-white" : "text-foreground")}>Avelo</span>
+                    <img src="/logos/avelo logo.png" alt="Avelo" className="h-20 w-auto object-contain mix-blend-multiply brightness-105 contrast-110 dark:mix-blend-screen dark:grayscale dark:invert dark:brightness-200" />
                 </Link>
 
                 {/* Desktop Navigation */}
@@ -127,15 +124,7 @@ export function LandingHeader({ variant = 'default' }: { variant?: 'default' | '
                     <NavigationMenu>
                         <NavigationMenuList className={isDark ? "text-white" : ""}>
                             <NavigationMenuItem>
-                                <Link to="/pricing">
-                                    <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), isDark && "bg-transparent text-white hover:bg-white/10 hover:text-white focus:bg-white/10 focus:text-white")}>
-                                        Pricing
-                                    </NavigationMenuLink>
-                                </Link>
-                            </NavigationMenuItem>
-
-                            <NavigationMenuItem>
-                                <NavigationMenuTrigger className={cn(isDark && "bg-transparent text-white hover:bg-white/10 hover:text-white focus:bg-white/10 focus:text-white data-[state=open]:bg-white/10 data-[state=open]:text-white")}>Product</NavigationMenuTrigger>
+                                <NavigationMenuTrigger className="bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent hover:text-green-600 dark:text-white font-medium" >Product</NavigationMenuTrigger>
                                 <NavigationMenuContent>
                                     <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                                         <ListItem title="Official API" href="/product/official-api">
@@ -155,7 +144,7 @@ export function LandingHeader({ variant = 'default' }: { variant?: 'default' | '
                             </NavigationMenuItem>
 
                             <NavigationMenuItem>
-                                <NavigationMenuTrigger className={cn(isDark && "bg-transparent text-white hover:bg-white/10 hover:text-white focus:bg-white/10 focus:text-white data-[state=open]:bg-white/10 data-[state=open]:text-white")}>Features</NavigationMenuTrigger>
+                                <NavigationMenuTrigger className="bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent hover:text-green-600 dark:text-white font-medium" >Features</NavigationMenuTrigger>
                                 <NavigationMenuContent>
                                     <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                                         {features.map((feature) => (
@@ -173,7 +162,7 @@ export function LandingHeader({ variant = 'default' }: { variant?: 'default' | '
                             </NavigationMenuItem>
 
                             <NavigationMenuItem>
-                                <NavigationMenuTrigger className={cn(isDark && "bg-transparent text-white hover:bg-white/10 hover:text-white focus:bg-white/10 focus:text-white data-[state=open]:bg-white/10 data-[state=open]:text-white")}>Integrations</NavigationMenuTrigger>
+                                <NavigationMenuTrigger className="bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent hover:text-green-600 dark:text-white font-medium" >Integrations</NavigationMenuTrigger>
                                 <NavigationMenuContent>
                                     <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                                         {integrations.map((item) => (
@@ -191,7 +180,7 @@ export function LandingHeader({ variant = 'default' }: { variant?: 'default' | '
                             </NavigationMenuItem>
 
                             <NavigationMenuItem>
-                                <NavigationMenuTrigger className={cn(isDark && "bg-transparent text-white hover:bg-white/10 hover:text-white focus:bg-white/10 focus:text-white data-[state=open]:bg-white/10 data-[state=open]:text-white")}>Resources</NavigationMenuTrigger>
+                                <NavigationMenuTrigger className="bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent hover:text-green-600 dark:text-white font-medium" >Resources</NavigationMenuTrigger>
                                 <NavigationMenuContent>
                                     <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                                         <li className="row-span-3">
@@ -219,7 +208,7 @@ export function LandingHeader({ variant = 'default' }: { variant?: 'default' | '
                                         <ListItem title="Blog" href="/blog">
                                             Latest updates and marketing tips.
                                         </ListItem>
-                                        <ListItem title="Case Studies" href="/case-studies">
+                                        <ListItem title="Case Studies" href="/customers/case-studies">
                                             See how others grow with Avelo.
                                         </ListItem>
                                         <ListItem title="Help Center" href="/help">
@@ -227,6 +216,13 @@ export function LandingHeader({ variant = 'default' }: { variant?: 'default' | '
                                         </ListItem>
                                     </ul>
                                 </NavigationMenuContent>
+                            </NavigationMenuItem>
+                            <NavigationMenuItem>
+                                <Link to="/pricing">
+                                    <NavigationMenuLink className="bg-transparent hover:bg-transparent focus:bg-transparent hover:text-green-600 dark:text-white font-medium px-4 py-2" >
+                                        Pricing
+                                    </NavigationMenuLink>
+                                </Link>
                             </NavigationMenuItem>
                         </NavigationMenuList>
                     </NavigationMenu>
