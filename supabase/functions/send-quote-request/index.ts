@@ -5,7 +5,7 @@ const corsHeaders = {
     "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-serve(async (req) => {
+serve(async (req: Request) => {
     if (req.method === "OPTIONS") {
         return new Response("ok", { headers: corsHeaders });
     }
@@ -72,7 +72,7 @@ serve(async (req) => {
     } catch (error) {
         console.error("Error processing quote request:", error);
         return new Response(
-            JSON.stringify({ error: error.message }),
+            JSON.stringify({ error: (error as Error).message }),
             {
                 headers: { ...corsHeaders, "Content-Type": "application/json" },
                 status: 400,

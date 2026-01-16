@@ -469,11 +469,7 @@ const ConversationDetail = () => {
                   className="h-11 w-11 rounded-full shrink-0 shadow-md"
                   disabled={!newMessage.trim() || sendMessage.isPending}
                 >
-                  <img
-                    src="https://img.icons8.com/color/48/whatsapp--v1.png"
-                    alt="Send"
-                    className="w-6 h-6"
-                  />
+                  <Send className="w-5 h-5" />
                 </Button>
               </motion.form>
             </div>
