@@ -1,0 +1,19 @@
+# Avelo - WhatsApp Business API Solution
+
+> Avelo is the complete platform for WhatsApp Business API. Automate marketing, sales, and support in one place.
+
+## Core Products
+- **Official API**: Direct access to WhatsApp Cloud API infrastructure.
+- **Team Inbox**: Multi-agent support inbox for your team.
+- **Flow Builder**: Drag & Drop chatbot builder.
+- **Analytics**: Detailed insights and reporting.
+
+## Solutions
+- Marketers: Run broadcasts, retargeting campaigns, and click-to-WhatsApp ads.
+- Sales Teams: Qualify leads automatically and manage pipelines.
+- Support Teams: Automate FAQs and route complex queries to agents.
+
+## Links
+- [Homepage](https://www.avelo.in/)
+- [Pricing](https://www.avelo.in/pricing)
+- [Book Demo](https://calendly.com/systrocode/new-meeting)

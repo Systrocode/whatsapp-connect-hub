@@ -20,7 +20,7 @@ const Index = () => {
       <LandingHeader />
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6 relative overflow-hidden">
+      <section className="pt-24 md:pt-32 pb-12 md:pb-20 px-4 md:px-6 relative overflow-hidden">
         <div className="absolute inset-0 opacity-5">
           <div className="absolute top-20 left-1/4 w-96 h-96 rounded-full bg-[#00E785] blur-3xl" />
           <div className="absolute bottom-20 right-1/4 w-64 h-64 rounded-full bg-[#00E785] blur-3xl" />
@@ -148,7 +148,7 @@ const Index = () => {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="relative h-[350px] md:h-[500px] w-full flex items-center justify-center scale-[0.6] md:scale-100 origin-center mt-12 md:mt-0"
+              className="relative h-[300px] md:h-[500px] w-full flex items-center justify-center scale-[0.5] sm:scale-[0.6] md:scale-100 origin-center mt-8 md:mt-0"
             >
               {/* Central Pulse */}
               <div className="absolute w-[300px] h-[300px] bg-green-500/5 rounded-full blur-3xl animate-pulse" />
@@ -348,7 +348,7 @@ const Index = () => {
           {/* Marketing & Buyer Journey Section */}
           <div className="mt-32 mb-32">
             <div className="text-center mb-16 px-4">
-              <h2 className="text-4xl md:text-5xl font-bold text-foreground max-w-5xl mx-auto leading-tight">
+              <h2 className="text-3xl md:text-5xl font-bold text-foreground max-w-5xl mx-auto leading-tight">
                 Turn conversations into revenue across your entire customer journey
               </h2>
             </div>
@@ -517,7 +517,7 @@ const Index = () => {
 
           {/* Sales Pipeline Section */}
           <div className="mt-0 mb-32 relative">
-            <div className="w-[95%] max-w-[1440px] mx-auto bg-[#FFF5FD] dark:bg-pink-950/20 rounded-[3rem] p-8 md:p-16 relative overflow-hidden">
+            <div className="w-[95%] max-w-[1440px] mx-auto bg-[#FFF5FD] dark:bg-pink-950/20 rounded-[2rem] md:rounded-[3rem] p-5 md:p-16 relative overflow-hidden">
 
               {/* Decorative Background Elements */}
               <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-pink-100/60 dark:bg-pink-900/10 rounded-full blur-[100px] -z-10 -translate-x-1/2 -translate-y-1/2"></div>
@@ -527,11 +527,11 @@ const Index = () => {
                 {/* Left Visual - Flow Diagram */}
                 <div className="relative w-full flex flex-col items-center order-2 lg:order-1 mt-8 lg:mt-0">
 
-                  {/* Top Process Pills - Single line on mobile */}
-                  <div className="w-full flex items-center justify-start gap-0.5 md:gap-3 px-0.5 mb-6 md:mb-8 overflow-hidden md:overflow-visible">
+                  {/* Top Process Pills - Wraps on mobile */}
+                  <div className="w-full flex flex-wrap justify-center gap-2 md:gap-3 mb-6 md:mb-8">
                     {['ENGAGE', 'QUALIFY', 'ASSIGN', 'WIN'].map((step, i) => (
                       <div key={step} className="flex items-center min-w-fit">
-                        <span className="bg-[#FFD6F8] text-[#D845C2] px-1 sm:px-4 md:px-6 py-0.5 sm:py-2 rounded-full text-[7px] sm:text-[10px] md:text-xs font-bold shadow-sm whitespace-nowrap tracking-tight">{step}</span>
+                        <span className="bg-[#FFD6F8] text-[#D845C2] px-3 py-1 md:px-6 md:py-2 rounded-full text-[10px] md:text-xs font-bold shadow-sm whitespace-nowrap tracking-tight">{step}</span>
                         {i < 3 && <ArrowRight className="w-1.5 h-1.5 sm:w-3 sm:h-3 md:w-4 md:h-4 text-pink-300 mx-[0px] sm:mx-1 md:mx-2 flex-shrink-0" />}
                       </div>
                     ))}
@@ -699,7 +699,7 @@ const Index = () => {
 
           {/* Support Section (Yellow Theme) */}
           <div className="mt-0 mb-32 relative">
-            <div className="w-[95%] max-w-[1440px] mx-auto bg-[#FFFDEB] dark:bg-yellow-950/20 rounded-[3rem] px-4 pt-8 pb-8 md:px-16 md:pt-16 md:pb-6 relative overflow-hidden">
+            <div className="w-[95%] max-w-[1440px] mx-auto bg-[#FFFDEB] dark:bg-yellow-950/20 rounded-[2rem] md:rounded-[3rem] p-5 md:p-16 relative overflow-hidden">
 
               {/* Decorative Background */}
               <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-yellow-100/60 dark:bg-yellow-900/10 rounded-full blur-[100px] -z-10 translate-x-1/2 -translate-y-1/2"></div>

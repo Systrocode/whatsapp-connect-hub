@@ -13,7 +13,7 @@ export const FloatingWidget = () => {
     }, []);
 
     return (
-        <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-4 font-sans max-w-[360px] w-full">
+        <div className="fixed bottom-6 right-4 md:right-6 z-50 flex flex-col items-end gap-4 font-sans max-w-[360px] w-[calc(100vw-32px)] md:w-full">
             <AnimatePresence>
                 {isOpen && (
                     <motion.div

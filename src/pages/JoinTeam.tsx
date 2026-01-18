@@ -120,9 +120,9 @@ export default function JoinTeam() {
         <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900 p-4">
             <Card className="w-full max-w-md shadow-xl">
                 <CardHeader className="text-center">
-                    <CardTitle className="text-2xl">
+                    <h1 className="text-2xl font-semibold leading-none tracking-tight text-slate-900 dark:text-white mb-2">
                         {status === 'success' ? 'Welcome Aboard!' : 'Team Invitation'}
-                    </CardTitle>
+                    </h1>
                     <CardDescription>
                         {status === 'success' ? 'Redirecting to dashboard...' : 'You have been invited to join a workspace.'}
                     </CardDescription>
