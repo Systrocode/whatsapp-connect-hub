@@ -37,25 +37,10 @@ if (!supabaseUrl || !supabaseKey) {
     </div>
   );
 } else {
-  // Only attempt to load App if config is present
-  root.render(<div style={{ padding: 20 }}>Loading Application...</div>);
-
-  import("./App.tsx")
-    .then(({ default: App }) => {
-      console.log("App loaded, rendering...");
-      root.render(
-        <React.StrictMode>
-          <App />
-        </React.StrictMode>
-      );
-    })
-    .catch((err) => {
-      console.error("App Import Error:", err);
-      root.render(
-        <div style={{ padding: 20, color: 'red' }}>
-          <h1>Runtime Error</h1>
-          <pre>{err.message}</pre>
-        </div>
-      );
-    });
+  // Config exists, render App directly
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
 }

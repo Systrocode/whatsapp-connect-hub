@@ -257,7 +257,7 @@ export function LandingHeader({ variant = 'default' }: { variant?: 'default' | '
             {/* Mobile Menu */}
             {/* Mobile Menu */}
             {isMobileMenuOpen && (
-                <div className="lg:hidden fixed inset-x-0 top-[60px] h-[calc(100vh-60px)] bg-background/95 backdrop-blur-xl p-6 flex flex-col gap-6 overflow-y-auto animate-in fade-in slide-in-from-top-5">
+                <div className="lg:hidden fixed inset-x-0 top-[60px] h-[calc(100vh-60px)] bg-white dark:bg-slate-900 p-6 flex flex-col gap-6 overflow-y-auto animate-in fade-in slide-in-from-top-5 z-50">
                     <div className="flex flex-col gap-2">
                         <Link
                             to="/pricing"
