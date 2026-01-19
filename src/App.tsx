@@ -10,10 +10,12 @@ import { Analytics as VercelAnalytics } from "@vercel/analytics/react";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { FacebookSDK } from "@/components/FacebookSDK";
 import AdminRoute from "./components/AdminRoute";
+import ScrollToTop from "./components/ScrollToTop";
 
 // Lazy load all pages for performance optimization
 const Index = lazy(() => import("./pages/Index"));
 const Pricing = lazy(() => import("./pages/Pricing"));
+const Features = lazy(() => import("./pages/Features"));
 const FeaturePage = lazy(() => import("./pages/FeaturePage"));
 const Auth = lazy(() => import("./pages/Auth"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
@@ -108,10 +110,12 @@ const App = () => {
               v7_startTransition: true,
               v7_relativeSplatPath: true,
             }}>
+              <ScrollToTop />
               <Suspense fallback={<PageLoader />}>
                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/pricing" element={<Pricing />} />
+                  <Route path="/features" element={<Features />} />
                   <Route path="/features/:slug" element={<FeaturePage />} />
                   <Route path="/integrations/:slug" element={<IntegrationPage />} />
                   <Route path="/mobile-app" element={<MobileAppPage />} />

@@ -30,7 +30,7 @@ interface Section {
     }[];
 }
 
-interface PageData {
+export interface PageData {
     title: string;
     subtitle: string;
     description: string;
@@ -40,7 +40,7 @@ interface PageData {
     sections?: Section[];
 }
 
-const pages: Record<string, PageData> = {
+export const pages: Record<string, PageData> = {
     // Solutions
 
 

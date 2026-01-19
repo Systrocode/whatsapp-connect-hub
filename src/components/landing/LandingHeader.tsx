@@ -259,13 +259,25 @@ export function LandingHeader({ variant = 'default' }: { variant?: 'default' | '
             {isMobileMenuOpen && (
                 <div className="lg:hidden fixed inset-x-0 top-[60px] h-[calc(100vh-60px)] bg-background/95 backdrop-blur-xl p-6 flex flex-col gap-6 overflow-y-auto animate-in fade-in slide-in-from-top-5">
                     <div className="flex flex-col gap-2">
-                        <Link to="/pricing" className="text-lg font-medium py-3 border-b border-border">Pricing</Link>
+                        <Link
+                            to="/pricing"
+                            className="text-lg font-medium py-3 border-b border-border"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                            Pricing
+                        </Link>
                     </div>
 
                     <div className="space-y-4">
                         <div className="flex items-center justify-between">
                             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Features</p>
-                            <Link to="/features" className="text-xs text-primary font-medium">View All</Link>
+                            <Link
+                                to="/features"
+                                className="text-xs text-primary font-medium"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                                View All
+                            </Link>
                         </div>
                         <div className="grid grid-cols-1 gap-3">
                             {features.slice(0, 4).map(f => (
@@ -273,6 +285,7 @@ export function LandingHeader({ variant = 'default' }: { variant?: 'default' | '
                                     key={f.title}
                                     to={`/features/${f.title.toLowerCase().replace(/ /g, '-')}`}
                                     className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors border border-transparent hover:border-border"
+                                    onClick={() => setIsMobileMenuOpen(false)}
                                 >
                                     <div className="p-2 bg-green-500/10 rounded-md">
                                         <f.icon className="w-5 h-5 text-green-600" />
@@ -286,7 +299,7 @@ export function LandingHeader({ variant = 'default' }: { variant?: 'default' | '
                     <div className="mt-auto pb-8 space-y-4">
                         <div className="h-px bg-border" />
                         <div className="flex flex-col gap-3">
-                            <Link to="/auth" className="w-full">
+                            <Link to="/auth" className="w-full" onClick={() => setIsMobileMenuOpen(false)}>
                                 <Button variant="outline" className="w-full h-12 text-base font-medium border-primary/20 hover:bg-primary/5 hover:text-primary">
                                     Sign in
                                 </Button>
