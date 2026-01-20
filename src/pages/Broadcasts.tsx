@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,8 +13,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useBroadcasts, BroadcastCampaign } from '@/hooks/useBroadcasts';
 import { useTemplates } from '@/hooks/useTemplates';
 import { useContacts } from '@/hooks/useContacts';
-import { Plus, Send, Calendar, Users, MessageSquare, Trash2, Eye, Clock, CheckCircle, XCircle, AlertCircle, Settings, Smartphone, Image as ImageIcon } from 'lucide-react';
-import { format } from 'date-fns';
+import { useSegments } from '@/hooks/useSegments';
+import { Plus, Send, Calendar, Users, MessageSquare, Trash2, Eye, Clock, CheckCircle, XCircle, AlertCircle, Settings, Smartphone, Image as ImageIcon, Filter } from 'lucide-react';
+import { format, subDays, isAfter, parseISO } from 'date-fns';
 import PhoneMockup from '@/components/PhoneMockup';
 
 const statusColors: Record<string, string> = {
@@ -39,9 +40,11 @@ export default function Broadcasts() {
   const { campaigns, isLoading, createCampaign, addRecipients, deleteCampaign } = useBroadcasts();
   const { templates } = useTemplates();
   const { contacts } = useContacts();
+  const { segments } = useSegments();
 
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [selectedContacts, setSelectedContacts] = useState<string[]>([]);
+  const [selectedSegmentId, setSelectedSegmentId] = useState<string>('all');
   const [newCampaign, setNewCampaign] = useState({
     name: '',
     template_id: '',
@@ -86,9 +89,44 @@ export default function Broadcasts() {
     setSelectedContacts([]);
   };
 
-  const filteredContacts = filterTag
-    ? contacts.filter(c => c.tags?.includes(filterTag))
-    : contacts;
+  const filteredContacts = useMemo(() => {
+    let result = contacts;
+
+    // 1. Filter by Segment
+    if (selectedSegmentId && selectedSegmentId !== 'all') {
+      const segment = (segments || []).find(s => s.id === selectedSegmentId);
+      if (segment) {
+        result = result.filter(contact => {
+          const criteria = segment.criteria;
+          if (criteria.tags && criteria.tags.length > 0) {
+            const contactTags = contact.tags || [];
+            if (!criteria.tags.every(t => contactTags.includes(t))) return false;
+          }
+          if (criteria.last_active_days) {
+            const cutoffDate = subDays(new Date(), criteria.last_active_days);
+            if (contact.created_at && isAfter(parseISO(contact.created_at), cutoffDate)) return false;
+          }
+          return true;
+        });
+      }
+    }
+
+    // 2. Filter by Tag dropdown (Legacy)
+    if (filterTag) {
+      result = result.filter(c => c.tags?.includes(filterTag));
+    }
+
+    return result;
+  }, [contacts, selectedSegmentId, segments, filterTag]);
+
+  // Effect to auto-select filtered contacts when segment changes (optional, but convenient for "Broadcast to Segment")
+  // For now, we just let user select ALL manually or auto-select if segment is chosen?
+  // Let's AUTO-SELECT all matches when a segment is picked
+  useEffect(() => {
+    if (selectedSegmentId && selectedSegmentId !== 'all') {
+      setSelectedContacts(filteredContacts.map(c => c.id));
+    }
+  }, [selectedSegmentId, filteredContacts]);
 
   const allTags = [...new Set(contacts.flatMap(c => c.tags ?? []))];
 
@@ -199,7 +237,28 @@ export default function Broadcasts() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label>Select Recipients</Label>
+                      <Label>Target Audience</Label>
+
+                      {/* Segment Selector */}
+                      <div className="flex gap-2 mb-2">
+                        <Select value={selectedSegmentId} onValueChange={setSelectedSegmentId}>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select Segment" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">Check Manually / All Contacts</SelectItem>
+                            {(segments || []).map(s => (
+                              <SelectItem key={s.id} value={s.id}>
+                                <span className="flex items-center gap-2">
+                                  <Filter className="w-3 h-3 text-muted-foreground" />
+                                  {s.name}
+                                </span>
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+
                       <div className="border rounded-md p-3 max-h-48 overflow-y-auto space-y-2">
                         <div className="flex items-center gap-2 pb-2 border-b sticky top-0 bg-background z-10">
                           <Checkbox

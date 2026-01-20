@@ -23,6 +23,9 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 import { WhatsAppMedia } from '@/components/dashboard/WhatsAppMedia';
 import { ContactInfoSidebar } from '@/components/dashboard/ContactInfoSidebar';
+
+import { useCannedResponses } from '@/hooks/useCannedResponses';
+import { QuickReplyManager } from '@/components/dashboard/QuickReplyManager';
 import { useContacts } from '@/hooks/useContacts';
 
 const ConversationDetail = () => {
@@ -31,7 +34,9 @@ const ConversationDetail = () => {
   const { messages, isLoading: messagesLoading, error, sendMessage } = useMessages(id);
   const { conversations, updateConversation, markAsRead } = useConversations();
   const { updateContact } = useContacts();
+
   const { templates } = useTemplates();
+  const { responses: cannedResponses } = useCannedResponses();
 
   const [newMessage, setNewMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -268,6 +273,7 @@ const ConversationDetail = () => {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
+                <QuickReplyManager />
               </div>
             </motion.div>
 
@@ -448,9 +454,43 @@ const ConversationDetail = () => {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <div className="flex-1 bg-muted/30 rounded-2xl border border-transparent focus-within:border-primary/20 focus-within:bg-background transition-all">
+                <div className="flex-1 relative bg-muted/30 rounded-2xl border border-transparent focus-within:border-primary/20 focus-within:bg-background transition-all">
+                  {/* Quick Reply Popover */}
+                  {newMessage.startsWith('/') && (
+                    <div className="absolute bottom-full mb-2 left-0 w-full max-w-md bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-border overflow-hidden z-20 animate-in slide-in-from-bottom-2 fade-in duration-200">
+                      <div className="p-2 text-xs font-semibold bg-muted/50 border-b text-muted-foreground flex justify-between items-center">
+                        <span>Quick Replies</span>
+                        <span className="font-mono bg-background px-1 rounded border">TAB to select</span>
+                      </div>
+                      <div className="max-h-[200px] overflow-y-auto p-1">
+                        {(cannedResponses || [])
+                          .filter(r => r.shortcut.toLowerCase().includes(newMessage.slice(1).toLowerCase()))
+                          .map((r) => (
+                            <div
+                              key={r.id}
+                              className="px-3 py-2 hover:bg-muted rounded-md cursor-pointer flex justify-between items-center group"
+                              onClick={() => setNewMessage(r.content)}
+                            >
+                              <div className="flex flex-col overflow-hidden">
+                                <span className="font-bold text-sm text-foreground">/{r.shortcut}</span>
+                                <span className="text-xs text-muted-foreground truncate max-w-[200px]">{r.content}</span>
+                              </div>
+                              <div className="text-[10px] bg-slate-100 text-slate-500 px-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                                Enter
+                              </div>
+                            </div>
+                          ))}
+                        {(cannedResponses || []).filter(r => r.shortcut.toLowerCase().includes(newMessage.slice(1).toLowerCase())).length === 0 && (
+                          <div className="p-3 text-center text-xs text-muted-foreground">
+                            No matching quick replies found.
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
                   <Textarea
-                    placeholder="Type a message..."
+                    placeholder="Type a message... (Type '/' for quick replies)"
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     className="min-h-[44px] max-h-32 border-0 bg-transparent focus-visible:ring-0 resize-none py-3"
@@ -458,6 +498,14 @@ const ConversationDetail = () => {
                       if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();
                         handleSendMessage(e);
+                      }
+                      // Handle Tab to select first match
+                      if (e.key === 'Tab' && newMessage.startsWith('/')) {
+                        e.preventDefault();
+                        const matches = (cannedResponses || []).filter(r => r.shortcut.toLowerCase().includes(newMessage.slice(1).toLowerCase()));
+                        if (matches.length > 0) {
+                          setNewMessage(matches[0].content);
+                        }
                       }
                     }}
                   />
@@ -481,7 +529,7 @@ const ConversationDetail = () => {
           </div>
 
         </div>
-      </div>
+      </div >
     </DashboardLayout >
   );
 };

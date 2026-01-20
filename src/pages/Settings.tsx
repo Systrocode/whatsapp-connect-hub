@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { User, Phone, Building2, Bell, Smartphone, Save, ExternalLink, Key, CheckCircle, AlertCircle, Globe, Mail, MapPin, Image as ImageIcon } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -131,6 +132,7 @@ const Settings = () => {
             <TabsTrigger value="whatsapp_profile">WhatsApp Public Profile</TabsTrigger>
             <TabsTrigger value="automation">Automation & Chat</TabsTrigger>
             <TabsTrigger value="team">My Team</TabsTrigger>
+            <TabsTrigger value="privacy">Privacy & Security</TabsTrigger>
             <TabsTrigger value="notifications">Notifications</TabsTrigger>
           </TabsList>
 
@@ -354,6 +356,102 @@ const Settings = () => {
 
           <TabsContent value="team">
             <TeamSettings />
+          </TabsContent>
+
+          <TabsContent value="privacy">
+            <div className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Key className="w-5 h-5 text-blue-500" />
+                    Data Portability (GDPR Art. 20)
+                  </CardTitle>
+                  <CardDescription>
+                    You have the right to request a copy of your personal data.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="flex items-center justify-between">
+                  <div className="space-y-1">
+                    <p className="font-medium">Export Personal Data</p>
+                    <p className="text-sm text-muted-foreground">Download your profile, contacts, and settings in JSON format.</p>
+                  </div>
+                  <Button variant="outline" onClick={async () => {
+                    // Mock Export Logic
+                    toast.success("Preparing your data export...");
+                    try {
+                      const { data: profile } = await supabase.from('profiles').select('*').single();
+                      const { data: contacts } = await supabase.from('contacts').select('*').limit(100);
+                      const { data: segments } = await supabase.from('segments' as any).select('*');
+
+                      const exportData = {
+                        user_id: user?.id,
+                        timestamp: new Date().toISOString(),
+                        profile,
+                        contacts_sample: contacts,
+                        segments
+                      };
+
+                      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+                      const url = window.URL.createObjectURL(blob);
+                      const a = document.createElement('a');
+                      a.href = url;
+                      a.download = `avelo-data-export-${new Date().toISOString().split('T')[0]}.json`;
+                      document.body.appendChild(a);
+                      a.click();
+                      window.URL.revokeObjectURL(url);
+                      document.body.removeChild(a);
+                      toast.success("Data export downloaded.");
+                    } catch (e) {
+                      console.error(e);
+                      toast.error("Failed to export data.");
+                    }
+                  }}>
+                    <ExternalLink className="w-4 h-4 mr-2" />
+                    Download Data
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card className="border-red-100 dark:border-red-900/30">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-red-600 dark:text-red-500">
+                    <AlertCircle className="w-5 h-5" />
+                    Danger Zone
+                  </CardTitle>
+                  <CardDescription>
+                    Irreversible actions regarding your account.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-between p-4 border border-red-200 dark:border-red-900/50 rounded-lg bg-red-50 dark:bg-red-900/10">
+                    <div className="space-y-1">
+                      <p className="font-medium text-red-900 dark:text-red-200">Delete Account</p>
+                      <p className="text-sm text-red-700 dark:text-red-300">
+                        Permanently delete your account and all associated data.
+                      </p>
+                    </div>
+                    <Button variant="destructive" onClick={async () => {
+                      if (confirm("Are you sure you want to delete your account? This action involves complete erasure of your data and cannot be undone.")) {
+                        try {
+                          toast.info("Deleting account...");
+                          const { error } = await supabase.functions.invoke('delete-account');
+                          if (error) throw error;
+
+                          toast.success("Account deleted. Goodbye!");
+                          await supabase.auth.signOut();
+                          window.location.href = '/';
+                        } catch (e: any) {
+                          console.error(e);
+                          toast.error("Failed to delete account: " + e.message);
+                        }
+                      }
+                    }}>
+                      Delete Account
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
         </Tabs>
       </div>

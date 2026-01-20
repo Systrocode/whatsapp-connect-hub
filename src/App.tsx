@@ -11,6 +11,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { FacebookSDK } from "@/components/FacebookSDK";
 import AdminRoute from "./components/AdminRoute";
 import ScrollToTop from "./components/ScrollToTop";
+import { CookieConsentBanner } from "./components/CookieConsentBanner";
 
 // Lazy load all pages for performance optimization
 const Index = lazy(() => import("./pages/Index"));
@@ -23,6 +24,7 @@ const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Conversations = lazy(() => import("./pages/Conversations"));
 const ConversationDetail = lazy(() => import("./pages/ConversationDetail"));
 const Contacts = lazy(() => import("./pages/Contacts"));
+const Segments = lazy(() => import("./pages/Segments"));
 const Analytics = lazy(() => import("./pages/Analytics"));
 const Settings = lazy(() => import("./pages/Settings"));
 const Broadcasts = lazy(() => import("./pages/Broadcasts"));
@@ -111,6 +113,7 @@ const App = () => {
               v7_relativeSplatPath: true,
             }}>
               <ScrollToTop />
+              <CookieConsentBanner />
               <Suspense fallback={<PageLoader />}>
                 <Routes>
                   <Route path="/" element={<Index />} />
@@ -129,6 +132,7 @@ const App = () => {
                   <Route path="/dashboard/conversations" element={<ProtectedRoute><Conversations /></ProtectedRoute>} />
                   <Route path="/dashboard/conversations/:id" element={<ProtectedRoute><ConversationDetail /></ProtectedRoute>} />
                   <Route path="/dashboard/contacts" element={<ProtectedRoute><Contacts /></ProtectedRoute>} />
+                  <Route path="/dashboard/segments" element={<ProtectedRoute><Segments /></ProtectedRoute>} />
                   <Route path="/dashboard/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
                   <Route path="/dashboard/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
                   <Route path="/dashboard/invoices" element={<ProtectedRoute><InvoicesPage /></ProtectedRoute>} />

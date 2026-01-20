@@ -95,6 +95,37 @@ export default function TermsAndPrivacy() {
                                     <p>
                                         We comply with US privacy laws. We provide mechanisms for you to opt-out of collection and request data deletion ("Right to be Forgotten").
                                     </p>
+                                    <h3>5. Cookie Policy</h3>
+                                    <h3>5. Cookie Policy</h3>
+                                    <p>
+                                        We use cookies to enhance your experience. By using our service, you consent to the following:
+                                    </p>
+                                    <ul className="list-disc pl-6 mb-4">
+                                        <li><strong>Essential Cookies:</strong> Used for authentication (keeping you logged in) and UI preferences (e.g., sidebar state).</li>
+                                        <li><strong>Functional Cookies:</strong> We use the <strong>Facebook SDK (Meta)</strong> to facilitate the connection with WhatsApp Business API. This sets third-party cookies required for the integration to work.</li>
+                                        <li><strong>Affiliate & Analytics:</strong> If you visit via a partner link, we store a 60-day attribution cookie to credit the referral. We also use anonymous analytics to improve system performance.</li>
+                                    </ul>
+                                    <p>
+                                        You can manage or disable cookies in your browser settings, though this may break the WhatsApp integration.
+                                    </p>
+
+                                    <h3>6. Third-Party Subprocessors</h3>
+                                    <p>
+                                        We partner with the following trusted entities to provide our services. All partners are GDPR-compliant:
+                                    </p>
+                                    <ul>
+                                        <li><strong>Supabase</strong> (Database & Auth) - USA</li>
+                                        <li><strong>Vercel</strong> (Hosting) - USA</li>
+                                        <li><strong>Meta / WhatsApp</strong> (Messaging Infrastructure) - USA</li>
+                                    </ul>
+
+                                    <h3>7. Contact Data Protection Officer (DPO)</h3>
+                                    <p>
+                                        For any privacy concerns, DSR requests, or to report a breach, please contact our DPO immediately:
+                                    </p>
+                                    <p className="font-medium text-blue-600 dark:text-blue-400">
+                                        Email: <a href="mailto:privacy@avelo.in" className="underline">privacy@avelo.in</a>
+                                    </p>
                                 </div>
                             </TabsContent>
 
