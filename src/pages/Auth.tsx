@@ -182,7 +182,7 @@ const Auth = () => {
           <div className="absolute bottom-20 right-20 w-96 h-96 rounded-full bg-whatsapp blur-3xl" />
         </div>
 
-        <div className="relative z-10 flex flex-col justify-center px-16 text-sidebar-foreground">
+        <div className="relative z-10 flex flex-col justify-center px-16 text-white">
           <div className="flex items-center gap-3 mb-8">
             <div className="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center shadow-glow">
               <MessageSquare className="w-6 h-6 text-primary-foreground" />
@@ -195,7 +195,7 @@ const Auth = () => {
             <span className="text-gradient block">on WhatsApp</span>
           </h1>
 
-          <p className="text-sidebar-foreground/70 text-lg mb-8 max-w-md">
+          <p className="text-white/70 text-lg mb-8 max-w-md">
             Manage conversations, automate responses, and grow your business with our powerful dashboard.
           </p>
 
@@ -213,7 +213,7 @@ const Auth = () => {
                 className="flex items-center gap-3"
               >
                 <div className="w-2 h-2 rounded-full bg-whatsapp" />
-                <span className="text-sidebar-foreground/80">{feature}</span>
+                <span className="text-white/80">{feature}</span>
               </motion.div>
             ))}
           </div>

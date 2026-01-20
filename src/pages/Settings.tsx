@@ -19,6 +19,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from 'sonner';
 import { ConversationalAutomation } from '@/components/settings/ConversationalAutomation';
 import TeamSettings from './settings/TeamSettings';
+import { FacebookLoginButton } from '@/components/FacebookLoginButton';
 
 const Settings = () => {
   const { user } = useAuth();
@@ -210,6 +211,20 @@ const Settings = () => {
                 <CardDescription>Connect your Meta Business Account</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
+                {!connectionStatus?.connected && (
+                  <div className="bg-blue-50 dark:bg-blue-900/10 p-5 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4 border border-blue-100 dark:border-blue-900/30 mb-2">
+                    <div className="space-y-1 text-center sm:text-left">
+                      <h4 className="font-semibold text-blue-900 dark:text-blue-100 flex items-center justify-center sm:justify-start gap-2">
+                        Connect Automatically
+                      </h4>
+                      <p className="text-sm text-blue-700 dark:text-blue-300 max-w-sm">
+                        Log in with Facebook to automatically sync your WhatsApp Business Account, Phone ID, and Token.
+                      </p>
+                    </div>
+                    <FacebookLoginButton onSuccess={() => window.location.reload()} />
+                  </div>
+                )}
+
                 <div className="space-y-2">
                   <Label htmlFor="accessToken" className="flex items-center gap-2">
                     <Key className="w-4 h-4" /> Access Token (System User)
