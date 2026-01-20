@@ -142,7 +142,7 @@ export default function TermsAndPrivacy() {
                                             <Globe className="w-8 h-8 text-blue-500 mb-4" />
                                             <h4 className="font-bold text-lg mb-2 text-slate-900 dark:text-white">Data Residency</h4>
                                             <p className="text-sm text-slate-600 dark:text-slate-400">
-                                                We utilize top-tier cloud providers (AWS/Google Cloud) with servers located in the US and EU, ensuring low latency and strict data sovereignty compliance.
+                                                We utilize top-tier enterprise cloud infrastructure (powered by AWS) with servers located in the US and EU, ensuring low latency and strict data sovereignty compliance.
                                             </p>
                                         </div>
                                         <div className="p-6 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700">

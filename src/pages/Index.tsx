@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { MessageSquare, ArrowRight, CheckCircle, Users, Clock, TrendingUp, Send, Calendar, Instagram, Facebook, MessageCircle, Phone, Check, MoreHorizontal, ArrowDown, Sparkles, Heart, Zap, Megaphone, Bot } from 'lucide-react';
+import { ArrowRight, CheckCircle, Clock, TrendingUp, Send, Calendar, Instagram, Facebook, MessageCircle, Phone, Check, MoreHorizontal, ArrowDown, Sparkles, Heart, Zap, Bot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 
@@ -1015,8 +1015,8 @@ const Index = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="col-span-1 md:col-span-2 space-y-6">
                     <div className="bg-background rounded-2xl p-6 border border-border shadow-sm flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-600">
-                        <MessageSquare className="w-6 h-6" />
+                      <div className="w-12 h-12 rounded-full bg-green-50 flex items-center justify-center border border-green-100">
+                        <img src="https://img.icons8.com/3d-fluency/94/megaphone.png" alt="Broadcast" className="w-8 h-8 object-contain" />
                       </div>
                       <div>
                         <h3 className="font-semibold text-lg">Broadcast Campaign</h3>
@@ -1027,11 +1027,21 @@ const Index = () => {
 
                     <div className="grid grid-cols-2 gap-4">
                       <div className="bg-background rounded-2xl p-6 border border-border shadow-sm">
-                        <div className="text-muted-foreground mb-2">Active Contacts</div>
+                        <div className="flex items-center gap-3 mb-3">
+                          <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center border border-blue-100">
+                            <img src="https://img.icons8.com/3d-fluency/94/user-group-man-woman.png" alt="Contacts" className="w-6 h-6 object-contain" />
+                          </div>
+                          <div className="text-muted-foreground text-sm font-medium">Active Contacts</div>
+                        </div>
                         <div className="text-3xl font-bold">4,291</div>
                       </div>
                       <div className="bg-background rounded-2xl p-6 border border-border shadow-sm">
-                        <div className="text-muted-foreground mb-2">Messages Sent</div>
+                        <div className="flex items-center gap-3 mb-3">
+                          <div className="w-10 h-10 rounded-full bg-purple-50 flex items-center justify-center border border-purple-100">
+                            <img src="https://img.icons8.com/3d-fluency/94/paper-plane.png" alt="Sent" className="w-6 h-6 object-contain" />
+                          </div>
+                          <div className="text-muted-foreground text-sm font-medium">Messages Sent</div>
+                        </div>
                         <div className="text-3xl font-bold">128k</div>
                       </div>
                     </div>

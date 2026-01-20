@@ -1,22 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
-    MessageSquare,
     Menu,
     X,
     ChevronDown,
-    Bot,
-    Megaphone,
-    CreditCard,
-    ShoppingCart,
-    Link as LinkIcon,
-    FileText,
-    Zap,
-    Briefcase,
-    Info,
-    Smartphone,
     Globe,
-    Users
 } from "lucide-react";
 import { QuoteRequestDialog } from "./QuoteRequestDialog";
 import { Button } from "@/components/ui/button";
@@ -36,32 +24,32 @@ const features = [
     {
         title: "WhatsApp Broadcasting",
         description: "Retargeting, CRM & more",
-        icon: Megaphone,
+        icon: "https://img.icons8.com/3d-fluency/94/megaphone.png",
     },
     {
         title: "AI WhatsApp Chatbot",
         description: "Automate everything with AI",
-        icon: Bot,
+        icon: "https://img.icons8.com/3d-fluency/94/robot-2.png",
     },
     {
         title: "Click to WhatsApp Ads",
         description: "3X Your Leads",
-        icon: Zap,
+        icon: "https://img.icons8.com/3d-fluency/94/lightning-bolt.png",
     },
     {
         title: "WhatsApp Payments",
         description: "Collect Payments via UPI",
-        icon: CreditCard,
+        icon: "https://img.icons8.com/3d-fluency/94/card-wallet.png",
     },
     {
         title: "WhatsApp Forms",
         description: "Native Data Collection",
-        icon: FileText,
+        icon: "https://img.icons8.com/3d-fluency/94/form.png",
     },
     {
         title: "WhatsApp Catalog",
         description: "Sell Products on WhatsApp",
-        icon: ShoppingCart,
+        icon: "https://img.icons8.com/3d-fluency/94/shopping-bag.png",
     },
 ];
 
@@ -69,22 +57,22 @@ const integrations = [
     {
         title: "Shopify",
         description: "Abandoned Cart Recovery",
-        icon: ShoppingCart,
+        icon: "https://img.icons8.com/3d-fluency/94/shopping-bag.png",
     },
     {
         title: "Razorpay",
         description: "Payment Notifications",
-        icon: CreditCard,
+        icon: "https://img.icons8.com/3d-fluency/94/bank-cards.png",
     },
     {
         title: "Webhooks",
         description: "Connect any stack",
-        icon: LinkIcon,
+        icon: "https://img.icons8.com/3d-fluency/94/link.png",
     },
     {
         title: "CRM Sync",
         description: "Salesforce, HubSpot & more",
-        icon: Users,
+        icon: "https://img.icons8.com/3d-fluency/94/user-group-man-woman.png",
     },
 ];
 
@@ -124,7 +112,7 @@ export function LandingHeader({ variant = 'default' }: { variant?: 'default' | '
                     <NavigationMenu>
                         <NavigationMenuList className={isDark ? "text-white" : ""}>
                             <NavigationMenuItem>
-                                <NavigationMenuTrigger className="bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent hover:text-green-600 dark:text-white font-medium" >Product</NavigationMenuTrigger>
+                                <NavigationMenuTrigger className="bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent hover:text-green-600 focus:text-green-600 data-[state=open]:text-green-600 dark:text-white dark:focus:text-white dark:data-[state=open]:text-white font-medium" >Product</NavigationMenuTrigger>
                                 <NavigationMenuContent>
                                     <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                                         <ListItem title="Official API" href="/product/official-api">
@@ -144,7 +132,7 @@ export function LandingHeader({ variant = 'default' }: { variant?: 'default' | '
                             </NavigationMenuItem>
 
                             <NavigationMenuItem>
-                                <NavigationMenuTrigger className="bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent hover:text-green-600 dark:text-white font-medium" >Features</NavigationMenuTrigger>
+                                <NavigationMenuTrigger className="bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent hover:text-green-600 focus:text-green-600 data-[state=open]:text-green-600 dark:text-white dark:focus:text-white dark:data-[state=open]:text-white font-medium" >Features</NavigationMenuTrigger>
                                 <NavigationMenuContent>
                                     <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                                         {features.map((feature) => (
@@ -152,7 +140,7 @@ export function LandingHeader({ variant = 'default' }: { variant?: 'default' | '
                                                 key={feature.title}
                                                 title={feature.title}
                                                 href={`/features/${feature.title.toLowerCase().replace(/ /g, '-')}`}
-                                                icon={<feature.icon className="w-4 h-4 text-whatsapp" />}
+                                                icon={<img src={feature.icon} alt={feature.title} className="w-6 h-6 object-contain" />}
                                             >
                                                 {feature.description}
                                             </ListItem>
@@ -162,7 +150,7 @@ export function LandingHeader({ variant = 'default' }: { variant?: 'default' | '
                             </NavigationMenuItem>
 
                             <NavigationMenuItem>
-                                <NavigationMenuTrigger className="bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent hover:text-green-600 dark:text-white font-medium" >Integrations</NavigationMenuTrigger>
+                                <NavigationMenuTrigger className="bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent hover:text-green-600 focus:text-green-600 data-[state=open]:text-green-600 dark:text-white dark:focus:text-white dark:data-[state=open]:text-white font-medium" >Integrations</NavigationMenuTrigger>
                                 <NavigationMenuContent>
                                     <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                                         {integrations.map((item) => (
@@ -170,7 +158,7 @@ export function LandingHeader({ variant = 'default' }: { variant?: 'default' | '
                                                 key={item.title}
                                                 title={item.title}
                                                 href={`/integrations/${item.title.toLowerCase().replace(/ /g, '-')}`}
-                                                icon={<item.icon className="w-4 h-4 text-primary" />}
+                                                icon={<img src={item.icon} alt={item.title} className="w-6 h-6 object-contain" />}
                                             >
                                                 {item.description}
                                             </ListItem>
@@ -180,7 +168,7 @@ export function LandingHeader({ variant = 'default' }: { variant?: 'default' | '
                             </NavigationMenuItem>
 
                             <NavigationMenuItem>
-                                <NavigationMenuTrigger className="bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent hover:text-green-600 dark:text-white font-medium" >Resources</NavigationMenuTrigger>
+                                <NavigationMenuTrigger className="bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent hover:text-green-600 focus:text-green-600 data-[state=open]:text-green-600 dark:text-white dark:focus:text-white dark:data-[state=open]:text-white font-medium" >Resources</NavigationMenuTrigger>
                                 <NavigationMenuContent>
                                     <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                                         <li className="row-span-3">
@@ -189,8 +177,8 @@ export function LandingHeader({ variant = 'default' }: { variant?: 'default' | '
                                                     className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
                                                     href="/tools/chat-button-generator"
                                                 >
-                                                    <MessageSquare className="h-6 w-6 text-green-500" />
-                                                    <div className="mb-2 mt-4 text-lg font-medium">
+                                                    <img src="https://img.icons8.com/3d-fluency/94/whatsapp.png" alt="Free Tools" className="w-12 h-12 mb-4 object-contain" />
+                                                    <div className="mb-2 text-lg font-medium">
                                                         Free WhatsApp Tools
                                                     </div>
                                                     <p className="text-sm leading-tight text-muted-foreground">
@@ -219,7 +207,7 @@ export function LandingHeader({ variant = 'default' }: { variant?: 'default' | '
                             </NavigationMenuItem>
                             <NavigationMenuItem>
                                 <Link to="/pricing">
-                                    <NavigationMenuLink className="bg-transparent hover:bg-transparent focus:bg-transparent hover:text-green-600 dark:text-white font-medium px-4 py-2" >
+                                    <NavigationMenuLink className="bg-transparent hover:bg-transparent focus:bg-transparent hover:text-green-600 focus:text-green-600 dark:text-white dark:focus:text-white font-medium px-4 py-2" >
                                         Pricing
                                     </NavigationMenuLink>
                                 </Link>
@@ -288,7 +276,7 @@ export function LandingHeader({ variant = 'default' }: { variant?: 'default' | '
                                     onClick={() => setIsMobileMenuOpen(false)}
                                 >
                                     <div className="p-2 bg-green-500/10 rounded-md">
-                                        <f.icon className="w-5 h-5 text-green-600" />
+                                        <img src={f.icon} alt={f.title} className="w-5 h-5 object-contain" />
                                     </div>
                                     <span className="font-medium">{f.title}</span>
                                 </Link>

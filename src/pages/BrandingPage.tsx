@@ -135,28 +135,16 @@ const BrandingPage = () => {
                             {/* Logo Grid */}
                             <div className="grid grid-cols-1 gap-6">
                                 <div className="bg-white dark:bg-slate-950 p-12 rounded-2xl border border-slate-200 dark:border-slate-800 flex items-center justify-center">
-                                    <div className="flex items-center gap-3 scale-150">
-                                        <div className="w-10 h-10 bg-[#00E785] rounded-xl flex items-center justify-center">
-                                            <MessageSquare className="w-5 h-5 text-slate-900 fill-current" />
-                                        </div>
-                                        <span className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Avelo</span>
-                                    </div>
+                                    <img src="/logos/avelo-logo-transparent.png" alt="Avelo Logo" className="h-24 w-auto object-contain dark:invert" />
                                 </div>
                                 <div className="grid grid-cols-2 gap-6">
                                     <div className="bg-slate-900 p-8 rounded-2xl flex items-center justify-center">
                                         {/* Dark Mode Version */}
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-8 h-8 bg-[#00E785] rounded-lg flex items-center justify-center">
-                                                <MessageSquare className="w-4 h-4 text-slate-900 fill-current" />
-                                            </div>
-                                            <span className="text-lg font-bold text-white tracking-tight">Avelo</span>
-                                        </div>
+                                        <img src="/logos/avelo-logo-transparent.png" alt="Avelo Logo Dark" className="h-10 w-auto object-contain invert brightness-0 invert" />
                                     </div>
                                     <div className="bg-white border p-8 rounded-2xl flex items-center justify-center">
                                         {/* Mark Only */}
-                                        <div className="w-12 h-12 bg-[#00E785] rounded-xl flex items-center justify-center shadow-lg">
-                                            <MessageSquare className="w-6 h-6 text-slate-900 fill-current" />
-                                        </div>
+                                        <img src="/logos/Logomark.png" alt="Avelo Mark" className="h-16 w-16 object-contain" />
                                     </div>
                                 </div>
                             </div>
@@ -164,13 +152,7 @@ const BrandingPage = () => {
                             {/* Clear Space Guide */}
                             <div className="relative border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl p-8 flex items-center justify-center bg-slate-100/50 dark:bg-slate-800/30">
                                 <div className="absolute top-2 left-2 text-xs font-mono text-slate-400">CLEAR SPACE</div>
-                                <div className="flex items-center gap-3 relative z-10">
-                                    <div className="absolute -inset-6 border border-blue-400/30 bg-blue-400/5 rounded-lg"></div>
-                                    <div className="w-10 h-10 bg-[#00E785] rounded-xl flex items-center justify-center">
-                                        <MessageSquare className="w-5 h-5 text-slate-900 fill-current" />
-                                    </div>
-                                    <span className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Avelo</span>
-                                </div>
+                                <img src="/logos/avelo-logo-transparent.png" alt="Avelo Logo" className="h-16 w-auto object-contain dark:invert relative z-10" />
                             </div>
                         </div>
                     </div>
@@ -232,12 +214,7 @@ const BrandingPage = () => {
                                 <Check className="w-5 h-5" /> DO
                             </div>
                             <div className="bg-white dark:bg-slate-800 p-8 rounded-xl border-l-4 border-green-500 shadow-sm h-64 flex items-center justify-center">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 bg-[#00E785] rounded-xl flex items-center justify-center">
-                                        <MessageSquare className="w-5 h-5 text-slate-900 fill-current" />
-                                    </div>
-                                    <span className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Avelo</span>
-                                </div>
+                                <img src="/logos/avelo-logo-transparent.png" alt="Avelo Logo" className="h-12 w-auto object-contain dark:invert" />
                             </div>
                             <p className="text-sm text-slate-600 dark:text-slate-400 pl-1">
                                 Use the standard full logo on white or light backgrounds.
@@ -249,12 +226,7 @@ const BrandingPage = () => {
                                 <Check className="w-5 h-5" /> DO
                             </div>
                             <div className="bg-slate-900 p-8 rounded-xl border-l-4 border-green-500 shadow-sm h-64 flex items-center justify-center">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 bg-[#00E785] rounded-xl flex items-center justify-center">
-                                        <MessageSquare className="w-5 h-5 text-slate-900 fill-current" />
-                                    </div>
-                                    <span className="text-2xl font-bold text-white tracking-tight">Avelo</span>
-                                </div>
+                                <img src="/logos/avelo-logo-transparent.png" alt="Avelo Logo" className="h-12 w-auto object-contain invert brightness-0 invert" />
                             </div>
                             <p className="text-sm text-slate-600 dark:text-slate-400 pl-1">
                                 Use the white text version on dark or photo backgrounds.
@@ -268,12 +240,7 @@ const BrandingPage = () => {
                                 <X className="w-5 h-5" /> DON'T
                             </div>
                             <div className="bg-white dark:bg-slate-800 p-8 rounded-xl border-l-4 border-red-500 shadow-sm h-64 flex items-center justify-center relative overflow-hidden">
-                                <div className="flex items-center gap-3 transform rotate-12 opacity-50">
-                                    <div className="w-10 h-10 bg-red-500 rounded-xl flex items-center justify-center">
-                                        <MessageSquare className="w-5 h-5 text-white fill-current" />
-                                    </div>
-                                    <span className="text-2xl font-bold text-red-500 tracking-tight">Avelo</span>
-                                </div>
+                                <img src="/logos/avelo-logo-transparent.png" alt="Avelo Logo" className="h-12 w-auto object-contain transform rotate-12 opacity-50 hue-rotate-90" />
                                 <div className="absolute inset-0 flex items-center justify-center">
                                     <div className="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-bold">Never change colors</div>
                                 </div>
@@ -288,12 +255,7 @@ const BrandingPage = () => {
                                 <X className="w-5 h-5" /> DON'T
                             </div>
                             <div className="bg-white dark:bg-slate-800 p-8 rounded-xl border-l-4 border-red-500 shadow-sm h-64 flex items-center justify-center relative overflow-hidden">
-                                <div className="flex items-center gap-3 transform scale-x-50 opacity-50">
-                                    <div className="w-10 h-10 bg-[#00E785] rounded-xl flex items-center justify-center">
-                                        <MessageSquare className="w-5 h-5 text-slate-900 fill-current" />
-                                    </div>
-                                    <span className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Avelo</span>
-                                </div>
+                                <img src="/logos/avelo-logo-transparent.png" alt="Avelo Logo" className="h-12 w-auto object-contain transform scale-x-50 opacity-50 dark:invert" />
                                 <div className="absolute inset-0 flex items-center justify-center">
                                     <div className="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-bold">Do not stretch</div>
                                 </div>

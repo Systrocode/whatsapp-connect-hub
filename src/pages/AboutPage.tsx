@@ -1,37 +1,36 @@
 import { motion } from "framer-motion";
 import { LandingHeader } from "@/components/landing/LandingHeader";
 import { LandingFooter } from "@/components/landing/LandingFooter";
-import { Heart, Users, Target, Zap, Globe, Shield } from "lucide-react";
 
 export default function AboutPage() {
     const values = [
         {
-            icon: Users,
+            icon: "https://img.icons8.com/3d-fluency/94/user-group-man-woman.png",
             title: "Customer First",
             description: "We build everything with our customers in mind, ensuring their success is our success."
         },
         {
-            icon: Target,
+            icon: "https://img.icons8.com/3d-fluency/94/rocket.png",
             title: "Innovation Driven",
             description: "We constantly push the boundaries of what's possible with WhatsApp API technology."
         },
         {
-            icon: Heart,
+            icon: "https://img.icons8.com/3d-fluency/94/handshake.png",
             title: "Transparent & Honest",
             description: "We believe in building trust through transparency and honest communication."
         },
         {
-            icon: Zap,
+            icon: "https://img.icons8.com/3d-fluency/94/lightning-bolt.png",
             title: "Fast & Reliable",
             description: "Speed matters. We build high-performance tools that you can rely on 24/7."
         },
         {
-            icon: Globe,
+            icon: "https://img.icons8.com/3d-fluency/94/globe.png",
             title: "Global Vision",
             description: "Connecting businesses and customers across borders and time zones."
         },
         {
-            icon: Shield,
+            icon: "https://img.icons8.com/3d-fluency/94/shield.png",
             title: "Privacy Focused",
             description: "Data security and privacy are at the core of our infrastructure."
         }
@@ -57,7 +56,7 @@ export default function AboutPage() {
                         animate={{ opacity: 1, y: 0 }}
                         className="inline-block px-4 py-1.5 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 font-medium text-sm mb-8"
                     >
-                        Establishment in 2024
+                        Establishment in 2026
                     </motion.div>
                     <motion.h1
                         initial={{ opacity: 0, y: 20 }}
@@ -110,7 +109,7 @@ export default function AboutPage() {
                     >
                         <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-8">Our Story</h2>
                         <p className="text-slate-600 dark:text-slate-400 mb-6">
-                            Founded in 2024, Avelo started with a simple observation: Customers prefer chatting over calling or emailing, but businesses lacked the tools to manage these conversations effectively at scale.
+                            Founded in 2026, Avelo started with a simple observation: Customers prefer chatting over calling or emailing, but businesses lacked the tools to manage these conversations effectively at scale.
                         </p>
                         <p className="text-slate-600 dark:text-slate-400">
                             What began as a simple automated reply tool has grown into a comprehensive customer engagement platform. Today, we empower thousands of businesses to market, sell, and support their customers directly on WhatsApp, the world's most popular messaging app.
@@ -139,8 +138,8 @@ export default function AboutPage() {
                                 transition={{ delay: index * 0.1 }}
                                 className="bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-100 dark:border-slate-800 hover:shadow-xl transition-shadow duration-300"
                             >
-                                <div className="w-12 h-12 bg-green-100 dark:bg-green-900/20 text-green-600 dark:text-green-400 rounded-xl flex items-center justify-center mb-6">
-                                    <value.icon className="w-6 h-6" />
+                                <div className="w-16 h-16 bg-blue-50 dark:bg-blue-900/10 rounded-2xl flex items-center justify-center mb-6">
+                                    <img src={value.icon} alt={value.title} className="w-10 h-10 object-contain" />
                                 </div>
                                 <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">{value.title}</h3>
                                 <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
