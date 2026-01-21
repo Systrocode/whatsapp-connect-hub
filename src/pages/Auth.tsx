@@ -183,12 +183,11 @@ const Auth = () => {
         </div>
 
         <div className="relative z-10 flex flex-col justify-center px-16 text-white">
-          <div className="flex items-center gap-3 mb-8">
-            <div className="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center shadow-glow">
-              <MessageSquare className="w-6 h-6 text-primary-foreground" />
-            </div>
-            <span className="text-2xl font-bold">Avelo</span>
-          </div>
+          <img
+            src="/avelo-logo-auth.png"
+            alt="Avelo"
+            className="h-12 w-auto object-contain"
+          />
 
           <h1 className="text-4xl font-bold mb-4 leading-tight">
             Connect with your customers
@@ -230,10 +229,11 @@ const Auth = () => {
         >
           {/* Mobile Logo */}
           <div className="flex items-center gap-3 mb-8 lg:hidden">
-            <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
-              <MessageSquare className="w-5 h-5 text-primary-foreground" />
-            </div>
-            <span className="text-xl font-bold text-foreground">Avelo</span>
+            <img
+              src="/avelo-logo-auth.png"
+              alt="Avelo"
+              className="h-10 w-auto object-contain"
+            />
           </div>
 
           <div className="mb-8">
