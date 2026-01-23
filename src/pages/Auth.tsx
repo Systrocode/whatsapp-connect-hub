@@ -175,26 +175,25 @@ const Auth = () => {
         initial={{ opacity: 0, x: -50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.6 }}
-        className="hidden lg:flex lg:w-1/2 gradient-dark relative overflow-hidden"
+        className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-white via-[#41644A]/10 to-[#41644A]/40 relative overflow-hidden"
       >
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 left-20 w-64 h-64 rounded-full bg-whatsapp blur-3xl" />
-          <div className="absolute bottom-20 right-20 w-96 h-96 rounded-full bg-whatsapp blur-3xl" />
+        <div className="absolute inset-0 opacity-60">
+          <div className="absolute bottom-20 right-20 w-96 h-96 rounded-full bg-[#41644A]/20 blur-3xl" />
         </div>
 
-        <div className="relative z-10 flex flex-col justify-center px-16 text-white">
+        <div className="relative z-10 flex flex-col justify-center px-8 text-slate-900">
           <img
             src="/logos/avelo logo.png"
             alt="Avelo"
-            className="h-12 w-auto object-contain brightness-0 invert"
+            className="h-16 w-auto object-contain mb-8"
           />
 
-          <h1 className="text-4xl font-bold mb-4 leading-tight">
+          <h1 className="text-4xl font-bold mb-4 leading-tight text-slate-900">
             Connect with your customers
-            <span className="text-gradient block">on WhatsApp</span>
+            <span className="text-[#41644A] block">on WhatsApp</span>
           </h1>
 
-          <p className="text-white/70 text-lg mb-8 max-w-md">
+          <p className="text-slate-600 text-lg mb-8 max-w-md">
             Manage conversations, automate responses, and grow your business with our powerful dashboard.
           </p>
 
@@ -211,8 +210,8 @@ const Auth = () => {
                 transition={{ delay: 0.3 + i * 0.1 }}
                 className="flex items-center gap-3"
               >
-                <div className="w-2 h-2 rounded-full bg-whatsapp" />
-                <span className="text-white/80">{feature}</span>
+                <div className="w-2 h-2 rounded-full bg-[#41644A]" />
+                <span className="text-slate-700 font-medium">{feature}</span>
               </motion.div>
             ))}
           </div>
@@ -230,9 +229,9 @@ const Auth = () => {
           {/* Mobile Logo */}
           <div className="flex items-center gap-3 mb-8 lg:hidden">
             <img
-              src="/logos/avelo logo.png"
+              src="/logos/avelo-logo-transparent.png"
               alt="Avelo"
-              className="h-10 w-auto object-contain mix-blend-multiply"
+              className="h-10 w-auto object-contain"
             />
           </div>
 
@@ -356,7 +355,7 @@ const Auth = () => {
               type="submit"
               variant="whatsapp"
               size="lg"
-              className="w-full"
+              className="w-full bg-[#41644A] hover:bg-[#36513d]"
               disabled={isLoading}
             >
               {isLoading ? (
@@ -472,7 +471,7 @@ const Auth = () => {
               <Button
                 type="submit"
                 variant="whatsapp"
-                className="flex-1"
+                className="flex-1 bg-[#41644A] hover:bg-[#36513d]"
                 disabled={isSendingReset}
               >
                 {isSendingReset ? (

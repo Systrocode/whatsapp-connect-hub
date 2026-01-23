@@ -2283,7 +2283,7 @@ const renderFeatureVisual = (title: string, Icon: any, visualType?: string, desc
                 </div>
             </div>
             {/* Floating Badge */}
-            <div className="absolute bottom-6 right-6 bg-white dark:bg-slate-800 p-3 rounded-xl shadow-xl border border-slate-100 dark:border-slate-700 flex items-center gap-3 animate-bounce duration-[4000ms]">
+            <div className="absolute bottom-6 right-6 bg-white dark:bg-slate-800 p-3 rounded-xl shadow-xl border border-slate-100 dark:border-slate-700 flex items-center gap-3 animate-bounce" style={{ animationDuration: '4000ms' }}>
                 <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600">
                     <TrendingUp className="w-4 h-4" />
                 </div>
@@ -2487,13 +2487,13 @@ const FeaturePage = () => {
                             </motion.div>
 
                             {/* Floating App Icons */}
-                            <motion.div className="absolute bottom-20 left-0 bg-white p-2 rounded-2xl shadow-xl z-20 animate-bounce duration-[4000ms]">
+                            <motion.div className="absolute bottom-20 left-0 bg-white p-2 rounded-2xl shadow-xl z-20 animate-bounce" style={{ animationDuration: '4000ms' }}>
                                 <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" className="w-10 h-10" alt="WA" />
                             </motion.div>
-                            <motion.div className="absolute bottom-32 left-[-40px] bg-white p-2 rounded-2xl shadow-xl z-10 animate-pulse duration-[3000ms]">
+                            <motion.div className="absolute bottom-32 left-[-40px] bg-white p-2 rounded-2xl shadow-xl z-10 animate-pulse" style={{ animationDuration: '3000ms' }}>
                                 <img src="/logos/instagram.svg" className="w-8 h-8" alt="Insta" />
                             </motion.div>
-                            <motion.div className="absolute bottom-40 left-16 bg-white p-2 rounded-full shadow-xl z-30 animate-bounce delay-100 duration-[5000ms]">
+                            <motion.div className="absolute bottom-40 left-16 bg-white p-2 rounded-full shadow-xl z-30 animate-bounce delay-100" style={{ animationDuration: '5000ms' }}>
                                 <img src="/logos/google-ads.svg" className="w-8 h-8" alt="Google Ads" />
                             </motion.div>
 
