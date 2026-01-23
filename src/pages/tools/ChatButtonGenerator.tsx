@@ -122,9 +122,9 @@ const ChatButtonGenerator = () => {
         <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col font-sans">
             <LandingHeader />
 
-            <section className="pt-32 pb-20 px-6">
+            <section className="pt-24 pb-12 px-4 md:pt-32 md:pb-20 md:px-6">
                 <div className="container mx-auto max-w-7xl">
-                    <div className="text-center mb-16">
+                    <div className="text-center mb-12 md:mb-16">
                         <motion.div
                             initial={{ opacity: 0, scale: 0.8 }}
                             animate={{ opacity: 1, scale: 1 }}
@@ -132,24 +132,24 @@ const ChatButtonGenerator = () => {
                         >
                             <MessageCircle className="w-8 h-8" />
                         </motion.div>
-                        <h1 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-6">
+                        <h1 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-6">
                             WhatsApp Chat Button Generator
                         </h1>
-                        <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+                        <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
                             Design a custom WhatsApp chat widget for your website in seconds.
                         </p>
                     </div>
 
-                    <div className="grid lg:grid-cols-[1fr,500px] gap-12 items-start">
+                    <div className="grid lg:grid-cols-[1fr,420px] xl:grid-cols-[1fr,500px] gap-8 lg:gap-12 items-start">
                         {/* Configuration Panel */}
-                        <div className="space-y-8">
+                        <div className="space-y-6 md:space-y-8">
 
                             {/* Section 1: Button Config */}
                             <Card className="border-0 shadow-sm bg-white dark:bg-slate-900 overflow-hidden">
-                                <CardContent className="p-8 space-y-8">
+                                <CardContent className="p-6 md:p-8 space-y-6 md:space-y-8">
                                     <div className="flex items-center gap-3 mb-6">
                                         <div className="h-8 w-1 bg-green-500 rounded-full" />
-                                        <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-300">
+                                        <h2 className="text-xl md:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-300">
                                             Configure WhatsApp Chat Button
                                         </h2>
                                     </div>
@@ -250,7 +250,7 @@ const ChatButtonGenerator = () => {
                                             <RadioGroup
                                                 value={position}
                                                 onValueChange={setPosition}
-                                                className="flex gap-6"
+                                                className="flex flex-wrap gap-6"
                                             >
                                                 <div className="flex items-center space-x-2">
                                                     <RadioGroupItem value="bottom-right" id="br" />
@@ -268,10 +268,10 @@ const ChatButtonGenerator = () => {
 
                             {/* Section 2: Widget Config */}
                             <Card className="border-0 shadow-sm bg-white dark:bg-slate-900 overflow-hidden">
-                                <CardContent className="p-8 space-y-8">
+                                <CardContent className="p-6 md:p-8 space-y-6 md:space-y-8">
                                     <div className="flex items-center gap-3 mb-6">
                                         <div className="h-8 w-1 bg-green-500 rounded-full" />
-                                        <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-300">
+                                        <h2 className="text-xl md:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-300">
                                             Chat Widget Configuration
                                         </h2>
                                     </div>
@@ -377,7 +377,7 @@ const ChatButtonGenerator = () => {
                             </Card>
 
                             {/* Code Snippet Card */}
-                            <Card className="border-0 shadow-xl bg-slate-900 text-slate-100 rounded-2xl overflow-hidden mt-8">
+                            <Card className="border-0 shadow-xl bg-slate-900 text-slate-100 rounded-2xl overflow-hidden mt-8 max-w-[calc(100vw-3rem)] lg:max-w-none mx-auto">
                                 <CardContent className="p-0">
                                     <div className="flex items-center justify-between p-4 border-b border-slate-800 bg-black/20">
                                         <div className="flex items-center gap-2 text-sm font-mono text-slate-400">
@@ -392,7 +392,7 @@ const ChatButtonGenerator = () => {
                                         </Button>
                                     </div>
                                     <div className="relative group">
-                                        <pre className="p-6 overflow-x-auto text-xs font-mono text-green-400 leading-relaxed h-[300px]">
+                                        <pre className="p-6 overflow-x-auto text-xs font-mono text-green-400 leading-relaxed h-[300px] whitespace-pre w-full">
                                             {code}
                                         </pre>
                                         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-slate-900/10 pointer-events-none" />
@@ -404,7 +404,7 @@ const ChatButtonGenerator = () => {
 
                         {/* Sticky Preview */}
                         <div className="lg:sticky lg:top-32 space-y-6">
-                            <div className="bg-white dark:bg-slate-900 rounded-3xl border-8 border-slate-100 dark:border-slate-800 shadow-2xl relative h-[800px] w-full overflow-hidden flex flex-col">
+                            <div className="bg-white dark:bg-slate-900 rounded-3xl border-8 border-slate-100 dark:border-slate-800 shadow-2xl relative h-[500px] sm:h-[600px] lg:h-[800px] w-full overflow-hidden flex flex-col">
                                 {/* Browser Header */}
                                 <div className="h-10 bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 flex items-center px-4 gap-2 shrink-0">
                                     <div className="flex gap-1.5">
@@ -441,19 +441,19 @@ const ChatButtonGenerator = () => {
                                                 initial={{ opacity: 0, y: 20, scale: 0.95 }}
                                                 animate={{ opacity: 1, y: 0, scale: 1 }}
                                                 exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                                                className={`absolute z-20 w-[350px] flex flex-col shadow-2xl rounded-xl overflow-hidden font-sans
-                                                    ${position === 'bottom-right' ? 'right-6 bottom-[80px]' : 'left-6 bottom-[80px]'}
+                                                className={`absolute z-20 w-[300px] sm:w-[350px] flex flex-col shadow-2xl rounded-xl overflow-hidden font-sans
+                                                    ${position === 'bottom-right' ? 'right-4 sm:right-6 bottom-[80px]' : 'left-4 sm:left-6 bottom-[80px]'}
                                                 `}
                                                 style={{ marginBottom: `${marginBottom}px` }}
                                             >
                                                 {/* Header */}
-                                                <div className="p-5 text-white flex items-center gap-3 relative" style={{ backgroundColor: brandColor }}>
+                                                <div className="p-4 sm:p-5 text-white flex items-center gap-3 relative" style={{ backgroundColor: brandColor }}>
                                                     {brandImageUrl && (
-                                                        <img src={brandImageUrl} className="w-12 h-12 rounded-full object-cover border-2 border-white/20" alt="" />
+                                                        <img src={brandImageUrl} className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-white/20" alt="" />
                                                     )}
                                                     <div>
-                                                        <div className="font-bold text-lg leading-tight">{brandName}</div>
-                                                        <div className="text-xs opacity-90">{brandSubtitle}</div>
+                                                        <div className="font-bold text-base sm:text-lg leading-tight">{brandName}</div>
+                                                        <div className="text-[10px] sm:text-xs opacity-90">{brandSubtitle}</div>
                                                     </div>
                                                     <button
                                                         onClick={() => setIsPreviewOpen(false)}
@@ -464,7 +464,7 @@ const ChatButtonGenerator = () => {
                                                 </div>
 
                                                 {/* Body */}
-                                                <div className="bg-[#e5ddd5] p-5 pr-2 h-[300px] overflow-hidden relative">
+                                                <div className="bg-[#e5ddd5] p-5 pr-2 h-[250px] sm:h-[300px] overflow-hidden relative">
                                                     {/* Chat bubbles */}
                                                     <div className="bg-white p-3 rounded-tr-xl rounded-bl-xl rounded-br-xl shadow-sm max-w-[85%] relative mb-4">
                                                         <div className="text-[10px] text-slate-400 font-bold mb-1">{brandName}</div>
@@ -493,7 +493,7 @@ const ChatButtonGenerator = () => {
                                         whileTap={{ scale: 0.95 }}
                                         onClick={() => setIsPreviewOpen(!isPreviewOpen)}
                                         className={`absolute flex items-center gap-2.5 px-6 py-3.5 shadow-lg z-10 font-bold text-white transition-all
-                                            ${position === 'bottom-right' ? 'right-6' : 'left-6'}
+                                            ${position === 'bottom-right' ? 'right-4 sm:right-6' : 'left-4 sm:left-6'}
                                         `}
                                         style={{
                                             backgroundColor: buttonBgColor,

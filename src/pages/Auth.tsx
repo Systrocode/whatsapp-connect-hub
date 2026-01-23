@@ -184,9 +184,9 @@ const Auth = () => {
 
         <div className="relative z-10 flex flex-col justify-center px-16 text-white">
           <img
-            src="/avelo-logo-auth.png"
+            src="/logos/avelo logo.png"
             alt="Avelo"
-            className="h-12 w-auto object-contain"
+            className="h-12 w-auto object-contain brightness-0 invert"
           />
 
           <h1 className="text-4xl font-bold mb-4 leading-tight">
@@ -230,9 +230,9 @@ const Auth = () => {
           {/* Mobile Logo */}
           <div className="flex items-center gap-3 mb-8 lg:hidden">
             <img
-              src="/avelo-logo-auth.png"
+              src="/logos/avelo logo.png"
               alt="Avelo"
-              className="h-10 w-auto object-contain"
+              className="h-10 w-auto object-contain mix-blend-multiply"
             />
           </div>
 

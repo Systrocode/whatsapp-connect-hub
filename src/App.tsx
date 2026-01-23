@@ -56,6 +56,7 @@ const BrandingPage = lazy(() => import("./pages/BrandingPage"));
 const EbooksPage = lazy(() => import("./pages/EbooksPage"));
 const WebinarsPage = lazy(() => import("./pages/WebinarsPage"));
 const DocsPage = lazy(() => import("./pages/DocsPage"));
+const DocsMigration = lazy(() => import("./pages/docs/DocsMigration"));
 const HelpCenterPage = lazy(() => import("./pages/HelpCenterPage"));
 const IntegrationPage = lazy(() => import("./pages/IntegrationPage"));
 const MobileAppPage = lazy(() => import("./pages/MobileAppPage"));
@@ -78,6 +79,7 @@ const AdminTemplates = lazy(() => import("./pages/AdminTemplates"));
 const AdminSubscriptions = lazy(() => import("./pages/AdminSubscriptions"));
 const AdminInvoices = lazy(() => import("./pages/admin/AdminInvoices"));
 const AdminBlog = lazy(() => import("./pages/AdminBlog"));
+const AdminAffiliates = lazy(() => import("./pages/admin/AdminAffiliates"));
 
 // Global loading fallback
 const PageLoader = () => (
@@ -155,6 +157,7 @@ const App = () => {
                   <Route path="/dashboard/admin/subscriptions" element={<AdminRoute><AdminSubscriptions /></AdminRoute>} />
                   <Route path="/dashboard/admin/invoices" element={<AdminRoute><AdminInvoices /></AdminRoute>} />
                   <Route path="/dashboard/admin/blog" element={<AdminRoute><AdminBlog /></AdminRoute>} />
+                  <Route path="/dashboard/admin/affiliates" element={<AdminRoute><AdminAffiliates /></AdminRoute>} />
                   <Route path="/dashboard/admin/blog" element={<AdminRoute><AdminBlog /></AdminRoute>} />
 
                   {/* Partner Route */}
@@ -171,6 +174,7 @@ const App = () => {
                   <Route path="/ebooks" element={<EbooksPage />} />
                   <Route path="/webinars" element={<WebinarsPage />} />
                   <Route path="/docs" element={<DocsPage />} />
+                  <Route path="/docs/migration-guide" element={<DocsMigration />} />
                   <Route path="/help" element={<HelpCenterPage />} />
                   <Route path="/careers" element={<CareersPage />} />
                   <Route path="/branding" element={<BrandingPage />} />
