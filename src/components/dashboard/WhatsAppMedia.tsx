@@ -11,7 +11,7 @@ interface WhatsAppMediaProps {
 }
 
 export const WhatsAppMedia = ({ mediaId, mediaUrl, caption, className }: WhatsAppMediaProps) => {
-    const [imageUrl, setImageUrl] = useState<string | null>(null);
+    const [imageUrl, setImageUrl] = useState<string | null>(mediaUrl || null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorDetails, setErrorDetails] = useState<string | null>(null);
@@ -77,9 +77,9 @@ export const WhatsAppMedia = ({ mediaId, mediaUrl, caption, className }: WhatsAp
         return () => {
             if (imageUrl) URL.revokeObjectURL(imageUrl);
         };
-    }, [mediaId]);
+    }, [mediaId, mediaUrl]);
 
-    if (!mediaId) {
+    if (!mediaId && !mediaUrl) {
         return (
             <div className="flex items-center gap-2 p-2 bg-muted/50 rounded text-muted-foreground text-sm italic">
                 <ImageOff className="w-4 h-4" />
