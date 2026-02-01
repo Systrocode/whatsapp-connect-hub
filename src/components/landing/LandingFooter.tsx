@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { MessageSquare, Twitter, Linkedin, Facebook, Instagram, Apple, Play, ShieldCheck, Lock, Server, Calendar } from "lucide-react";
+import { MessageSquare, Facebook, Apple, Play, ShieldCheck, Lock, Server, Calendar } from "lucide-react";
 import { QuoteRequestDialog } from "./QuoteRequestDialog";
 
 export function LandingFooter() {
@@ -163,10 +163,22 @@ export function LandingFooter() {
 
                     <div className="mt-12 pt-8 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-medium text-slate-600">
                         <p>© {new Date().getFullYear()} Avelo. All rights reserved.</p>
-                        <div className="flex gap-6">
-                            <SocialLink href="https://x.com/getavelo" icon={Twitter} />
-                            <SocialLink href="https://www.linkedin.com/company/connectwithavelo" icon={Linkedin} />
-                            <SocialLink href="https://www.instagram.com/connectwithavelo" icon={Instagram} />
+                        <div className="flex gap-6 items-center">
+                            <SocialLink
+                                href="https://x.com/getavelo"
+                                src="https://img.icons8.com/fluency/48/twitterx.png"
+                                alt="X (formerly Twitter)"
+                            />
+                            <SocialLink
+                                href="https://www.linkedin.com/company/connectwithavelo"
+                                src="https://img.icons8.com/fluency/48/linkedin.png"
+                                alt="LinkedIn"
+                            />
+                            <SocialLink
+                                href="https://www.instagram.com/connectwithavelo"
+                                src="https://img.icons8.com/fluency/48/instagram-new.png"
+                                alt="Instagram"
+                            />
                         </div>
                     </div>
                 </footer>
@@ -175,13 +187,13 @@ export function LandingFooter() {
     );
 }
 
-const SocialLink = ({ href, icon: Icon }: { href: string; icon: any }) => (
+const SocialLink = ({ href, src, alt }: { href: string; src: string; alt: string }) => (
     <a
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-slate-500 hover:text-green-500 transition-colors"
+        className="transition-transform hover:scale-110 hover:-translate-y-1 block"
     >
-        <Icon className="w-5 h-5" />
+        <img src={src} alt={alt} className="w-8 h-8" />
     </a>
 );
