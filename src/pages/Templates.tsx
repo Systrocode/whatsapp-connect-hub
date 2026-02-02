@@ -33,6 +33,7 @@ export default function Templates() {
             category: newTemplate.category,
             content: newTemplate.content,
             variables: newTemplate.headerType === 'IMAGE' ? ['has_image'] : [],
+            headerType: newTemplate.headerType,
         });
 
         setIsCreateOpen(false);
