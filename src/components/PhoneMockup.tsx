@@ -7,13 +7,15 @@ interface PhoneMockupProps {
     image?: string;
     time?: string;
     isBusiness?: boolean;
+    avatar?: string;
 }
 
 export default function PhoneMockup({
     message = "This is a preview of your message.",
     image,
     time = "12:00",
-    isBusiness = true
+    isBusiness = true,
+    avatar
 }: PhoneMockupProps) {
     return (
         <div className="w-[300px] h-[600px] bg-black rounded-[2rem] border-[10px] border-slate-900 overflow-hidden relative shadow-2xl mx-auto flex flex-col">
@@ -33,7 +35,7 @@ export default function PhoneMockup({
             {/* Header */}
             <div className="bg-[#1f2c34] p-3 flex items-center gap-3 text-white border-b border-gray-800 z-10 relative shrink-0">
                 <div className="w-8 h-8 rounded-full bg-teal-500/50 flex items-center justify-center text-xs overflow-hidden">
-                    {image ? <img src={image} className="w-full h-full object-cover" /> : "VB"}
+                    {avatar ? <img src={avatar} className="w-full h-full object-cover" alt="Profile" /> : "VB"}
                 </div>
                 <div className="flex-1">
                     <p className="font-semibold text-sm leading-tight">My Business</p>

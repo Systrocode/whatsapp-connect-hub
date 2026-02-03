@@ -14,35 +14,23 @@ import { useBroadcasts, BroadcastCampaign } from '@/hooks/useBroadcasts';
 import { useTemplates } from '@/hooks/useTemplates';
 import { useContacts } from '@/hooks/useContacts';
 import { useSegments } from '@/hooks/useSegments';
-import { Plus, Send, Calendar, Users, MessageSquare, Trash2, Eye, Clock, CheckCircle, XCircle, AlertCircle, Settings, Smartphone, Image as ImageIcon, Filter } from 'lucide-react';
+import { useWhatsAppAPI } from '@/hooks/useWhatsAppAPI';
+import { Upload, Plus, Send, Calendar, Users, MessageSquare, Trash2, Eye, Clock, CheckCircle, XCircle, AlertCircle, Settings, Smartphone, Image as ImageIcon, Filter } from 'lucide-react';
 import { format, subDays, isAfter, parseISO } from 'date-fns';
 import PhoneMockup from '@/components/PhoneMockup';
+import ImportContactsDialog from '@/components/contacts/ImportContactsDialog';
 
-const statusColors: Record<string, string> = {
-  draft: 'bg-muted text-muted-foreground',
-  scheduled: 'bg-blue-500/20 text-blue-500',
-  sending: 'bg-yellow-500/20 text-yellow-500',
-  completed: 'bg-green-500/20 text-green-500',
-  failed: 'bg-destructive/20 text-destructive',
-  cancelled: 'bg-muted text-muted-foreground',
-};
-
-const statusIcons: Record<string, React.ReactNode> = {
-  draft: <Clock className="h-3 w-3" />,
-  scheduled: <Calendar className="h-3 w-3" />,
-  sending: <Send className="h-3 w-3" />,
-  completed: <CheckCircle className="h-3 w-3" />,
-  failed: <XCircle className="h-3 w-3" />,
-  cancelled: <AlertCircle className="h-3 w-3" />,
-};
+// ... existing imports ...
 
 export default function Broadcasts() {
-  const { campaigns, isLoading, createCampaign, addRecipients, deleteCampaign } = useBroadcasts();
+  const { campaigns, isLoading, createCampaign, addRecipients, deleteCampaign, sendCampaign } = useBroadcasts();
   const { templates } = useTemplates();
   const { contacts } = useContacts();
   const { segments } = useSegments();
+  const { businessProfile } = useWhatsAppAPI();
 
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [isImportOpen, setIsImportOpen] = useState(false);
   const [selectedContacts, setSelectedContacts] = useState<string[]>([]);
   const [selectedSegmentId, setSelectedSegmentId] = useState<string>('all');
   const [newCampaign, setNewCampaign] = useState({
@@ -53,6 +41,34 @@ export default function Broadcasts() {
     segment_filter: {} as Record<string, unknown>,
   });
   const [filterTag, setFilterTag] = useState('');
+  const [optInConfirmed, setOptInConfirmed] = useState(false);
+
+  const statusColors: Record<string, string> = {
+    draft: 'bg-muted text-muted-foreground',
+    scheduled: 'bg-blue-500/20 text-blue-500',
+    sending: 'bg-yellow-500/20 text-yellow-500',
+    completed: 'bg-green-500/20 text-green-500',
+    failed: 'bg-destructive/20 text-destructive',
+    cancelled: 'bg-muted text-muted-foreground',
+  };
+
+  const statusIcons: Record<string, React.ReactNode> = {
+    draft: <Clock className="h-3 w-3" />,
+    scheduled: <Calendar className="h-3 w-3" />,
+    sending: <Send className="h-3 w-3" />,
+    completed: <CheckCircle className="h-3 w-3" />,
+    failed: <XCircle className="h-3 w-3" />,
+    cancelled: <AlertCircle className="h-3 w-3" />,
+  };
+
+  const handleImportSuccess = (importedIds: string[]) => {
+    // Add the newly imported contact IDs to the selection
+    setSelectedContacts(prev => [...new Set([...prev, ...importedIds])]);
+    // Ensure segment is set to 'custom' so manual selection is preserved
+    setSelectedSegmentId('custom');
+  };
+
+  const [previewImage, setPreviewImage] = useState<string | undefined>(undefined);
 
   // Handle Template Selection & Content Parsing (Basic)
   const handleTemplateSelect = (templateId: string) => {
@@ -63,6 +79,20 @@ export default function Broadcasts() {
         template_id: templateId,
         message_content: template.content,
       }));
+      // Check if template has image header
+      if (template.variables?.includes('has_image')) {
+        setPreviewImage("https://placehold.co/600x400/png?text=Header+Image");
+      } else {
+        setPreviewImage(undefined);
+      }
+    }
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setPreviewImage(url);
     }
   };
 
@@ -84,9 +114,15 @@ export default function Broadcasts() {
       });
     }
 
+    // Trigger explicit send if not scheduled
+    if (!newCampaign.scheduled_at) {
+      await sendCampaign.mutateAsync(campaign.id);
+    }
+
     setIsCreateOpen(false);
     setNewCampaign({ name: '', template_id: '', message_content: '', scheduled_at: '', segment_filter: {} });
     setSelectedContacts([]);
+    setOptInConfirmed(false);
   };
 
   const filteredContacts = useMemo(() => {
@@ -221,7 +257,7 @@ export default function Broadcasts() {
                           <ImageIcon className="w-4 h-4" />
                           <span>Media Header (Optional)</span>
                         </div>
-                        <Input type="file" disabled className="bg-background" />
+                        <Input type="file" accept="image/*" className="bg-background" onChange={handleImageUpload} />
                         <p className="text-[10px] text-muted-foreground">Only if your template has an Image header.</p>
                       </div>
                     )}
@@ -240,13 +276,24 @@ export default function Broadcasts() {
                       <Label>Target Audience</Label>
 
                       {/* Segment Selector */}
-                      <div className="flex gap-2 mb-2">
-                        <Select value={selectedSegmentId} onValueChange={setSelectedSegmentId}>
+                      <div className="flex flex-col gap-2 mb-2">
+                        <Select value={selectedSegmentId} onValueChange={(val) => {
+                          setSelectedSegmentId(val);
+                          if (val === 'custom') {
+                            setIsImportOpen(true);
+                          }
+                        }}>
                           <SelectTrigger className="w-full">
                             <SelectValue placeholder="Select Segment" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="all">Check Manually / All Contacts</SelectItem>
+                            <SelectItem value="custom">
+                              <span className="flex items-center gap-2 font-medium text-primary">
+                                <Upload className="w-3 h-3" />
+                                Import Custom Audience
+                              </span>
+                            </SelectItem>
                             {(segments || []).map(s => (
                               <SelectItem key={s.id} value={s.id}>
                                 <span className="flex items-center gap-2">
@@ -257,6 +304,18 @@ export default function Broadcasts() {
                             ))}
                           </SelectContent>
                         </Select>
+
+                        {selectedSegmentId === 'custom' && (
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            className="w-full border-dashed border-2"
+                            onClick={() => setIsImportOpen(true)}
+                          >
+                            <Upload className="w-4 h-4 mr-2" />
+                            Import More Contacts to Audience
+                          </Button>
+                        )}
                       </div>
 
                       <div className="border rounded-md p-3 max-h-48 overflow-y-auto space-y-2">
@@ -294,7 +353,23 @@ export default function Broadcasts() {
                     <PhoneMockup
                       message={newCampaign.message_content || "Select a template to preview"}
                       time={format(new Date(), 'HH:mm')}
+                      image={previewImage}
+                      avatar={businessProfile?.profile_picture_url}
                     />
+                  </div>
+                </div>
+
+                <div className="px-6 py-2 bg-amber-50 border-t border-amber-100">
+                  <div className="flex items-start gap-2">
+                    <Checkbox
+                      id="opt-in"
+                      checked={optInConfirmed}
+                      onCheckedChange={(checked) => setOptInConfirmed(checked as boolean)}
+                    />
+                    <Label htmlFor="opt-in" className="text-xs text-amber-900 leading-tight cursor-pointer">
+                      I confirm that all selected recipients have explicitly opted-in to receive messages from my business.
+                      I understand that messaging users without consent may lead to my WhatsApp Business Account being blocked.
+                    </Label>
                   </div>
                 </div>
 
@@ -302,7 +377,7 @@ export default function Broadcasts() {
                   <Button variant="outline" onClick={() => setIsCreateOpen(false)}>Cancel</Button>
                   <Button
                     onClick={handleCreate}
-                    disabled={!newCampaign.name || !newCampaign.template_id || selectedContacts.length === 0 || createCampaign.isPending}
+                    disabled={!newCampaign.name || !newCampaign.template_id || selectedContacts.length === 0 || createCampaign.isPending || !optInConfirmed}
                   >
                     <Send className="w-4 h-4 mr-2" />
                     {newCampaign.scheduled_at ? 'Schedule' : 'Send Broadcast'}
@@ -357,9 +432,18 @@ export default function Broadcasts() {
                   <div className="mt-4 flex gap-2">
                     <Button size="sm" variant="outline"><Eye className="mr-2 h-3 w-3" /> View Details</Button>
                     {campaign.status === 'draft' && (
-                      <Button size="sm" variant="destructive" onClick={() => deleteCampaign.mutate(campaign.id)}>
-                        <Trash2 className="mr-2 h-3 w-3" /> Delete
-                      </Button>
+                      <>
+                        <Button
+                          size="sm"
+                          className="bg-green-600 hover:bg-green-700 text-white"
+                          onClick={() => sendCampaign.mutateAsync(campaign.id)}
+                        >
+                          <Send className="mr-2 h-3 w-3" /> Send Now
+                        </Button>
+                        <Button size="sm" variant="destructive" onClick={() => deleteCampaign.mutate(campaign.id)}>
+                          <Trash2 className="mr-2 h-3 w-3" /> Delete
+                        </Button>
+                      </>
                     )}
                   </div>
                 </CardContent>
@@ -368,6 +452,12 @@ export default function Broadcasts() {
           </div>
         )}
       </div>
-    </DashboardLayout>
+
+      <ImportContactsDialog
+        open={isImportOpen}
+        onOpenChange={setIsImportOpen}
+        onImportSuccess={handleImportSuccess}
+      />
+    </DashboardLayout >
   );
 }

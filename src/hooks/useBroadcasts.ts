@@ -190,6 +190,26 @@ export const useBroadcasts = () => {
     },
   });
 
+  // Send campaign (Trigger immediate send)
+  const sendCampaign = useMutation({
+    mutationFn: async (id: string) => {
+      const { data, error } = await supabase.functions.invoke('whatsapp-api', {
+        body: { action: 'send_broadcast', campaign_id: id }
+      });
+
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      return data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['broadcasts'] });
+      toast.success(`Broadcast sent! Sent: ${data.sent}, Failed: ${data.failed}`);
+    },
+    onError: (error: Error) => {
+      toast.error(`Failed to send broadcast: ${error.message}`);
+    },
+  });
+
   return {
     campaigns: campaignsQuery.data ?? [],
     isLoading: campaignsQuery.isLoading,
@@ -198,5 +218,6 @@ export const useBroadcasts = () => {
     addRecipients,
     getCampaignRecipients,
     deleteCampaign,
+    sendCampaign,
   };
 };

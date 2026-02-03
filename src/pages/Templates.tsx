@@ -96,7 +96,14 @@ export default function Templates() {
                                             <Label>Category</Label>
                                             <Select
                                                 value={newTemplate.category}
-                                                onValueChange={(val) => setNewTemplate({ ...newTemplate, category: val })}
+                                                onValueChange={(val) => {
+                                                    setNewTemplate(prev => ({
+                                                        ...prev,
+                                                        category: val,
+                                                        // Reset header to NONE if switching to AUTHENTICATION
+                                                        headerType: val === 'AUTHENTICATION' ? 'NONE' : prev.headerType
+                                                    }))
+                                                }}
                                             >
                                                 <SelectTrigger>
                                                     <SelectValue />
@@ -107,6 +114,22 @@ export default function Templates() {
                                                     <SelectItem value="AUTHENTICATION">Authentication</SelectItem>
                                                 </SelectContent>
                                             </Select>
+
+                                            {/* Meta Policy Tips */}
+                                            <div className="mt-2 p-3 bg-blue-50 text-blue-800 rounded-md text-xs space-y-1">
+                                                <p className="font-semibold flex items-center gap-1">
+                                                    <CheckCircle className="w-3 h-3" /> Meta Policy Tip:
+                                                </p>
+                                                {newTemplate.category === 'MARKETING' && (
+                                                    <p>Use for promotions, offers, or newsletters. Avoid overly aggressive language to prevent blocking.</p>
+                                                )}
+                                                {newTemplate.category === 'UTILITY' && (
+                                                    <p>Strictly for transactional updates (orders, account alerts). <strong>No promotional content allowed</strong> or it will be rejected.</p>
+                                                )}
+                                                {newTemplate.category === 'AUTHENTICATION' && (
+                                                    <p>Only for OTP/Verification codes. <span className="font-semibold">Media/Images are NOT allowed</span> for this category.</p>
+                                                )}
+                                            </div>
                                         </div>
 
                                         <div className="space-y-2">
@@ -114,14 +137,15 @@ export default function Templates() {
                                             <Select
                                                 value={newTemplate.headerType}
                                                 onValueChange={(val: any) => setNewTemplate({ ...newTemplate, headerType: val })}
+                                                disabled={newTemplate.category === 'AUTHENTICATION'}
                                             >
                                                 <SelectTrigger>
                                                     <SelectValue />
                                                 </SelectTrigger>
                                                 <SelectContent>
                                                     <SelectItem value="NONE">None</SelectItem>
-                                                    <SelectItem value="IMAGE">Image / Media</SelectItem>
-                                                    <SelectItem value="TEXT">Text Header</SelectItem>
+                                                    <SelectItem value="IMAGE" disabled={newTemplate.category === 'AUTHENTICATION'}>Image / Media</SelectItem>
+                                                    <SelectItem value="TEXT" disabled={newTemplate.category === 'AUTHENTICATION'}>Text Header</SelectItem>
                                                 </SelectContent>
                                             </Select>
                                             {newTemplate.headerType === 'IMAGE' && (
@@ -217,6 +241,6 @@ export default function Templates() {
                     ))}
                 </div>
             </div>
-        </DashboardLayout>
+        </DashboardLayout >
     );
 }

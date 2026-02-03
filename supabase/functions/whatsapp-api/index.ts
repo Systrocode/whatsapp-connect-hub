@@ -629,7 +629,33 @@ serve(async (req: Request) => {
           }
 
           // 3. Save the message
-          let dbContent = message || (template_name ? `Template: ${template_name}` : '');
+          let dbContent = message;
+
+          if (!dbContent && template_name) {
+            // Try to fetch template content from DB to show meaningful history
+            const { data: templateData } = await supabaseServiceRole
+              .from('message_templates')
+              .select('content')
+              .eq('name', template_name)
+              .eq('user_id', user.id)
+              .maybeSingle();
+
+            if (templateData?.content) {
+              dbContent = templateData.content;
+              // Basic variable substitution (assuming text params)
+              if (template_params && Array.isArray(template_params)) {
+                template_params.forEach((param: any, index: number) => {
+                  if (param.type === 'text') {
+                    dbContent = dbContent.replace(`{{${index + 1}}}`, param.text);
+                  }
+                });
+              }
+            } else {
+              dbContent = `Template: ${template_name}`;
+            }
+          }
+
+          if (!dbContent) dbContent = '';
 
           if (['image', 'video', 'audio', 'document'].includes(type) && media_url) {
             dbContent = JSON.stringify({
@@ -1102,6 +1128,187 @@ serve(async (req: Request) => {
         });
       }
 
+      case 'send_broadcast': {
+        const { campaign_id } = params;
+
+        // 1. Get Campaign and Settings
+        // 1. Get Campaign and Settings
+        const { data: campaign, error: campaignError } = await supabaseServiceRole
+          .from('broadcast_campaigns')
+          .select('*')
+          .eq('id', campaign_id)
+          .eq('user_id', user.id)
+          .single();
+
+        if (campaignError || !campaign) {
+          console.error("Campaign Fetch Error:", campaignError);
+          return new Response(JSON.stringify({ error: 'Campaign not found', details: campaignError }), { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+        }
+
+        let templateData = null;
+        if (campaign.template_id) {
+          const { data: t } = await supabaseServiceRole
+            .from('message_templates')
+            .select('*')
+            .eq('id', campaign.template_id)
+            .single();
+          templateData = t;
+        }
+
+
+
+        const { data: settings } = await supabaseServiceRole
+          .from('whatsapp_settings')
+          .select('phone_number_id, access_token:access_token_encrypted')
+          .eq('user_id', user.id)
+          .single();
+
+        if (!settings?.phone_number_id || !settings?.access_token) {
+          return new Response(JSON.stringify({ error: 'WhatsApp not configured' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+        }
+
+        // 2. Get Recipients
+        // 2. Get Recipients
+        const { data: recipients } = await supabaseServiceRole
+          .from('broadcast_recipients')
+          .select('*')
+          .eq('campaign_id', campaign_id)
+          .eq('status', 'pending');
+
+        if (!recipients || recipients.length === 0) {
+          return new Response(JSON.stringify({ message: 'No pending recipients found' }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+        }
+
+        // Update status to sending
+        await supabaseServiceRole.from('broadcast_campaigns').update({ status: 'sending' }).eq('id', campaign_id);
+
+        let sentCount = 0;
+        let failedCount = 0;
+
+        // 3. Send Loop
+        for (const recipient of recipients) {
+          // Fetch Contact Details Manually
+          const { data: contact } = await supabaseServiceRole
+            .from('contacts')
+            .select('phone_number')
+            .eq('id', recipient.contact_id)
+            .single();
+
+          if (!contact || !contact.phone_number) {
+            console.error("Missing contact for recipient:", recipient.id);
+            continue;
+          }
+
+          const to = contact.phone_number;
+
+          // Construct Payload
+          const messagePayload: any = {
+            messaging_product: 'whatsapp',
+            recipient_type: 'individual',
+            to: to,
+          };
+
+          const templateName = templateData?.name;
+
+          if (templateName) {
+            messagePayload.type = 'template';
+            messagePayload.template = {
+              name: templateName,
+              language: { code: 'en_US' }, // TODO: Make dynamic
+              components: []
+            };
+            // Helper: if template has header image, add it? (omitted for brevity, requires param parsing)
+          } else {
+            messagePayload.type = 'text';
+            messagePayload.text = { body: campaign.message_content || ' ' };
+          }
+
+          // Send API Call
+          try {
+            const res = await fetch(
+              `https://graph.facebook.com/v21.0/${settings.phone_number_id}/messages`,
+              {
+                method: 'POST',
+                headers: {
+                  'Authorization': `Bearer ${settings.access_token}`,
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(messagePayload),
+              }
+            );
+            const resJson = await res.json();
+
+            if (res.ok) {
+              sentCount++;
+              // Update Recipient
+              await supabaseServiceRole.from('broadcast_recipients').update({
+                status: 'sent',
+                sent_at: new Date().toISOString()
+              }).eq('id', recipient.id);
+
+              // Log to Messages History
+              // Find/Create conversation logic is strict here, for simplicity assume contact exists (it does)
+              // We need conversationID. 
+              const { data: conv } = await supabaseServiceRole
+                .from('conversations')
+                .select('id')
+                .eq('contact_id', recipient.contact_id)
+                .single();
+
+              let conversationId = conv?.id;
+              if (!conversationId) {
+                const { data: newConv } = await supabaseServiceRole.from('conversations').insert({
+                  user_id: user.id,
+                  contact_id: recipient.contact_id,
+                  status: 'active',
+                  last_message_at: new Date().toISOString()
+                }).select().single();
+                conversationId = newConv.id;
+              }
+
+              // Save Message
+              // Use actual template content if available
+              let content = campaign.message_content || (templateData ? templateData.content : `Template: ${templateName}`);
+
+              await supabaseServiceRole.from('messages').insert({
+                conversation_id: conversationId,
+                whatsapp_message_id: resJson.messages?.[0]?.id,
+                content: content,
+                direction: 'outbound',
+                message_type: templateName ? 'template' : 'text',
+                status: 'sent'
+              });
+
+            } else {
+              failedCount++;
+              await supabaseServiceRole.from('broadcast_recipients').update({
+                status: 'failed',
+                error_message: resJson.error?.message
+              }).eq('id', recipient.id);
+            }
+
+          } catch (e) {
+            failedCount++;
+            console.error("Broadcast Send Error:", e);
+            await supabaseServiceRole.from('broadcast_recipients').update({
+              status: 'failed',
+              error_message: String(e)
+            }).eq('id', recipient.id);
+          }
+        }
+
+        // 4. Update Campaign Stats
+        await supabaseServiceRole.from('broadcast_campaigns').update({
+          status: 'completed',
+          sent_count: sentCount,
+          failed_count: failedCount,
+          sent_at: new Date().toISOString()
+        }).eq('id', campaign_id);
+
+        return new Response(JSON.stringify({ success: true, sent: sentCount, failed: failedCount }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
       default:
         return new Response(JSON.stringify({ error: 'Unknown action' }), {
           status: 400,
