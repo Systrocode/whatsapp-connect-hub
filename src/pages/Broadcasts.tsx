@@ -1,5 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -43,6 +45,7 @@ export default function Broadcasts() {
   });
   const [filterTag, setFilterTag] = useState('');
   const [optInConfirmed, setOptInConfirmed] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const statusColors: Record<string, string> = {
     draft: 'bg-muted text-muted-foreground',
@@ -89,21 +92,48 @@ export default function Broadcasts() {
     }
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
-      setPreviewImage(url);
+    if (!file) return;
+
+    setIsUploading(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `broadcast-${Date.now()}.${fileExt}`;
+      const { error: uploadError } = await supabase.storage
+        .from('chat-media')
+        .upload(fileName, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('chat-media')
+        .getPublicUrl(fileName);
+
+      setPreviewImage(publicUrl);
+    } catch (error: any) {
+      toast.error('Failed to upload image: ' + error.message);
+    } finally {
+      setIsUploading(false);
     }
   };
 
   const handleCreate = async () => {
     if (!newCampaign.name) return;
 
+    // Construct content payload if media is present
+    let finalContent = newCampaign.message_content;
+    if (previewImage && !previewImage.startsWith('blob:') && !previewImage.startsWith('https://placehold.co')) {
+      finalContent = JSON.stringify({
+        body: newCampaign.message_content,
+        image_url: previewImage
+      });
+    }
+
     const campaign = await createCampaign.mutateAsync({
       name: newCampaign.name,
       template_id: newCampaign.template_id || undefined,
-      message_content: newCampaign.message_content || undefined,
+      message_content: finalContent || undefined,
       scheduled_at: newCampaign.scheduled_at || undefined,
       segment_filter: newCampaign.segment_filter,
     });
@@ -258,7 +288,10 @@ export default function Broadcasts() {
                           <ImageIcon className="w-4 h-4" />
                           <span>Media Header (Optional)</span>
                         </div>
-                        <Input type="file" accept="image/*" className="bg-background" onChange={handleImageUpload} />
+                        <div className="flex gap-2">
+                          <Input type="file" accept="image/*" className="bg-background" onChange={handleImageUpload} disabled={isUploading} />
+                          {isUploading && <div className="flex items-center text-xs text-muted-foreground">Uploading...</div>}
+                        </div>
                         <p className="text-[10px] text-muted-foreground">Only if your template has an Image header.</p>
                       </div>
                     )}
