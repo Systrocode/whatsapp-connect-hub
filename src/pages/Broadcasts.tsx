@@ -26,7 +26,7 @@ import ImportContactsDialog from '@/components/contacts/ImportContactsDialog';
 // ... existing imports ...
 
 export default function Broadcasts() {
-  const { campaigns, isLoading, createCampaign, addRecipients, deleteCampaign, sendCampaign } = useBroadcasts();
+  const { campaigns, isLoading, createCampaign, addRecipients, deleteCampaign, sendCampaign, getCampaignRecipients } = useBroadcasts();
   const { templates } = useTemplates();
   const { contacts } = useContacts();
   const { segments } = useSegments();
@@ -34,6 +34,9 @@ export default function Broadcasts() {
 
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isImportOpen, setIsImportOpen] = useState(false);
+  const [viewCampaignId, setViewCampaignId] = useState<string | null>(null);
+  const [campaignRecipients, setCampaignRecipients] = useState<any[]>([]);
+  const [isLoadingRecipients, setIsLoadingRecipients] = useState(false);
   const [selectedContacts, setSelectedContacts] = useState<string[]>([]);
   const [selectedSegmentId, setSelectedSegmentId] = useState<string>('all');
   const [newCampaign, setNewCampaign] = useState({
@@ -63,6 +66,19 @@ export default function Broadcasts() {
     completed: <CheckCircle className="h-3 w-3" />,
     failed: <XCircle className="h-3 w-3" />,
     cancelled: <AlertCircle className="h-3 w-3" />,
+  };
+
+  const handleViewDetails = async (campaignId: string) => {
+    setViewCampaignId(campaignId);
+    setIsLoadingRecipients(true);
+    try {
+      const data = await getCampaignRecipients(campaignId);
+      setCampaignRecipients(data);
+    } catch (error) {
+      toast.error('Failed to load recipients');
+    } finally {
+      setIsLoadingRecipients(false);
+    }
   };
 
   const handleImportSuccess = (importedIds: string[]) => {
@@ -470,7 +486,9 @@ export default function Broadcasts() {
                   </div>
 
                   <div className="mt-4 flex gap-2">
-                    <Button size="sm" variant="outline"><Eye className="mr-2 h-3 w-3" /> View Details</Button>
+                    <Button size="sm" variant="outline" onClick={() => handleViewDetails(campaign.id)}>
+                      <Eye className="mr-2 h-3 w-3" /> View Details
+                    </Button>
                     {campaign.status === 'draft' && (
                       <>
                         <Button
@@ -498,6 +516,58 @@ export default function Broadcasts() {
         onOpenChange={setIsImportOpen}
         onImportSuccess={handleImportSuccess}
       />
+
+      {/* Campaign Details Dialog */}
+      <Dialog open={!!viewCampaignId} onOpenChange={(open) => !open && setViewCampaignId(null)}>
+        <DialogContent className="max-w-3xl max-h-[80vh] flex flex-col">
+          <DialogHeader>
+            <DialogTitle>Campaign Details</DialogTitle>
+            <DialogDescription>Recipient status and delivery report.</DialogDescription>
+          </DialogHeader>
+
+          <div className="flex-1 overflow-y-auto border rounded-md p-2">
+            {isLoadingRecipients ? (
+              <div className="flex justify-center p-8"><span className="loading loading-spinner">Loading...</span></div>
+            ) : campaignRecipients.length === 0 ? (
+              <div className="text-center p-8 text-muted-foreground">No recipients found.</div>
+            ) : (
+              <table className="w-full text-sm text-left">
+                <thead className="text-xs text-muted-foreground uppercase bg-muted/50 sticky top-0">
+                  <tr>
+                    <th className="px-3 py-2">Name</th>
+                    <th className="px-3 py-2">Phone</th>
+                    <th className="px-3 py-2">Status</th>
+                    <th className="px-3 py-2">Error / Info</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {campaignRecipients.map((r) => (
+                    <tr key={r.id} className="hover:bg-muted/10">
+                      <td className="px-3 py-2 font-medium">{r.contact?.name || '-'}</td>
+                      <td className="px-3 py-2 text-muted-foreground">{r.contact?.phone_number}</td>
+                      <td className="px-3 py-2">
+                        <Badge variant="outline" className={
+                          r.status === 'sent' ? 'border-green-500 text-green-600 bg-green-50' :
+                            r.status === 'failed' ? 'border-red-500 text-red-600 bg-red-50' :
+                              'text-muted-foreground'
+                        }>
+                          {r.status}
+                        </Badge>
+                      </td>
+                      <td className="px-3 py-2 text-xs text-destructive max-w-[200px] truncate" title={r.error_message || ''}>
+                        {r.error_message || '-'}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setViewCampaignId(null)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </DashboardLayout >
   );
 }
