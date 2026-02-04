@@ -1051,11 +1051,14 @@ serve(async (req: Request) => {
             user_id: settings.user_id,
             name: t.name,
             category: t.category,
+            language: t.language || 'en_US',
             content: content,
             is_approved: isApproved,
             variables: [], // TODO: Parse variables
             updated_at: new Date().toISOString()
           };
+
+          console.log(`Syncing Template: ${t.name} | Language: ${t.language} | Status: ${t.status}`);
 
           // Parse Basic Variables {{1}}
           const varMatches = content.match(/\{\{\d+\}\}/g);
@@ -1153,6 +1156,10 @@ serve(async (req: Request) => {
             .eq('id', campaign.template_id)
             .single();
           templateData = t;
+          if (!templateData) {
+            console.error(`Template not found for ID: ${campaign.template_id}`);
+            return new Response(JSON.stringify({ error: 'Template defined in campaign but not found in database' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+          }
         }
 
 
@@ -1176,7 +1183,7 @@ serve(async (req: Request) => {
           .eq('status', 'pending');
 
         if (!recipients || recipients.length === 0) {
-          return new Response(JSON.stringify({ message: 'No pending recipients found' }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+          return new Response(JSON.stringify({ success: false, sent: 0, failed: 0, error: 'No pending recipients found for this campaign.' }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
         }
 
         // Update status to sending
@@ -1199,7 +1206,8 @@ serve(async (req: Request) => {
             continue;
           }
 
-          const to = contact.phone_number;
+          // Sanitize phone number (remove +, spaces, etc)
+          const to = contact.phone_number.replace(/\D/g, '');
 
           // Construct Payload
           const messagePayload: any = {
@@ -1214,11 +1222,23 @@ serve(async (req: Request) => {
             messagePayload.type = 'template';
             messagePayload.template = {
               name: templateName,
-              language: { code: 'en_US' }, // TODO: Make dynamic
-              components: []
+              language: { code: templateData?.language || 'en_US' },
+              components: [] // TODO: Add variable support if needed
             };
-            // Helper: if template has header image, add it? (omitted for brevity, requires param parsing)
           } else {
+            // Fallback to text is DANGEROUS for broadcasts as it violates 24h window if not careful.
+            // But if user explicitly created a campaign without a template (is that possible?), we allow it?
+            // The frontend enforces template selection. So reaching here without templateName implies data corruption or logic error.
+            if (campaign.template_id) {
+              console.error("Template name missing for ID:", campaign.template_id);
+              // Skip this recipient or fail? Let's fail this send.
+              failedCount++;
+              await supabaseServiceRole.from('broadcast_recipients').update({
+                status: 'failed',
+                error_message: 'Template name missing'
+              }).eq('id', recipient.id);
+              continue;
+            }
             messagePayload.type = 'text';
             messagePayload.text = { body: campaign.message_content || ' ' };
           }
@@ -1305,7 +1325,14 @@ serve(async (req: Request) => {
           sent_at: new Date().toISOString()
         }).eq('id', campaign_id);
 
-        return new Response(JSON.stringify({ success: true, sent: sentCount, failed: failedCount }), {
+        return new Response(JSON.stringify({
+          success: true,
+          sent: sentCount,
+          failed: failedCount,
+          total_attempted: recipients.length,
+          last_api_response: sentCount > 0 ? 'Last Message Accepted' : 'Check Logs',
+          debug_payload_sample: recipients.length > 0 ? 'Enabled' : 'None'
+        }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       }

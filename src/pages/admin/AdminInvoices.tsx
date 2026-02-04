@@ -12,7 +12,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Loader2, Search, DollarSign, Calendar, User } from "lucide-react";
-import { format } from "date-fns";
+import { formatToIST } from "@/lib/utils";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 
 interface AdminInvoice {
@@ -150,7 +150,7 @@ export default function AdminInvoices() {
                                             </div>
                                         </TableCell>
                                         <TableCell>
-                                            {format(new Date(invoice.invoice_date), 'MMM dd, yyyy')}
+                                            {formatToIST(invoice.invoice_date)}
                                         </TableCell>
                                         <TableCell className="font-medium">
                                             {invoice.currency} {Number(invoice.amount).toFixed(2)}

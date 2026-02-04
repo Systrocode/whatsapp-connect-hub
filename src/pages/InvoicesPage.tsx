@@ -13,7 +13,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { format } from "date-fns";
+import { formatToIST } from "@/lib/utils";
 
 interface Invoice {
     id: string;
@@ -122,7 +122,7 @@ export default function InvoicesPage() {
                                         <TableCell>
                                             <div className="flex items-center gap-2">
                                                 <Calendar className="w-4 h-4 text-slate-400" />
-                                                {format(new Date(invoice.invoice_date), 'MMM dd, yyyy')}
+                                                {formatToIST(invoice.invoice_date)}
                                             </div>
                                         </TableCell>
                                         <TableCell className="font-medium">

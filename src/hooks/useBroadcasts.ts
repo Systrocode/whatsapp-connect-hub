@@ -203,7 +203,24 @@ export const useBroadcasts = () => {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['broadcasts'] });
-      toast.success(`Broadcast sent! Sent: ${data.sent}, Failed: ${data.failed}`);
+
+      console.log("Broadcast Response:", data);
+
+      if (data.success === false) {
+        toast.error(data.error || 'Broadcast failed to start.');
+        return;
+      }
+
+      if (data.sent === 0 && data.failed > 0) {
+        toast.error(`Broadcast failed. Failed: ${data.failed}`);
+      } else if (data.sent === 0 && data.failed === 0) {
+        toast.warning('No available recipients found properly.');
+      } else if (data.failed > 0) {
+        toast.warning(`Broadcast finished. Sent: ${data.sent}, Failed: ${data.failed}`);
+      } else {
+        toast.success(`Broadcast processed! Sent: ${data.sent}`);
+      }
+
     },
     onError: (error: Error) => {
       toast.error(`Failed to send broadcast: ${error.message}`);

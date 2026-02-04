@@ -12,7 +12,8 @@ import { useMessages } from '@/hooks/useMessages';
 import { useConversations } from '@/hooks/useConversations';
 import { useTemplates, MessageTemplate } from '@/hooks/useTemplates';
 import { Skeleton } from '@/components/ui/skeleton';
-import { format, isToday, isYesterday } from 'date-fns';
+import { isToday, isYesterday } from 'date-fns';
+import { formatToIST } from '@/lib/utils';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -182,7 +183,7 @@ const ConversationDetail = () => {
 
   const groupedMessages = messages.reduce((groups: { date: string; messages: typeof messages }[], message) => {
     const date = new Date(message.created_at);
-    let dateLabel = format(date, 'MMMM d, yyyy');
+    let dateLabel = formatToIST(date, { month: 'long', day: 'numeric', year: 'numeric' });
     if (isToday(date)) dateLabel = 'Today';
     else if (isYesterday(date)) dateLabel = 'Yesterday';
 
@@ -389,7 +390,7 @@ const ConversationDetail = () => {
                           )}
                           <div className={`flex items-center justify-end gap-1 mt-1 ${message.direction === 'outbound' ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>
                             <p className="text-[10px]">
-                              {format(new Date(message.created_at), 'HH:mm')}
+                              {formatToIST(new Date(message.created_at), { hour: '2-digit', minute: '2-digit' })}
                             </p>
                             {message.direction === 'outbound' && (
                               <span className="text-[10px]">

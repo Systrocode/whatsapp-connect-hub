@@ -16,7 +16,8 @@ import { useContacts } from '@/hooks/useContacts';
 import { useSegments } from '@/hooks/useSegments';
 import { useWhatsAppAPI } from '@/hooks/useWhatsAppAPI';
 import { Upload, Plus, Send, Calendar, Users, MessageSquare, Trash2, Eye, Clock, CheckCircle, XCircle, AlertCircle, Settings, Smartphone, Image as ImageIcon, Filter } from 'lucide-react';
-import { format, subDays, isAfter, parseISO } from 'date-fns';
+import { subDays, isAfter, parseISO } from 'date-fns';
+import { formatToIST } from '@/lib/utils';
 import PhoneMockup from '@/components/PhoneMockup';
 import ImportContactsDialog from '@/components/contacts/ImportContactsDialog';
 
@@ -352,7 +353,7 @@ export default function Broadcasts() {
                     </div>
                     <PhoneMockup
                       message={newCampaign.message_content || "Select a template to preview"}
-                      time={format(new Date(), 'HH:mm')}
+                      time={formatToIST(new Date(), { hour: '2-digit', minute: '2-digit' })}
                       image={previewImage}
                       avatar={businessProfile?.profile_picture_url}
                     />
@@ -407,13 +408,19 @@ export default function Broadcasts() {
                   <div className="flex items-start justify-between">
                     <div>
                       <CardTitle className="text-lg">{campaign.name}</CardTitle>
-                      <CardDescription>Created {format(new Date(campaign.created_at), 'PPp')}</CardDescription>
+                      <CardDescription>Created {formatToIST(campaign.created_at)}</CardDescription>
                     </div>
                     <Badge className={statusColors[campaign.status]}>
                       {statusIcons[campaign.status]}
                       <span className="ml-1 capitalize">{campaign.status}</span>
                     </Badge>
                   </div>
+                  {campaign.status === 'completed' && (
+                    <div className="text-xs text-muted-foreground mt-1 flex justify-end gap-2">
+                      <span className="text-green-600 font-medium">Sent: {campaign.sent_count ?? 0}</span>
+                      <span className="text-destructive font-medium">Failed: {campaign.failed_count ?? 0}</span>
+                    </div>
+                  )}
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center gap-6 text-sm text-muted-foreground">
