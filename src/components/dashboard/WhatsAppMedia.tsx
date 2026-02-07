@@ -66,9 +66,17 @@ export const WhatsAppMedia = ({ mediaId, mediaUrl, caption, className, type = 'i
                 const url = URL.createObjectURL(blob);
                 setImageUrl(url);
             } catch (err: any) {
-                console.error('Error loading image:', err);
+                const errorMessage = err.message || '';
+                // Filter out known Meta API errors regarding missing/expired media to avoid console spam
+                if (errorMessage.includes('Unsupported get request') || errorMessage.includes('does not exist')) {
+                    // Start of the conversation mentions "private Supabase bucket". 
+                    // If this media ID is from Meta (incoming message) and it's expired/deleted, we show "Expired".
+                    setErrorDetails("Media no longer available on WhatsApp servers.");
+                } else {
+                    console.error('Error loading image:', err);
+                    setErrorDetails(errorMessage);
+                }
                 setError(true);
-                setErrorDetails(err.message);
             } finally {
                 setLoading(false);
             }

@@ -1064,6 +1064,16 @@ serve(async (req: Request) => {
           const varMatches = content.match(/\{\{\d+\}\}/g);
           if (varMatches) {
             payload.variables = [...new Set(varMatches)]; // unique vars
+          } else {
+            payload.variables = [];
+          }
+
+          // Check for Header Media
+          const headerComponent = t.components.find((c: any) => c.type === 'HEADER');
+          if (headerComponent) {
+            if (headerComponent.format === 'IMAGE') payload.variables.push('has_image');
+            if (headerComponent.format === 'VIDEO') payload.variables.push('has_video');
+            if (headerComponent.format === 'DOCUMENT') payload.variables.push('has_document');
           }
 
           const existingId = nameToId.get(t.name);
@@ -1262,13 +1272,16 @@ serve(async (req: Request) => {
               // If message_content is JSON stringified with { image_url: ... }, we can parse it.
               // Let's try parsing message_content as JSON first.
 
-              let mediaUrl = null;
-              try {
-                const parsed = JSON.parse(campaign.message_content);
-                if (parsed.image_url) mediaUrl = parsed.image_url;
-                if (parsed.header_url) mediaUrl = parsed.header_url;
-              } catch (e) {
-                // Not JSON, plain text.
+              let mediaUrl = campaign.media_url;
+
+              if (!mediaUrl) {
+                try {
+                  const parsed = JSON.parse(campaign.message_content);
+                  if (parsed.image_url) mediaUrl = parsed.image_url;
+                  if (parsed.header_url) mediaUrl = parsed.header_url;
+                } catch (e) {
+                  // Not JSON, plain text.
+                }
               }
 
               if (mediaUrl) {
