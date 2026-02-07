@@ -21,7 +21,7 @@ import { useAdminUsers } from '@/hooks/useAdminUsers';
 import { useAuth } from '@/contexts/AuthContext';
 import { Users, Shield, UserCog, User, Trash2 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { format } from 'date-fns';
+import { formatToIST } from '@/lib/utils';
 
 const roleConfig = {
   admin: { label: 'Admin', color: 'bg-red-500/10 text-red-500 border-red-500/20' },
@@ -121,7 +121,7 @@ const AdminUsers = () => {
                             </Badge>
                           </TableCell>
                           <TableCell className="text-muted-foreground">
-                            {format(new Date(user.created_at), 'MMM d, yyyy')}
+                            {formatToIST(user.created_at)}
                           </TableCell>
                           <TableCell className="text-right">
                             <div className="flex justify-end gap-2">

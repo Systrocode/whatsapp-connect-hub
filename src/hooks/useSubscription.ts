@@ -62,10 +62,15 @@ export const useSubscription = () => {
         .from('user_subscriptions')
         .select(`
           *,
-          plan:subscription_plans(*)
+          subscription_plans(*)
         `)
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle();
+
+      if (data) {
+        // @ts-ignore
+        data.plan = data.subscription_plans;
+      }
 
       if (error && error.code !== 'PGRST116') {
         console.error('Error fetching subscription:', error);

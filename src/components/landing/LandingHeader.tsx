@@ -206,11 +206,14 @@ export function LandingHeader({ variant = 'default' }: { variant?: 'default' | '
                                 </NavigationMenuContent>
                             </NavigationMenuItem>
                             <NavigationMenuItem>
-                                <Link to="/pricing">
-                                    <NavigationMenuLink className="bg-transparent hover:bg-transparent focus:bg-transparent hover:text-green-600 focus:text-green-600 dark:text-white dark:focus:text-white font-medium px-4 py-2" >
+                                <NavigationMenuLink asChild>
+                                    <Link
+                                        to="/pricing"
+                                        className="block select-none rounded-md p-3 text-sm font-medium leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground bg-transparent hover:bg-transparent focus:bg-transparent hover:text-green-600 focus:text-green-600 dark:text-white dark:focus:text-white px-4 py-2"
+                                    >
                                         Pricing
-                                    </NavigationMenuLink>
-                                </Link>
+                                    </Link>
+                                </NavigationMenuLink>
                             </NavigationMenuItem>
                         </NavigationMenuList>
                     </NavigationMenu>
@@ -224,9 +227,9 @@ export function LandingHeader({ variant = 'default' }: { variant?: 'default' | '
                     </div>
 
                     <div className="hidden lg:flex items-center gap-2">
-                        <Link to="/auth">
-                            <Button variant="ghost" size="sm" className={cn(isDark && "text-white hover:text-white hover:bg-white/10")}>Sign in</Button>
-                        </Link>
+                        <Button variant="ghost" size="sm" className={cn(isDark && "text-white hover:text-white hover:bg-white/10")} asChild>
+                            <Link to="/auth">Sign in</Link>
+                        </Button>
                         <QuoteRequestDialog>
                             <Button variant="whatsapp" size="sm">Request a Quote</Button>
                         </QuoteRequestDialog>
@@ -287,11 +290,11 @@ export function LandingHeader({ variant = 'default' }: { variant?: 'default' | '
                     <div className="mt-auto pb-8 space-y-4">
                         <div className="h-px bg-border" />
                         <div className="flex flex-col gap-3">
-                            <Link to="/auth" className="w-full" onClick={() => setIsMobileMenuOpen(false)}>
-                                <Button variant="outline" className="w-full h-12 text-base font-medium border-primary/20 hover:bg-primary/5 hover:text-primary">
+                            <Button variant="outline" className="w-full h-12 text-base font-medium border-primary/20 hover:bg-primary/5 hover:text-primary" asChild>
+                                <Link to="/auth" onClick={() => setIsMobileMenuOpen(false)}>
                                     Sign in
-                                </Button>
-                            </Link>
+                                </Link>
+                            </Button>
                             <div className="w-full">
                                 <QuoteRequestDialog>
                                     <Button variant="whatsapp" className="w-full h-12 text-base font-bold shadow-lg shadow-green-500/20">

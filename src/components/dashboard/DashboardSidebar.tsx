@@ -55,6 +55,7 @@ const adminItems = [
   { icon: icons.subscriptions, label: 'Subscriptions', path: '/dashboard/admin/subscriptions' },
   { icon: icons.invoice, label: 'Invoices (Admin)', path: '/dashboard/admin/invoices' },
   { icon: icons.blog, label: 'Blog Manager', path: '/dashboard/admin/blog' },
+  { icon: icons.affiliates, label: 'Affiliates', path: '/dashboard/admin/affiliates' },
 ];
 
 const DashboardSidebar = () => {

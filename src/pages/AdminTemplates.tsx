@@ -13,7 +13,7 @@ import {
 import { useAdminTemplates } from '@/hooks/useAdminTemplates';
 import { FileText, Check, X, Trash2 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { format } from 'date-fns';
+import { formatToIST } from '@/lib/utils';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -93,7 +93,7 @@ const AdminTemplates = () => {
                           <Badge variant="outline">{template.category || 'General'}</Badge>
                         </TableCell>
                         <TableCell className="text-muted-foreground">
-                          {format(new Date(template.created_at), 'MMM d, yyyy')}
+                          {formatToIST(template.created_at)}
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex items-center justify-end gap-2">
@@ -170,7 +170,7 @@ const AdminTemplates = () => {
                           <Badge variant="outline">{template.category || 'General'}</Badge>
                         </TableCell>
                         <TableCell className="text-muted-foreground">
-                          {format(new Date(template.created_at), 'MMM d, yyyy')}
+                          {formatToIST(template.created_at)}
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex items-center justify-end gap-2">

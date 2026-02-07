@@ -11,7 +11,8 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { useSegments, SegmentCriteria } from '@/hooks/useSegments';
 import { useContacts } from '@/hooks/useContacts';
 import { Plus, Users, Filter, Trash2, Calendar, Clock } from 'lucide-react';
-import { format, subDays, isBefore, isAfter, parseISO } from 'date-fns';
+import { subDays, isAfter, parseISO } from 'date-fns';
+import { formatToIST } from '@/lib/utils';
 
 export default function Segments() {
     const { segments, isLoading, createSegment, deleteSegment } = useSegments();
@@ -200,7 +201,7 @@ export default function Segments() {
                                         <Trash2 className="w-4 h-4" />
                                     </Button>
                                 </div>
-                                <CardDescription>Created {format(new Date(segment.created_at), 'MMM d, yyyy')}</CardDescription>
+                                <CardDescription>Created {formatToIST(segment.created_at)}</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <div className="space-y-4">

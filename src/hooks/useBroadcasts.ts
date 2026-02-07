@@ -9,7 +9,6 @@ export interface BroadcastCampaign {
   name: string;
   template_id: string | null;
   message_content: string | null;
-  media_url?: string | null;
   segment_filter: Record<string, unknown>;
   status: 'draft' | 'scheduled' | 'sending' | 'completed' | 'failed' | 'cancelled';
   scheduled_at: string | null;
@@ -77,7 +76,6 @@ export const useBroadcasts = () => {
       message_content?: string;
       segment_filter?: Record<string, unknown>;
       scheduled_at?: string;
-      media_url?: string;
     }) => {
       if (!user?.id) throw new Error('Not authenticated');
 
@@ -89,7 +87,6 @@ export const useBroadcasts = () => {
           message_content: campaign.message_content,
           segment_filter: campaign.segment_filter as any,
           scheduled_at: campaign.scheduled_at,
-          media_url: campaign.media_url,
           user_id: user.id,
           status: campaign.scheduled_at ? 'scheduled' : 'draft',
         })
@@ -193,6 +190,43 @@ export const useBroadcasts = () => {
     },
   });
 
+  // Send campaign (Trigger immediate send)
+  const sendCampaign = useMutation({
+    mutationFn: async (id: string) => {
+      const { data, error } = await supabase.functions.invoke('whatsapp-api', {
+        body: { action: 'send_broadcast', campaign_id: id }
+      });
+
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      return data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['broadcasts'] });
+
+      console.log("Broadcast Response:", data);
+
+      if (data.success === false) {
+        toast.error(data.error || 'Broadcast failed to start.');
+        return;
+      }
+
+      if (data.sent === 0 && data.failed > 0) {
+        toast.error(`Broadcast failed. Failed: ${data.failed}`);
+      } else if (data.sent === 0 && data.failed === 0) {
+        toast.warning('No available recipients found properly.');
+      } else if (data.failed > 0) {
+        toast.warning(`Broadcast finished. Sent: ${data.sent}, Failed: ${data.failed}`);
+      } else {
+        toast.success(`Broadcast processed! Sent: ${data.sent}`);
+      }
+
+    },
+    onError: (error: Error) => {
+      toast.error(`Failed to send broadcast: ${error.message}`);
+    },
+  });
+
   return {
     campaigns: campaignsQuery.data ?? [],
     isLoading: campaignsQuery.isLoading,
@@ -201,5 +235,6 @@ export const useBroadcasts = () => {
     addRecipients,
     getCampaignRecipients,
     deleteCampaign,
+    sendCampaign,
   };
 };

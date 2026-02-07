@@ -38,11 +38,12 @@ import GoogleSheetsImport from './GoogleSheetsImport';
 interface ImportContactsDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onImportSuccess?: (importedIds: string[]) => void;
 }
 
 type ImportStep = 'select' | 'google-sheets' | 'preview' | 'importing' | 'complete';
 
-const ImportContactsDialog = ({ open, onOpenChange }: ImportContactsDialogProps) => {
+const ImportContactsDialog = ({ open, onOpenChange, onImportSuccess }: ImportContactsDialogProps) => {
   const [step, setStep] = useState<ImportStep>('select');
   const [pastedText, setPastedText] = useState('');
   const [duplicateHandling, setDuplicateHandling] = useState<DuplicateHandling>('skip');
@@ -117,7 +118,7 @@ const ImportContactsDialog = ({ open, onOpenChange }: ImportContactsDialogProps)
     // We need to trigger preview with these contacts
     setStep('preview');
     // Use a workaround - parse as text format
-    const textFormat = contacts.map(c => 
+    const textFormat = contacts.map(c =>
       `${c.name || ''},${c.phone_number},${c.email || ''}`
     ).join('\n');
     parseText(textFormat);
@@ -126,13 +127,17 @@ const ImportContactsDialog = ({ open, onOpenChange }: ImportContactsDialogProps)
   const handleImport = useCallback(async () => {
     if (!parseResult || parseResult.contacts.length === 0) return;
 
-    setStep('importing');
-    await importContacts.mutateAsync({
+    const result = await importContacts.mutateAsync({
       contacts: parseResult.contacts,
       duplicateHandling,
     });
+    // @ts-ignore - importedIds is now available in result
+    if (onImportSuccess && result?.importedIds) {
+      // @ts-ignore
+      onImportSuccess(result.importedIds);
+    }
     setStep('complete');
-  }, [parseResult, duplicateHandling, importContacts]);
+  }, [parseResult, duplicateHandling, importContacts, onImportSuccess]);
 
   const handleBack = useCallback(() => {
     setStep('select');
@@ -268,7 +273,7 @@ const ImportContactsDialog = ({ open, onOpenChange }: ImportContactsDialogProps)
                 <TabsContent value="sheets" className="mt-4">
                   <GoogleSheetsImport
                     onContactsParsed={handleGoogleSheetsContacts}
-                    onBack={() => {}}
+                    onBack={() => { }}
                   />
                 </TabsContent>
               </Tabs>

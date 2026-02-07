@@ -12,7 +12,8 @@ import { useMessages } from '@/hooks/useMessages';
 import { useConversations } from '@/hooks/useConversations';
 import { useTemplates, MessageTemplate } from '@/hooks/useTemplates';
 import { Skeleton } from '@/components/ui/skeleton';
-import { format, isToday, isYesterday } from 'date-fns';
+import { isToday, isYesterday } from 'date-fns';
+import { formatToIST } from '@/lib/utils';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -77,11 +78,16 @@ const ConversationDetail = () => {
     if (file.type.startsWith('image/')) {
       type = 'image';
       if (file.size > 5 * 1024 * 1024) { toast.error('Image max size is 5MB'); isValid = false; }
-      else if (!['image/jpeg', 'image/png'].includes(file.type)) { toast.error('Only JPEG and PNG images supported'); isValid = false; }
+      else if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) { toast.error('Only JPEG, PNG and WebP images supported'); isValid = false; }
     } else if (file.type.startsWith('audio/')) {
       type = 'audio';
       if (file.size > 16 * 1024 * 1024) { toast.error('Audio max size is 16MB'); isValid = false; }
-      // WhatsApp supports specific audio types, allowing common ones
+      // Common WhatsApp audio formats
+      else if (!['audio/aac', 'audio/mp4', 'audio/mpeg', 'audio/amr', 'audio/ogg', 'audio/opus'].includes(file.type)) {
+        // Note: 'audio/opus' is often used for voice notes
+        toast.error('Supported audio: AAC, MP4, MPEG, AMR, OGG');
+        isValid = false;
+      }
     } else if (file.type.startsWith('video/')) {
       type = 'video';
       if (file.size > 16 * 1024 * 1024) { toast.error('Video max size is 16MB'); isValid = false; }
@@ -89,6 +95,8 @@ const ConversationDetail = () => {
     } else {
       type = 'document';
       if (file.size > 100 * 1024 * 1024) { toast.error('Document max size is 100MB'); isValid = false; }
+      // Optional: Strict document type checking if needed, but 'application/*' usually covers it safely for upload.
+      // WhatsApp allows: pdf, doc(x), ppt(x), xls(x), txt, csv
     }
 
     if (!isValid) {
@@ -179,7 +187,7 @@ const ConversationDetail = () => {
 
   const groupedMessages = messages.reduce((groups: { date: string; messages: typeof messages }[], message) => {
     const date = new Date(message.created_at);
-    let dateLabel = format(date, 'MMMM d, yyyy');
+    let dateLabel = formatToIST(date, { month: 'long', day: 'numeric', year: 'numeric' });
     if (isToday(date)) dateLabel = 'Today';
     else if (isYesterday(date)) dateLabel = 'Yesterday';
 
@@ -327,20 +335,48 @@ const ConversationDetail = () => {
                             try {
                               const parsed = JSON.parse(message.content);
 
+                              // Helper to detect direct Meta URLs that will fail without auth header
+                              const isMetaUrl = (url?: string) => url && (url.includes('fbsbx') || url.includes('facebook.com') || url.includes('whatsapp.net'));
+
                               // Handle Image
                               if (parsed.image) {
                                 const mediaId = parsed.image.id;
-                                const mediaUrl = parsed.image.link;
+                                let mediaUrl = parsed.image.link;
+                                if (isMetaUrl(mediaUrl)) mediaUrl = undefined;
                                 const caption = parsed.caption;
-                                if (mediaId || mediaUrl) {
-                                  return <WhatsAppMedia mediaId={mediaId} mediaUrl={mediaUrl} caption={caption} />;
-                                }
+                                return <WhatsAppMedia mediaId={mediaId} mediaUrl={mediaUrl} caption={caption} type="image" />;
                               }
 
-                              // Handle other media types gracefully
-                              if (parsed.video) return <div className="flex items-center gap-2 p-2 bg-black/10 rounded">🎥 Video</div>;
-                              if (parsed.audio) return <div className="flex items-center gap-2 p-2 bg-black/10 rounded">🎵 Audio</div>;
-                              if (parsed.document) return <div className="flex items-center gap-2 p-2 bg-black/10 rounded">📄 Document: {parsed.filename || 'File'}</div>;
+                              // Handle Video
+                              if (parsed.video) {
+                                const mediaId = parsed.video.id;
+                                let mediaUrl = parsed.video.link || parsed.video.url;
+                                if (isMetaUrl(mediaUrl)) mediaUrl = undefined;
+                                const caption = parsed.caption;
+                                return <WhatsAppMedia mediaId={mediaId} mediaUrl={mediaUrl} caption={caption} type="video" />;
+                              }
+
+                              // Handle Audio
+                              if (parsed.audio) {
+                                const mediaId = parsed.audio.id;
+                                let mediaUrl = parsed.audio.link || parsed.audio.url;
+                                if (isMetaUrl(mediaUrl)) mediaUrl = undefined;
+                                return <WhatsAppMedia mediaId={mediaId} mediaUrl={mediaUrl} type="audio" />;
+                              }
+
+                              // Handle Document
+                              if (parsed.document) {
+                                const mediaId = parsed.document.id;
+                                let mediaUrl = parsed.document.link || parsed.document.url;
+                                if (isMetaUrl(mediaUrl)) mediaUrl = undefined;
+                                const filename = parsed.document.filename || parsed.filename || 'Document';
+                                return <WhatsAppMedia mediaId={mediaId} mediaUrl={mediaUrl} filename={filename} type="document" />;
+                              }
+
+                              // Fallback for legacy text messages that might look like media but aren't handled above
+                              if (!parsed.image && !parsed.document && !parsed.video && !parsed.audio) {
+                                // It might be just a JSON object without recognized keys, fall through
+                              }
 
                             } catch (e) {
                               // Legacy message or text
@@ -349,7 +385,7 @@ const ConversationDetail = () => {
                             // Fallback
                             return (
                               <div className="flex items-center gap-2 text-sm italic opacity-80">
-                                <span>📷</span>
+                                <span>💬</span>
                                 <span>{message.content}</span>
                               </div>
                             );
@@ -358,7 +394,7 @@ const ConversationDetail = () => {
                           )}
                           <div className={`flex items-center justify-end gap-1 mt-1 ${message.direction === 'outbound' ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>
                             <p className="text-[10px]">
-                              {format(new Date(message.created_at), 'HH:mm')}
+                              {formatToIST(new Date(message.created_at), { hour: '2-digit', minute: '2-digit' })}
                             </p>
                             {message.direction === 'outbound' && (
                               <span className="text-[10px]">
