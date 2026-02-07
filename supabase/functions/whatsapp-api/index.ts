@@ -1245,33 +1245,9 @@ serve(async (req: Request) => {
             // Ideally, 'campaign.message_content' acts as the text body if editable, OR we use template defaults.
             // But WhatsApp Templates CANNOT have their body text replaced arbitrarily. You can ONLY fill {{1}}, {{2}}.
 
-            // 1. Header Component (Image)
-            if (hasImageHeader) {
-              // We need the media URL. Currently, the UI doesn't allow uploading a campaign-specific image easily for broadcasts
-              // except maybe if we repurposed 'campaign.media_url' column if it existed?
-              // For now, let's assume the user MUST strictly follow the template content.
-              // BUT wait, a broadcast usually needs a customizable image if the template has a header image.
-
-              // **CRITICAL FIX**: The Broadcast UI *should* have let users upload an image if the template required it.
-              // Since we don't have that column in `broadcast_campaigns` yet (or I can't see it), I will check `campaign.message_content`
-              // If the user uploaded an image in the UI, we might have saved it? 
-              // Actually, `broadcast_campaigns` table schema earlier didn't show a `media_url` column.
-              // Let's assume for this specific "hello_world" test, it's just text.
-
-              // If it's a media template, we MUST provide a header or it fails.
-              // If we can't find one, we use a placeholder or fail?
-              // Let's try to extract it from the campaign/metadata if stored.
-
-              // TEMPORARY FALLBACK: If the template needs an image but we have none, 
-              // we'll try to find a link in the 'message_content' if it's a JSON?
-              // Or simply log an error.
-              // However, the user said "hello world broadcast is working but not which is including any media file".
-              // This confirms text works, media fails.
-
-              // Let's inspect how createCampaign saves data. It only saves `message_content`.
-              // If message_content is JSON stringified with { image_url: ... }, we can parse it.
-              // Let's try parsing message_content as JSON first.
-
+            // 1. Header Component (Media)
+            if (hasImageHeader || templateVariables.includes('has_video') || templateVariables.includes('has_document')) {
+              // TEMPORARY FALLBACK: Check campaign.media_url, then message_content JSON
               let mediaUrl = campaign.media_url;
 
               if (!mediaUrl) {
@@ -1279,21 +1255,27 @@ serve(async (req: Request) => {
                   const parsed = JSON.parse(campaign.message_content);
                   if (parsed.image_url) mediaUrl = parsed.image_url;
                   if (parsed.header_url) mediaUrl = parsed.header_url;
+                  if (parsed.video_url) mediaUrl = parsed.video_url;
+                  if (parsed.document_url) mediaUrl = parsed.document_url;
                 } catch (e) {
                   // Not JSON, plain text.
                 }
               }
 
               if (mediaUrl) {
+                let headerType = 'image';
+                if (templateVariables.includes('has_video')) headerType = 'video';
+                if (templateVariables.includes('has_document')) headerType = 'document';
+
                 messagePayload.template.components.push({
                   type: 'header',
                   parameters: [{
-                    type: 'image',
-                    image: { link: mediaUrl }
+                    type: headerType,
+                    [headerType]: { link: mediaUrl }
                   }]
                 });
               } else {
-                console.warn("Template requires image but no URL found in campaign content.");
+                console.warn("Template requires media but no URL found regarding campaign.");
                 // This will likely cause a "Parameter Missing" error from Meta
               }
             }
