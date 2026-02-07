@@ -9,6 +9,7 @@ export interface BroadcastCampaign {
   name: string;
   template_id: string | null;
   message_content: string | null;
+  media_url?: string | null;
   segment_filter: Record<string, unknown>;
   status: 'draft' | 'scheduled' | 'sending' | 'completed' | 'failed' | 'cancelled';
   scheduled_at: string | null;
@@ -76,6 +77,7 @@ export const useBroadcasts = () => {
       message_content?: string;
       segment_filter?: Record<string, unknown>;
       scheduled_at?: string;
+      media_url?: string;
     }) => {
       if (!user?.id) throw new Error('Not authenticated');
 
@@ -87,6 +89,7 @@ export const useBroadcasts = () => {
           message_content: campaign.message_content,
           segment_filter: campaign.segment_filter as any,
           scheduled_at: campaign.scheduled_at,
+          media_url: campaign.media_url,
           user_id: user.id,
           status: campaign.scheduled_at ? 'scheduled' : 'draft',
         })

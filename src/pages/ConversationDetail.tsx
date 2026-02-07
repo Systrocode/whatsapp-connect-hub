@@ -108,9 +108,13 @@ const ConversationDetail = () => {
 
       if (uploadError) throw uploadError;
 
-      const { data: { publicUrl } } = supabase.storage
+      const { data, error: signedUrlError } = await supabase.storage
         .from('chat-media')
-        .getPublicUrl(filePath);
+        .createSignedUrl(filePath, 315576000); // 10 years expiry to keep chat history accessible
+
+      if (signedUrlError) throw signedUrlError;
+
+      const publicUrl = data.signedUrl;
 
       await sendMessage.mutateAsync({
         content: newMessage || file.name, // Use message input as caption/content or filename

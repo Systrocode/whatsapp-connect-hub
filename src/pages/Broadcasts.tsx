@@ -51,7 +51,9 @@ export default function Broadcasts() {
     message_content: '',
     scheduled_at: '',
     segment_filter: {} as Record<string, unknown>,
+    media_url: '',
   });
+  const [isUploading, setIsUploading] = useState(false);
   const [filterTag, setFilterTag] = useState('');
 
   // Handle Template Selection & Content Parsing (Basic)
@@ -66,6 +68,40 @@ export default function Broadcasts() {
     }
   };
 
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    try {
+      // 1. Upload File
+      const fileExt = file.name.split('.').pop();
+      const fileName = `broadcast-${Date.now()}.${fileExt}`;
+      const { error: uploadError } = await import('@/integrations/supabase/client').then(m => m.supabase.storage
+        .from('chat-media')
+        .upload(fileName, file));
+
+      if (uploadError) throw uploadError;
+
+      // 2. Get Signed URL (10 years expiry)
+      const { data, error: urlError } = await import('@/integrations/supabase/client').then(m => m.supabase.storage
+        .from('chat-media')
+        .createSignedUrl(fileName, 315576000));
+
+      if (urlError) throw urlError;
+
+      // 3. Save to state
+      setNewCampaign(prev => ({ ...prev, media_url: data.signedUrl }));
+      console.log('Media attached:', data.signedUrl);
+
+    } catch (error: any) {
+      console.error('Upload failed:', error);
+      alert('Upload failed: ' + error.message);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   const handleCreate = async () => {
     if (!newCampaign.name) return;
 
@@ -75,6 +111,7 @@ export default function Broadcasts() {
       message_content: newCampaign.message_content || undefined,
       scheduled_at: newCampaign.scheduled_at || undefined,
       segment_filter: newCampaign.segment_filter,
+      media_url: newCampaign.media_url || undefined,
     });
 
     if (selectedContacts.length > 0) {
@@ -85,7 +122,7 @@ export default function Broadcasts() {
     }
 
     setIsCreateOpen(false);
-    setNewCampaign({ name: '', template_id: '', message_content: '', scheduled_at: '', segment_filter: {} });
+    setNewCampaign({ name: '', template_id: '', message_content: '', scheduled_at: '', segment_filter: {}, media_url: '' });
     setSelectedContacts([]);
   };
 
@@ -221,8 +258,22 @@ export default function Broadcasts() {
                           <ImageIcon className="w-4 h-4" />
                           <span>Media Header (Optional)</span>
                         </div>
-                        <Input type="file" disabled className="bg-background" />
-                        <p className="text-[10px] text-muted-foreground">Only if your template has an Image header.</p>
+                        <div className="space-y-2">
+                          <Input
+                            type="file"
+                            className="bg-background"
+                            disabled={isUploading}
+                            accept="image/*,video/*,application/pdf"
+                            onChange={handleFileUpload}
+                          />
+                          {isUploading && <p className="text-xs text-muted-foreground animate-pulse">Uploading media...</p>}
+                          {newCampaign.media_url && (
+                            <p className="text-xs text-green-600 flex items-center gap-1">
+                              <CheckCircle className="w-3 h-3" /> Media attached successfully
+                            </p>
+                          )}
+                        </div>
+                        <p className="text-[10px] text-muted-foreground">Only if your template has an Image/Video/Document header.</p>
                       </div>
                     )}
 
