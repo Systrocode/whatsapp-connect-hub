@@ -331,7 +331,7 @@ const ConversationDetail = () => {
                             : 'bg-white dark:bg-muted text-foreground rounded-bl-none border border-border/50'
                             }`}
                         >
-                          {['image', 'video', 'audio', 'document'].includes(message.message_type || '') ? (() => {
+                          {['image', 'video', 'audio', 'document', 'template'].includes(message.message_type || '') ? (() => {
                             try {
                               const parsed = JSON.parse(message.content);
 
@@ -371,6 +371,23 @@ const ConversationDetail = () => {
                                 if (isMetaUrl(mediaUrl)) mediaUrl = undefined;
                                 const filename = parsed.document.filename || parsed.filename || 'Document';
                                 return <WhatsAppMedia mediaId={mediaId} mediaUrl={mediaUrl} filename={filename} type="document" />;
+                              }
+
+                              // Handle Template Fallback (JSON Body)
+                              if (message.message_type === 'template') {
+                                // If message content is JSON { body: "..." }, extract it
+                                if (parsed.body) {
+                                  return (
+                                    <div className="space-y-2">
+                                      {parsed.image_url && (
+                                        <div className="rounded-lg overflow-hidden mb-2">
+                                          <img src={parsed.image_url} alt="Header" className="w-full h-auto object-cover max-h-48" />
+                                        </div>
+                                      )}
+                                      <p className="text-sm leading-relaxed whitespace-pre-wrap">{parsed.body}</p>
+                                    </div>
+                                  );
+                                }
                               }
 
                               // Fallback for legacy text messages that might look like media but aren't handled above

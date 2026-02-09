@@ -1060,7 +1060,10 @@ serve(async (req: Request) => {
 
           console.log(`Syncing Template: ${t.name} | Language: ${t.language} | Status: ${t.status}`);
 
-          // Parse Basic Variables {{1}}
+          // Variables Parsing
+          const variables = [];
+
+          // 1. Body Variables {{1}}
           const varMatches = content.match(/\{\{\d+\}\}/g);
           if (varMatches) {
             payload.variables = [...new Set(varMatches)]; // unique vars
@@ -1075,6 +1078,7 @@ serve(async (req: Request) => {
             if (headerComponent.format === 'VIDEO') payload.variables.push('has_video');
             if (headerComponent.format === 'DOCUMENT') payload.variables.push('has_document');
           }
+
 
           const existingId = nameToId.get(t.name);
           let error;
@@ -1245,10 +1249,15 @@ serve(async (req: Request) => {
             // Ideally, 'campaign.message_content' acts as the text body if editable, OR we use template defaults.
             // But WhatsApp Templates CANNOT have their body text replaced arbitrarily. You can ONLY fill {{1}}, {{2}}.
 
-            // 1. Header Component (Media)
-            if (hasImageHeader || templateVariables.includes('has_video') || templateVariables.includes('has_document')) {
-              // TEMPORARY FALLBACK: Check campaign.media_url, then message_content JSON
-              let mediaUrl = campaign.media_url;
+            // 1. Header Component (Image/Video/Document)
+            const isVideo = templateVariables.includes('has_video');
+            const isDocument = templateVariables.includes('has_document');
+
+            if (hasImageHeader || isVideo || isDocument) {
+              // We need the media URL. Currently, the UI doesn't allow uploading a campaign-specific image easily for broadcasts
+              // except maybe if we repurposed 'campaign.media_url' column if it existed?
+              // For now, let's assume the user MUST strictly follow the template content.
+              // BUT wait, a broadcast usually needs a customizable image if the template has a header image.
 
               if (!mediaUrl) {
                 try {
@@ -1263,16 +1272,20 @@ serve(async (req: Request) => {
               }
 
               if (mediaUrl) {
-                let headerType = 'image';
-                if (templateVariables.includes('has_video')) headerType = 'video';
-                if (templateVariables.includes('has_document')) headerType = 'document';
+                // Determine Media Type based on template variable
+                const isVideo = templateVariables.includes('has_video');
+                const isDocument = templateVariables.includes('has_document');
+
+                let parameterObject: any = { type: 'image', image: { link: mediaUrl } };
+                if (isVideo) {
+                  parameterObject = { type: 'video', video: { link: mediaUrl } };
+                } else if (isDocument) {
+                  parameterObject = { type: 'document', document: { link: mediaUrl, filename: 'Attachment' } };
+                }
 
                 messagePayload.template.components.push({
                   type: 'header',
-                  parameters: [{
-                    type: headerType,
-                    [headerType]: { link: mediaUrl }
-                  }]
+                  parameters: [parameterObject]
                 });
               } else {
                 console.warn("Template requires media but no URL found regarding campaign.");
