@@ -34,14 +34,24 @@ export const useWhatsAppAPI = () => {
   const connectionStatusQuery = useQuery({
     queryKey: ['whatsapp_connection_status', user?.id],
     queryFn: async (): Promise<WhatsAppConnectionStatus> => {
-      const { data, error } = await supabase.functions.invoke('whatsapp-api', {
-        body: { action: 'check_connection' }
-      });
+      try {
+        const { data, error } = await supabase.functions.invoke('whatsapp-api', {
+          body: { action: 'check_connection' }
+        });
 
-      if (error) throw error;
-      return data;
+        if (error) {
+          console.warn('Supabase Function "whatsapp-api" unreachable or failed:', error);
+          // Return disconnected state instead of throwing to avoid UI blocking error
+          return { connected: false, has_token: false, has_phone_number_id: false };
+        }
+        return data;
+      } catch (err) {
+        console.warn('Supabase Function invocation complete failure:', err);
+        return { connected: false, has_token: false, has_phone_number_id: false };
+      }
     },
     enabled: !!user,
+    retry: false, // Don't retry if function is down/missing
   });
 
   // Fetch Business Profile

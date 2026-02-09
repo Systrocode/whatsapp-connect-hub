@@ -15,7 +15,8 @@ import {
   RefreshCw, Calendar, Ban, Settings,
   ChevronRight, Clock
 } from 'lucide-react';
-import { format, formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow } from 'date-fns';
+import { formatToIST } from '@/lib/utils';
 import StatCard from '@/components/dashboard/StatCard';
 
 const statusColors: Record<string, string> = {
@@ -103,7 +104,7 @@ export default function AdminSubscriptions() {
         </TableCell>
         <TableCell>
           <div className={isExpired ? 'text-destructive' : isExpiringSoon ? 'text-yellow-500' : ''}>
-            <p>{format(new Date(sub.current_period_end), 'PP')}</p>
+            <p>{formatToIST(sub.current_period_end)}</p>
             <p className="text-xs text-muted-foreground">
               {formatDistanceToNow(new Date(sub.current_period_end), { addSuffix: true })}
             </p>

@@ -4,6 +4,7 @@ import { LandingFooter } from "@/components/landing/LandingFooter";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChevronRight, Terminal, Copy, Check, Hash, Globe, Lock } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const CodeBlock = ({ code, language }: { code: string, language: string }) => (
     <pre className="p-4 bg-[#1e1e1e] text-blue-300 font-mono text-sm overflow-x-auto">
@@ -27,6 +28,7 @@ const DocsPage = () => {
             items: [
                 { id: "introduction", label: "Introduction" },
                 { id: "authentication", label: "Authentication" },
+                { id: "migration-guide", label: "Migration Guide", to: "/docs/migration-guide" },
                 { id: "rate-limits", label: "Rate Limits" },
             ]
         },
@@ -161,19 +163,37 @@ const DocsPage = () => {
                                             {section.title}
                                         </h3>
                                         <div className="space-y-1">
-                                            {section.items.map((item) => (
-                                                <button
-                                                    key={item.id}
-                                                    onClick={() => setActiveSection(item.id)}
-                                                    className={`w-full text-left px-2 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-between group ${activeSection === item.id
+                                            {section.items.map((item) => {
+                                                const content = (
+                                                    <>
+                                                        {item.label}
+                                                        {activeSection === item.id && !item.to && <ChevronRight className="w-3 h-3" />}
+                                                    </>
+                                                );
+
+                                                const commonClasses = `w-full text-left px-2 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-between group ${activeSection === item.id
                                                         ? "bg-white dark:bg-slate-800 text-green-600 shadow-sm border border-slate-200 dark:border-slate-700"
                                                         : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900/50 hover:text-slate-900 dark:hover:text-white"
-                                                        }`}
-                                                >
-                                                    {item.label}
-                                                    {activeSection === item.id && <ChevronRight className="w-3 h-3" />}
-                                                </button>
-                                            ))}
+                                                    }`;
+
+                                                if (item.to) {
+                                                    return (
+                                                        <Link key={item.id} to={item.to} className={commonClasses}>
+                                                            {content}
+                                                        </Link>
+                                                    );
+                                                }
+
+                                                return (
+                                                    <button
+                                                        key={item.id}
+                                                        onClick={() => setActiveSection(item.id)}
+                                                        className={commonClasses}
+                                                    >
+                                                        {content}
+                                                    </button>
+                                                );
+                                            })}
                                         </div>
                                     </div>
                                 ))}

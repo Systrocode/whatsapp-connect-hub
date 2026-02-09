@@ -8,10 +8,12 @@ interface WhatsAppMediaProps {
     mediaUrl?: string;
     caption?: string;
     className?: string;
+    type?: 'image' | 'video' | 'audio' | 'document';
+    filename?: string;
 }
 
-export const WhatsAppMedia = ({ mediaId, mediaUrl, caption, className }: WhatsAppMediaProps) => {
-    const [imageUrl, setImageUrl] = useState<string | null>(null);
+export const WhatsAppMedia = ({ mediaId, mediaUrl, caption, className, type = 'image', filename }: WhatsAppMediaProps) => {
+    const [imageUrl, setImageUrl] = useState<string | null>(mediaUrl || null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorDetails, setErrorDetails] = useState<string | null>(null);
@@ -64,9 +66,17 @@ export const WhatsAppMedia = ({ mediaId, mediaUrl, caption, className }: WhatsAp
                 const url = URL.createObjectURL(blob);
                 setImageUrl(url);
             } catch (err: any) {
-                console.error('Error loading image:', err);
+                const errorMessage = err.message || '';
+                // Filter out known Meta API errors regarding missing/expired media to avoid console spam
+                if (errorMessage.includes('Unsupported get request') || errorMessage.includes('does not exist')) {
+                    // Start of the conversation mentions "private Supabase bucket". 
+                    // If this media ID is from Meta (incoming message) and it's expired/deleted, we show "Expired".
+                    setErrorDetails("Media no longer available on WhatsApp servers.");
+                } else {
+                    console.error('Error loading image:', err);
+                    setErrorDetails(errorMessage);
+                }
                 setError(true);
-                setErrorDetails(err.message);
             } finally {
                 setLoading(false);
             }
@@ -77,9 +87,9 @@ export const WhatsAppMedia = ({ mediaId, mediaUrl, caption, className }: WhatsAp
         return () => {
             if (imageUrl) URL.revokeObjectURL(imageUrl);
         };
-    }, [mediaId]);
+    }, [mediaId, mediaUrl]);
 
-    if (!mediaId) {
+    if (!mediaId && !mediaUrl) {
         return (
             <div className="flex items-center gap-2 p-2 bg-muted/50 rounded text-muted-foreground text-sm italic">
                 <ImageOff className="w-4 h-4" />
@@ -103,6 +113,49 @@ export const WhatsAppMedia = ({ mediaId, mediaUrl, caption, className }: WhatsAp
                 <span className="text-xs font-medium">Failed to load image</span>
                 {errorDetails && <span className="text-[10px] text-center opacity-70 break-all">{errorDetails}</span>}
             </div>
+        );
+    }
+
+    if (type === 'video') {
+        return (
+            <div className={`space-y-1 ${className}`}>
+                <video
+                    src={imageUrl}
+                    controls
+                    className="rounded-lg max-w-sm w-full bg-black/10"
+                />
+                {caption && <p className="text-sm mt-1 opacity-90">{caption}</p>}
+            </div>
+        );
+    }
+
+    if (type === 'audio') {
+        return (
+            <div className={`flex items-center gap-2 p-2 bg-secondary/50 rounded-lg min-w-[200px] ${className}`}>
+                <audio src={imageUrl} controls className="h-8 w-full" />
+            </div>
+        );
+    }
+
+    if (type === 'document') {
+        return (
+            <a
+                href={imageUrl}
+                download={filename || "document"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`flex items-center gap-3 p-3 bg-secondary/50 hover:bg-secondary/80 transition-colors rounded-lg border border-border/50 cursor-pointer mb-1 group max-w-[280px] ${className}`}
+                title="Click to download"
+            >
+                <div className="w-10 h-10 rounded-lg bg-white dark:bg-slate-800 flex items-center justify-center flex-shrink-0 shadow-sm">
+                    {/* We can import FileText if we want, or just use text/svg */}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-red-500"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" /><polyline points="14 2 14 8 20 8" /></svg>
+                </div>
+                <div className="flex flex-col overflow-hidden min-w-0">
+                    <span className="text-sm font-medium truncate text-foreground/90">{filename || 'Document'}</span>
+                    <span className="text-[10px] text-muted-foreground uppercase">{filename?.split('.').pop() || 'FILE'}</span>
+                </div>
+            </a>
         );
     }
 

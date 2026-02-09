@@ -7,21 +7,23 @@ interface PhoneMockupProps {
     image?: string;
     time?: string;
     isBusiness?: boolean;
+    avatar?: string;
 }
 
 export default function PhoneMockup({
     message = "This is a preview of your message.",
     image,
     time = "12:00",
-    isBusiness = true
+    isBusiness = true,
+    avatar
 }: PhoneMockupProps) {
     return (
-        <div className="w-[300px] h-[600px] bg-black rounded-[2rem] border-[10px] border-slate-900 overflow-hidden relative shadow-2xl mx-auto">
+        <div className="w-[300px] h-[600px] bg-black rounded-[2rem] border-[10px] border-slate-900 overflow-hidden relative shadow-2xl mx-auto flex flex-col">
             {/* Notch */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-slate-900 rounded-b-xl z-20"></div>
 
             {/* Status Bar */}
-            <div className="bg-[#0b141a] text-white px-4 pt-2 pb-1 flex justify-between items-center text-xs z-10 relative">
+            <div className="bg-[#0b141a] text-white px-4 pt-2 pb-1 flex justify-between items-center text-xs z-10 relative shrink-0">
                 <span>{time}</span>
                 <div className="flex gap-1.5 opacity-90">
                     <Signal className="w-3 h-3" />
@@ -31,9 +33,9 @@ export default function PhoneMockup({
             </div>
 
             {/* Header */}
-            <div className="bg-[#1f2c34] p-3 flex items-center gap-3 text-white border-b border-gray-800 z-10 relative">
+            <div className="bg-[#1f2c34] p-3 flex items-center gap-3 text-white border-b border-gray-800 z-10 relative shrink-0">
                 <div className="w-8 h-8 rounded-full bg-teal-500/50 flex items-center justify-center text-xs overflow-hidden">
-                    {image ? <img src={image} className="w-full h-full object-cover" /> : "VB"}
+                    {avatar ? <img src={avatar} className="w-full h-full object-cover" alt="Profile" /> : "VB"}
                 </div>
                 <div className="flex-1">
                     <p className="font-semibold text-sm leading-tight">My Business</p>
@@ -42,7 +44,7 @@ export default function PhoneMockup({
             </div>
 
             {/* Chat Area (WhatsApp Wallpaper) */}
-            <div className="bg-[#0b141a] h-full p-4 relative overflow-y-auto pb-20 bg-opacity-95"
+            <div className="bg-[#0b141a] flex-1 p-4 relative overflow-y-auto pb-20 bg-opacity-95"
                 style={{ backgroundImage: 'url("https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png")', backgroundRepeat: 'repeat', backgroundSize: '400px' }}>
 
                 {/* Encryption Notice */}
@@ -70,7 +72,7 @@ export default function PhoneMockup({
             </div>
 
             {/* Input Area Mockup */}
-            <div className="absolute bottom-0 w-full bg-[#1f2c34] p-2 flex items-center gap-2">
+            <div className="absolute bottom-0 w-full bg-[#1f2c34] p-2 flex items-center gap-2 shrink-0">
                 <div className="w-6 h-6 rounded-full bg-[#202c33]"></div>
                 <div className="flex-1 h-8 rounded-full bg-[#2a3942]"></div>
                 <div className="w-8 h-8 rounded-full bg-[#00a884] flex items-center justify-center">

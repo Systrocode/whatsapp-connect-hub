@@ -629,7 +629,33 @@ serve(async (req: Request) => {
           }
 
           // 3. Save the message
-          let dbContent = message || (template_name ? `Template: ${template_name}` : '');
+          let dbContent = message;
+
+          if (!dbContent && template_name) {
+            // Try to fetch template content from DB to show meaningful history
+            const { data: templateData } = await supabaseServiceRole
+              .from('message_templates')
+              .select('content')
+              .eq('name', template_name)
+              .eq('user_id', user.id)
+              .maybeSingle();
+
+            if (templateData?.content) {
+              dbContent = templateData.content;
+              // Basic variable substitution (assuming text params)
+              if (template_params && Array.isArray(template_params)) {
+                template_params.forEach((param: any, index: number) => {
+                  if (param.type === 'text') {
+                    dbContent = dbContent.replace(`{{${index + 1}}}`, param.text);
+                  }
+                });
+              }
+            } else {
+              dbContent = `Template: ${template_name}`;
+            }
+          }
+
+          if (!dbContent) dbContent = '';
 
           if (['image', 'video', 'audio', 'document'].includes(type) && media_url) {
             dbContent = JSON.stringify({
@@ -1025,17 +1051,34 @@ serve(async (req: Request) => {
             user_id: settings.user_id,
             name: t.name,
             category: t.category,
+            language: t.language || 'en_US',
             content: content,
             is_approved: isApproved,
             variables: [], // TODO: Parse variables
             updated_at: new Date().toISOString()
           };
 
-          // Parse Basic Variables {{1}}
+          console.log(`Syncing Template: ${t.name} | Language: ${t.language} | Status: ${t.status}`);
+
+          // Variables Parsing
+          const variables = [];
+
+          // 1. Body Variables {{1}}
           const varMatches = content.match(/\{\{\d+\}\}/g);
           if (varMatches) {
             payload.variables = [...new Set(varMatches)]; // unique vars
+          } else {
+            payload.variables = [];
           }
+
+          // Check for Header Media
+          const headerComponent = t.components.find((c: any) => c.type === 'HEADER');
+          if (headerComponent) {
+            if (headerComponent.format === 'IMAGE') payload.variables.push('has_image');
+            if (headerComponent.format === 'VIDEO') payload.variables.push('has_video');
+            if (headerComponent.format === 'DOCUMENT') payload.variables.push('has_document');
+          }
+
 
           const existingId = nameToId.get(t.name);
           let error;
@@ -1102,6 +1145,269 @@ serve(async (req: Request) => {
         });
       }
 
+      case 'send_broadcast': {
+        const { campaign_id } = params;
+
+        // 1. Get Campaign and Settings
+        // 1. Get Campaign and Settings
+        const { data: campaign, error: campaignError } = await supabaseServiceRole
+          .from('broadcast_campaigns')
+          .select('*')
+          .eq('id', campaign_id)
+          .eq('user_id', user.id)
+          .single();
+
+        if (campaignError || !campaign) {
+          console.error("Campaign Fetch Error:", campaignError);
+          return new Response(JSON.stringify({ error: 'Campaign not found', details: campaignError }), { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+        }
+
+        let templateData = null;
+        if (campaign.template_id) {
+          const { data: t } = await supabaseServiceRole
+            .from('message_templates')
+            .select('*')
+            .eq('id', campaign.template_id)
+            .single();
+          templateData = t;
+          if (!templateData) {
+            console.error(`Template not found for ID: ${campaign.template_id}`);
+            return new Response(JSON.stringify({ error: 'Template defined in campaign but not found in database' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+          }
+        }
+
+
+
+        const { data: settings } = await supabaseServiceRole
+          .from('whatsapp_settings')
+          .select('phone_number_id, access_token:access_token_encrypted')
+          .eq('user_id', user.id)
+          .single();
+
+        if (!settings?.phone_number_id || !settings?.access_token) {
+          return new Response(JSON.stringify({ error: 'WhatsApp not configured' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+        }
+
+        // 2. Get Recipients
+        // 2. Get Recipients
+        const { data: recipients } = await supabaseServiceRole
+          .from('broadcast_recipients')
+          .select('*')
+          .eq('campaign_id', campaign_id)
+          .eq('status', 'pending');
+
+        if (!recipients || recipients.length === 0) {
+          return new Response(JSON.stringify({ success: false, sent: 0, failed: 0, error: 'No pending recipients found for this campaign.' }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+        }
+
+        // Update status to sending
+        await supabaseServiceRole.from('broadcast_campaigns').update({ status: 'sending' }).eq('id', campaign_id);
+
+        let sentCount = 0;
+        let failedCount = 0;
+
+        // 3. Send Loop
+        for (const recipient of recipients) {
+          // Fetch Contact Details Manually
+          const { data: contact } = await supabaseServiceRole
+            .from('contacts')
+            .select('phone_number')
+            .eq('id', recipient.contact_id)
+            .single();
+
+          if (!contact || !contact.phone_number) {
+            console.error("Missing contact for recipient:", recipient.id);
+            continue;
+          }
+
+          // Sanitize phone number (remove +, spaces, etc)
+          const to = contact.phone_number.replace(/\D/g, '');
+
+          // Construct Payload
+          const messagePayload: any = {
+            messaging_product: 'whatsapp',
+            recipient_type: 'individual',
+            to: to,
+          };
+
+
+
+          const templateName = templateData?.name;
+          const templateVariables = templateData?.variables || [];
+          const hasImageHeader = templateVariables.includes('has_image');
+
+          if (templateName) {
+            messagePayload.type = 'template';
+            messagePayload.template = {
+              name: templateName,
+              language: { code: templateData?.language || 'en_US' },
+              components: [] // Components inserted below
+            };
+
+            // Calculate Variables & Media
+            // Note: For now, broadcasts are static (same message to everyone) unless we implement merge tags like {{name}}
+            // Ideally, 'campaign.message_content' acts as the text body if editable, OR we use template defaults.
+            // But WhatsApp Templates CANNOT have their body text replaced arbitrarily. You can ONLY fill {{1}}, {{2}}.
+
+            // 1. Header Component (Image/Video/Document)
+            const isVideo = templateVariables.includes('has_video');
+            const isDocument = templateVariables.includes('has_document');
+
+            if (hasImageHeader || isVideo || isDocument) {
+              // We need the media URL. Currently, the UI doesn't allow uploading a campaign-specific image easily for broadcasts
+              // except maybe if we repurposed 'campaign.media_url' column if it existed?
+              // For now, let's assume the user MUST strictly follow the template content.
+              // BUT wait, a broadcast usually needs a customizable image if the template has a header image.
+
+              if (!mediaUrl) {
+                try {
+                  const parsed = JSON.parse(campaign.message_content);
+                  if (parsed.image_url) mediaUrl = parsed.image_url;
+                  if (parsed.header_url) mediaUrl = parsed.header_url;
+                  if (parsed.video_url) mediaUrl = parsed.video_url;
+                  if (parsed.document_url) mediaUrl = parsed.document_url;
+                } catch (e) {
+                  // Not JSON, plain text.
+                }
+              }
+
+              if (mediaUrl) {
+                // Determine Media Type based on template variable
+                const isVideo = templateVariables.includes('has_video');
+                const isDocument = templateVariables.includes('has_document');
+
+                let parameterObject: any = { type: 'image', image: { link: mediaUrl } };
+                if (isVideo) {
+                  parameterObject = { type: 'video', video: { link: mediaUrl } };
+                } else if (isDocument) {
+                  parameterObject = { type: 'document', document: { link: mediaUrl, filename: 'Attachment' } };
+                }
+
+                messagePayload.template.components.push({
+                  type: 'header',
+                  parameters: [parameterObject]
+                });
+              } else {
+                console.warn("Template requires media but no URL found regarding campaign.");
+                // This will likely cause a "Parameter Missing" error from Meta
+              }
+            }
+
+            // 2. Body Component (Variables)
+            // If the template has variables {{1}}, we need to fill them.
+            // Currently assuming static or failed if variables missing.
+
+          } else {
+            // Fallback to text is DANGEROUS for broadcasts as it violates 24h window if not careful.
+            // But if user explicitly created a campaign without a template (is that possible?), we allow it?
+            // The frontend enforces template selection. So reaching here without templateName implies data corruption or logic error.
+            if (campaign.template_id) {
+              console.error("Template name missing for ID:", campaign.template_id);
+              // Skip this recipient or fail? Let's fail this send.
+              failedCount++;
+              await supabaseServiceRole.from('broadcast_recipients').update({
+                status: 'failed',
+                error_message: 'Template name missing'
+              }).eq('id', recipient.id);
+              continue;
+            }
+            messagePayload.type = 'text';
+            messagePayload.text = { body: campaign.message_content || ' ' };
+          }
+
+          // Send API Call
+          try {
+            const res = await fetch(
+              `https://graph.facebook.com/v21.0/${settings.phone_number_id}/messages`,
+              {
+                method: 'POST',
+                headers: {
+                  'Authorization': `Bearer ${settings.access_token}`,
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(messagePayload),
+              }
+            );
+            const resJson = await res.json();
+
+            if (res.ok) {
+              sentCount++;
+              // Update Recipient
+              await supabaseServiceRole.from('broadcast_recipients').update({
+                status: 'sent',
+                sent_at: new Date().toISOString()
+              }).eq('id', recipient.id);
+
+              // Log to Messages History
+              // Find/Create conversation logic is strict here, for simplicity assume contact exists (it does)
+              // We need conversationID. 
+              const { data: conv } = await supabaseServiceRole
+                .from('conversations')
+                .select('id')
+                .eq('contact_id', recipient.contact_id)
+                .single();
+
+              let conversationId = conv?.id;
+              if (!conversationId) {
+                const { data: newConv } = await supabaseServiceRole.from('conversations').insert({
+                  user_id: user.id,
+                  contact_id: recipient.contact_id,
+                  status: 'active',
+                  last_message_at: new Date().toISOString()
+                }).select().single();
+                conversationId = newConv.id;
+              }
+
+              // Save Message
+              // Use actual template content if available
+              let content = campaign.message_content || (templateData ? templateData.content : `Template: ${templateName}`);
+
+              await supabaseServiceRole.from('messages').insert({
+                conversation_id: conversationId,
+                whatsapp_message_id: resJson.messages?.[0]?.id,
+                content: content,
+                direction: 'outbound',
+                message_type: templateName ? 'template' : 'text',
+                status: 'sent'
+              });
+
+            } else {
+              failedCount++;
+              await supabaseServiceRole.from('broadcast_recipients').update({
+                status: 'failed',
+                error_message: resJson.error?.message
+              }).eq('id', recipient.id);
+            }
+
+          } catch (e) {
+            failedCount++;
+            console.error("Broadcast Send Error:", e);
+            await supabaseServiceRole.from('broadcast_recipients').update({
+              status: 'failed',
+              error_message: String(e)
+            }).eq('id', recipient.id);
+          }
+        }
+
+        // 4. Update Campaign Stats
+        await supabaseServiceRole.from('broadcast_campaigns').update({
+          status: 'completed',
+          sent_count: sentCount,
+          failed_count: failedCount,
+          sent_at: new Date().toISOString()
+        }).eq('id', campaign_id);
+
+        return new Response(JSON.stringify({
+          success: true,
+          sent: sentCount,
+          failed: failedCount,
+          total_attempted: recipients.length,
+          last_api_response: sentCount > 0 ? 'Last Message Accepted' : 'Check Logs',
+          debug_payload_sample: recipients.length > 0 ? 'Enabled' : 'None'
+        }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
       default:
         return new Response(JSON.stringify({ error: 'Unknown action' }), {
           status: 400,

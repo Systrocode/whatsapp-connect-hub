@@ -7,7 +7,7 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   isLoading: boolean;
-  signUp: (email: string, password: string, metadata?: { business_name?: string; phone_number?: string; full_name?: string }) => Promise<{ error: Error | null }>;
+  signUp: (email: string, password: string, metadata?: { business_name?: string; phone_number?: string; full_name?: string; affiliate_ref?: string | null }) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signInWithGoogle: () => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
@@ -75,7 +75,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const signUp = async (
     email: string,
     password: string,
-    metadata?: { business_name?: string; phone_number?: string; full_name?: string }
+    metadata?: { business_name?: string; phone_number?: string; full_name?: string; affiliate_ref?: string | null }
   ) => {
     const redirectUrl = `${window.location.origin}/auth`;
 
