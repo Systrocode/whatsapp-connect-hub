@@ -108,7 +108,8 @@ const Auth = () => {
         const { error } = await signUp(email, password, {
           business_name: businessName,
           phone_number: phoneNumber,
-          full_name: fullName
+          full_name: fullName,
+          affiliate_ref: localStorage.getItem('affiliate_ref')
         });
 
         if (error) {

@@ -9,28 +9,32 @@ export default function AffiliatePage() {
 
     const faqs = [
         {
-            question: "Are there any fees?",
-            answer: "Nope! It is free to join the affiliate program"
+            question: "Is it free to join?",
+            answer: "Yes! Joining the Avelo Affiliate Program is completely free. There are no setup fees or hidden charges."
+        },
+        {
+            question: "How do I earn commissions?",
+            answer: "You earn a 20% recurring commission for every customer you refer to Avelo. As long as they remain a paying customer, you keep earning every month."
         },
         {
             question: "How are referrals tracked?",
-            answer: "When people click on your affiliate URL link, we will use cookies to track them for 90 days. Once your contact sign-ups and completes the payment, they'll be considered as your referrals."
+            answer: "We use a cookie-based tracking system. When someone clicks your unique affiliate link, a cookie is stored for 90 days. If they sign up within that period, you get credit for the referral."
         },
         {
             question: "How do I get paid?",
-            answer: "We use Partnerstack to manage payouts. We will send payouts monthly, and then you can withdraw using PayPal or your Bank account."
+            answer: "Payouts are processed monthly. We support UPI and Bank Transfers for affiliates in India, and PayPal or Bank Transfer for international affiliates."
         },
         {
-            question: "How to promote Avelo?",
-            answer: "You can promote Avelo through your website, blog, social media channels, email newsletters, or any other marketing channels you have access to. We provide marketing materials and resources to help you succeed."
+            question: "Is there a minimum payout threshold?",
+            answer: "No, there is no minimum payout threshold. You get paid for every qualified commission you earn, regardless of the amount."
         },
         {
-            question: "Can affiliates use Google or Facebook ads to acquire customers?",
-            answer: "Yes, affiliates can use paid advertising channels like Google Ads and Facebook Ads to promote Avelo and acquire customers. However, please ensure you follow our brand guidelines and advertising policies."
+            question: "Can I run paid ads?",
+            answer: "You are welcome to use paid advertising (like Google Ads or Facebook Ads) to promote Avelo, but you must direct traffic to your own landing page first, not directly to our domain. Bidding on our brand keywords is widely prohibited."
         },
         {
-            question: "Do I get a commission on the usage?",
-            answer: "Yes! You earn recurring commissions on the monthly subscription fees paid by customers you refer, as long as they remain active subscribers."
+            question: "Do you provide marketing materials?",
+            answer: "Yes! Once you join, you will have access to a dashboard with banners, logos, and other promotional assets to help you succeed."
         }
     ];
 
@@ -111,9 +115,8 @@ export default function AffiliatePage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
-                        href="https://dash.partnerstack.com/application?company=watiio&group=affiliatepartners"
-                        target="_blank"
-                        rel="noopener noreferrer"
+                        href="/auth?mode=signup"
+                        target="_self"
                         className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-8 rounded-lg transition-colors group"
                     >
                         Become an Affiliate
@@ -356,9 +359,8 @@ export default function AffiliatePage() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.2 }}
-                        href="https://dash.partnerstack.com/application?company=watiio&group=affiliatepartners"
-                        target="_blank"
-                        rel="noopener noreferrer"
+                        href="/auth?mode=signup"
+                        target="_self"
                         className="inline-flex items-center gap-2 bg-white text-green-600 font-bold py-4 px-8 rounded-lg hover:bg-slate-50 transition-colors group"
                     >
                         Join the Affiliate Program

@@ -9,6 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
+import { PaymentSettingsForm } from "./PaymentSettingsForm";
 
 interface AffiliateProfile {
     id: string;
@@ -16,6 +17,17 @@ interface AffiliateProfile {
     commission_rate: number;
     total_earnings: number;
     status: string;
+    payment_details: PaymentSettings | null;
+}
+
+interface PaymentSettings {
+    method: 'upi' | 'bank_transfer' | 'paypal';
+    upi_id?: string;
+    bank_name?: string;
+    account_number?: string;
+    ifsc_code?: string;
+    account_holder_name?: string;
+    paypal_email?: string;
 }
 
 interface Referral {
@@ -55,7 +67,7 @@ export default function AffiliateDashboard() {
             }
 
             if (data) {
-                setProfile(data);
+                setProfile(data as unknown as AffiliateProfile);
                 fetchReferrals(data.id);
             }
         } catch (error) {
@@ -95,11 +107,9 @@ export default function AffiliateDashboard() {
                     { user_id: user?.id, referral_code: code }
                 ])
                 .select()
-                .single();
-
             if (error) throw error;
 
-            setProfile(data);
+            setProfile(data as unknown as AffiliateProfile);
             toast({
                 title: "Welcome to the program!",
                 description: "Your affiliate account has been created successfully.",
@@ -331,9 +341,19 @@ export default function AffiliateDashboard() {
                                 </a>
                             </CardContent>
                         </Card>
+
+                        <Card className="shadow-sm">
+                            <CardHeader>
+                                <CardTitle className="text-lg">Payment Settings</CardTitle>
+                                <CardDescription>How you get paid</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <PaymentSettingsForm profile={profile} onUpdate={(details) => setProfile({ ...profile, payment_details: details })} />
+                            </CardContent>
+                        </Card>
                     </div>
                 </div>
             </div>
-        </DashboardLayout>
+        </DashboardLayout >
     );
 }

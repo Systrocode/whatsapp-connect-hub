@@ -90,7 +90,7 @@ export default function AffiliateProgram() {
                                     </li>
                                     <li className="flex items-center gap-3">
                                         <CheckCircle2 className="text-green-500 w-6 h-6" />
-                                        <span className="font-medium">Monthly payouts via PayPal or Wise</span>
+                                        <span className="font-medium">Monthly payouts via UPI, Bank Transfer or PayPal</span>
                                     </li>
                                     <li className="flex items-center gap-3">
                                         <CheckCircle2 className="text-green-500 w-6 h-6" />
@@ -132,25 +132,31 @@ export default function AffiliateProgram() {
                             <AccordionItem value="item-1">
                                 <AccordionTrigger>Is there a fee to join?</AccordionTrigger>
                                 <AccordionContent>
-                                    No, joining our affiliate program is completely free.
+                                    No, joining our affiliate program is completely free. There are no setup fees or hidden charges.
                                 </AccordionContent>
                             </AccordionItem>
                             <AccordionItem value="item-2">
                                 <AccordionTrigger>How much can I earn?</AccordionTrigger>
                                 <AccordionContent>
-                                    There is no cap on earnings. You earn 20% of every payment made by customers you refer. If you refer a customer who pays $100/mo, you earn $20/mo passively.
+                                    There is no cap on earnings! You earn a 20% recurring commission on every payment made by customers you refer. For as long as they stay, you keep getting paid.
                                 </AccordionContent>
                             </AccordionItem>
                             <AccordionItem value="item-3">
-                                <AccordionTrigger>When do I get paid?</AccordionTrigger>
+                                <AccordionTrigger>When and how do I get paid?</AccordionTrigger>
                                 <AccordionContent>
-                                    Payouts are processed monthly for all commissions earned in the previous month, provided you have reached the minimum payout threshold of $50.
+                                    Payouts are processed monthly. We support UPI and Bank Transfer for Indian affiliates, and PayPal for international partners. There is no minimum payout threshold.
                                 </AccordionContent>
                             </AccordionItem>
                             <AccordionItem value="item-4">
                                 <AccordionTrigger>Can I run ads?</AccordionTrigger>
                                 <AccordionContent>
-                                    You can run ads to your own content, but you are not permitted to bid on our brand keywords (Avelo, etc.) in search engines.
+                                    You can run ads to your own content (like a blog post review), but you are not permitted to bid on 'Avelo' brand keywords or direct traffic straight to our main domain from ads.
+                                </AccordionContent>
+                            </AccordionItem>
+                            <AccordionItem value="item-5">
+                                <AccordionTrigger>How long is the tracking cookie?</AccordionTrigger>
+                                <AccordionContent>
+                                    We offer a generous 90-day cookie window. This means if a user clicks your link and signs up anytime within 3 months, you get the credit.
                                 </AccordionContent>
                             </AccordionItem>
                         </Accordion>

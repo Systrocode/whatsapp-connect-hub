@@ -1,12 +1,12 @@
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAdminStats } from '@/hooks/useAdminStats';
-import { 
-  Users, 
-  MessageSquare, 
-  MessagesSquare, 
-  Contact2, 
-  UserCheck, 
+import {
+  Users,
+  MessageSquare,
+  MessagesSquare,
+  Contact2,
+  UserCheck,
   FileText,
   TrendingUp,
   Shield
@@ -18,45 +18,45 @@ const AdminDashboard = () => {
   const { data: stats, isLoading } = useAdminStats();
 
   const statCards = [
-    { 
-      label: 'Total Users', 
-      value: stats?.totalUsers || 0, 
-      icon: Users, 
+    {
+      label: 'Total Users',
+      value: stats?.totalUsers || 0,
+      icon: Users,
       color: 'text-primary',
       bgColor: 'bg-primary/10'
     },
-    { 
-      label: 'Total Conversations', 
-      value: stats?.totalConversations || 0, 
-      icon: MessagesSquare, 
+    {
+      label: 'Total Conversations',
+      value: stats?.totalConversations || 0,
+      icon: MessagesSquare,
       color: 'text-whatsapp',
       bgColor: 'bg-whatsapp/10'
     },
-    { 
-      label: 'Total Messages', 
-      value: stats?.totalMessages || 0, 
-      icon: MessageSquare, 
+    {
+      label: 'Total Messages',
+      value: stats?.totalMessages || 0,
+      icon: MessageSquare,
       color: 'text-blue-500',
       bgColor: 'bg-blue-500/10'
     },
-    { 
-      label: 'Total Contacts', 
-      value: stats?.totalContacts || 0, 
-      icon: Contact2, 
+    {
+      label: 'Total Contacts',
+      value: stats?.totalContacts || 0,
+      icon: Contact2,
       color: 'text-amber-500',
       bgColor: 'bg-amber-500/10'
     },
-    { 
-      label: 'Active Today', 
-      value: stats?.activeUsersToday || 0, 
-      icon: UserCheck, 
+    {
+      label: 'Active Today',
+      value: stats?.activeUsersToday || 0,
+      icon: UserCheck,
       color: 'text-emerald-500',
       bgColor: 'bg-emerald-500/10'
     },
-    { 
-      label: 'Pending Templates', 
-      value: stats?.pendingTemplates || 0, 
-      icon: FileText, 
+    {
+      label: 'Pending Templates',
+      value: stats?.pendingTemplates || 0,
+      icon: FileText,
       color: 'text-orange-500',
       bgColor: 'bg-orange-500/10'
     },
@@ -65,6 +65,7 @@ const AdminDashboard = () => {
   const quickActions = [
     { label: 'Manage Users', path: '/dashboard/admin/users', icon: Users },
     { label: 'Review Templates', path: '/dashboard/admin/templates', icon: FileText },
+    { label: 'Affiliates', path: '/dashboard/admin/affiliates', icon: TrendingUp },
   ];
 
   return (

@@ -77,6 +77,7 @@ const AdminUsers = lazy(() => import("./pages/AdminUsers"));
 const AdminTemplates = lazy(() => import("./pages/AdminTemplates"));
 const AdminSubscriptions = lazy(() => import("./pages/AdminSubscriptions"));
 const AdminInvoices = lazy(() => import("./pages/admin/AdminInvoices"));
+const AdminAffiliates = lazy(() => import("./pages/admin/AdminAffiliates"));
 const AdminBlog = lazy(() => import("./pages/AdminBlog"));
 
 // Global loading fallback
@@ -154,7 +155,7 @@ const App = () => {
                   <Route path="/dashboard/admin/templates" element={<AdminRoute><AdminTemplates /></AdminRoute>} />
                   <Route path="/dashboard/admin/subscriptions" element={<AdminRoute><AdminSubscriptions /></AdminRoute>} />
                   <Route path="/dashboard/admin/invoices" element={<AdminRoute><AdminInvoices /></AdminRoute>} />
-                  <Route path="/dashboard/admin/blog" element={<AdminRoute><AdminBlog /></AdminRoute>} />
+                  <Route path="/dashboard/admin/affiliates" element={<AdminRoute><AdminAffiliates /></AdminRoute>} />
                   <Route path="/dashboard/admin/blog" element={<AdminRoute><AdminBlog /></AdminRoute>} />
 
                   {/* Partner Route */}
