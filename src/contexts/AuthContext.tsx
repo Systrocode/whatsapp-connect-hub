@@ -52,11 +52,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           }).then(({ error }) => {
             if (error) {
               console.error('Failed to send login alert:', error);
-              toast.error("Login alert failed to send: " + (error.message || error));
             }
           }).catch(error => {
             console.error('Failed to send login alert:', error);
-            toast.error("Login alert system error: " + error.message);
           });
         }
       }

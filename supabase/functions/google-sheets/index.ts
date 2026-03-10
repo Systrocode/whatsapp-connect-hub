@@ -1,10 +1,12 @@
+// @ts-ignore
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.2";
+import {
+  handleCors,
+  corsHeaders,
+  applyRateLimit,
+} from "../_shared/security.ts";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
-
+declare const Deno: any;
 const GOOGLE_CLIENT_ID = Deno.env.get("GOOGLE_CLIENT_ID")!;
 const GOOGLE_CLIENT_SECRET = Deno.env.get("GOOGLE_CLIENT_SECRET")!;
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -25,7 +27,7 @@ async function getUserFromToken(authHeader: string | null) {
     console.log("No authorization header provided");
     return null;
   }
-  
+
   const token = authHeader.replace("Bearer ", "");
   if (!token) {
     console.log("No token in authorization header");
@@ -91,9 +93,9 @@ async function refreshAccessToken(refreshToken: string) {
 // Store tokens in database
 async function storeTokens(userId: string, tokens: { access_token: string; refresh_token?: string; expires_in: number }) {
   const expiresAt = new Date(Date.now() + tokens.expires_in * 1000);
-  
+
   console.log(`Storing tokens for user ${userId}, expires at ${expiresAt.toISOString()}`);
-  
+
   const { error } = await supabaseAdmin
     .from("google_oauth_tokens")
     .upsert({
@@ -125,7 +127,7 @@ async function getValidAccessToken(userId: string): Promise<string | null> {
 
   const expiresAt = new Date(tokenData.expires_at);
   const now = new Date();
-  
+
   // If token expires within 5 minutes, refresh it
   if (expiresAt.getTime() - now.getTime() < 5 * 60 * 1000) {
     console.log("Token expired or expiring soon, refreshing...");
@@ -195,7 +197,7 @@ async function getSheetNames(accessToken: string, spreadsheetId: string) {
     id: s.properties.sheetId,
     title: s.properties.title,
   })) || [];
-  
+
   console.log(`Found ${sheets.length} sheets`);
   return sheets;
 }
@@ -205,7 +207,7 @@ async function getSheetData(accessToken: string, spreadsheetId: string, sheetNam
   console.log(`Fetching data from ${sheetName} in spreadsheet ${spreadsheetId}...`);
   const encodedSheetName = encodeURIComponent(sheetName);
   const range = `${encodedSheetName}!A1:Z${maxRows}`;
-  
+
   const response = await fetch(
     `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(range)}`,
     {
@@ -221,16 +223,16 @@ async function getSheetData(accessToken: string, spreadsheetId: string, sheetNam
 
   const data = await response.json();
   const values = data.values || [];
-  
+
   if (values.length === 0) {
     return { headers: [], rows: [], totalRows: 0 };
   }
 
   const headers = values[0] as string[];
   const rows = values.slice(1) as string[][];
-  
+
   console.log(`Retrieved ${rows.length} rows with ${headers.length} columns`);
-  
+
   return {
     headers,
     rows,
@@ -238,15 +240,21 @@ async function getSheetData(accessToken: string, spreadsheetId: string, sheetNam
   };
 }
 
-Deno.serve(async (req) => {
-  // Handle CORS preflight
-  if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
-  }
+Deno.serve(async (req: Request) => {
+  // Handle CORS preflight via shared module (origin allowlist, not wildcard)
+  const preflight = handleCors(req);
+  if (preflight) return preflight;
+
+  // Rate-limit: 60 req/min per IP. Google Sheets syncs can be chatty.
+  const rl = applyRateLimit(req, { prefix: "google-sheets", max: 60 });
+  if (rl) return rl;
+
+  // Resolve CORS headers for this origin (used in responses below)
+  const ch = corsHeaders(req.headers.get("origin"));
 
   const url = new URL(req.url);
   const path = url.pathname.replace("/google-sheets", "").replace("/functions/v1", "");
-  
+
   console.log(`Request: ${req.method} ${path}`);
 
   try {
@@ -254,17 +262,17 @@ Deno.serve(async (req) => {
     if (path === "/auth" && req.method === "GET") {
       const authHeader = req.headers.get("authorization");
       const user = await getUserFromToken(authHeader);
-      
+
       if (!user) {
         return new Response(
           JSON.stringify({ error: "Unauthorized" }),
-          { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          { status: 401, headers: { ...ch, "Content-Type": "application/json" } }
         );
       }
 
       // Create state with user ID for callback
       const state = btoa(JSON.stringify({ userId: user.id }));
-      
+
       const authUrl = new URL("https://accounts.google.com/o/oauth2/v2/auth");
       authUrl.searchParams.set("client_id", GOOGLE_CLIENT_ID);
       authUrl.searchParams.set("redirect_uri", REDIRECT_URI);
@@ -275,10 +283,10 @@ Deno.serve(async (req) => {
       authUrl.searchParams.set("state", state);
 
       console.log("Generated auth URL for user:", user.id);
-      
+
       return new Response(
         JSON.stringify({ authUrl: authUrl.toString() }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { headers: { ...ch, "Content-Type": "application/json" } }
       );
     }
 
@@ -319,9 +327,9 @@ Deno.serve(async (req) => {
       try {
         const tokens = await exchangeCodeForTokens(code);
         await storeTokens(userId, tokens);
-        
+
         console.log("Successfully stored tokens, sending success message");
-        
+
         return new Response(
           `<html><body><script>window.opener?.postMessage({type:'google-sheets-success'},'*');window.close();</script>Success! You can close this window.</body></html>`,
           { headers: { "Content-Type": "text/html" } }
@@ -339,19 +347,19 @@ Deno.serve(async (req) => {
     if (path === "/status" && req.method === "GET") {
       const authHeader = req.headers.get("authorization");
       const user = await getUserFromToken(authHeader);
-      
+
       if (!user) {
         return new Response(
           JSON.stringify({ error: "Unauthorized" }),
-          { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          { status: 401, headers: { ...ch, "Content-Type": "application/json" } }
         );
       }
 
       const accessToken = await getValidAccessToken(user.id);
-      
+
       return new Response(
         JSON.stringify({ connected: !!accessToken }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { headers: { ...ch, "Content-Type": "application/json" } }
       );
     }
 
@@ -359,21 +367,21 @@ Deno.serve(async (req) => {
     if (path === "/disconnect" && req.method === "POST") {
       const authHeader = req.headers.get("authorization");
       const user = await getUserFromToken(authHeader);
-      
+
       if (!user) {
         return new Response(
           JSON.stringify({ error: "Unauthorized" }),
-          { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          { status: 401, headers: { ...ch, "Content-Type": "application/json" } }
         );
       }
 
       await supabaseAdmin.from("google_oauth_tokens").delete().eq("user_id", user.id);
-      
+
       console.log("Disconnected Google account for user:", user.id);
-      
+
       return new Response(
         JSON.stringify({ success: true }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { headers: { ...ch, "Content-Type": "application/json" } }
       );
     }
 
@@ -381,11 +389,11 @@ Deno.serve(async (req) => {
     if (path === "/spreadsheets" && req.method === "GET") {
       const authHeader = req.headers.get("authorization");
       const user = await getUserFromToken(authHeader);
-      
+
       if (!user) {
         return new Response(
           JSON.stringify({ error: "Unauthorized" }),
-          { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          { status: 401, headers: { ...ch, "Content-Type": "application/json" } }
         );
       }
 
@@ -393,15 +401,15 @@ Deno.serve(async (req) => {
       if (!accessToken) {
         return new Response(
           JSON.stringify({ error: "Not connected to Google", code: "NOT_CONNECTED" }),
-          { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          { status: 401, headers: { ...ch, "Content-Type": "application/json" } }
         );
       }
 
       const spreadsheets = await listSpreadsheets(accessToken);
-      
+
       return new Response(
         JSON.stringify({ spreadsheets }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { headers: { ...ch, "Content-Type": "application/json" } }
       );
     }
 
@@ -409,29 +417,29 @@ Deno.serve(async (req) => {
     if (path.startsWith("/sheets/") && req.method === "GET") {
       const authHeader = req.headers.get("authorization");
       const user = await getUserFromToken(authHeader);
-      
+
       if (!user) {
         return new Response(
           JSON.stringify({ error: "Unauthorized" }),
-          { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          { status: 401, headers: { ...ch, "Content-Type": "application/json" } }
         );
       }
 
       const spreadsheetId = path.replace("/sheets/", "");
-      
+
       const accessToken = await getValidAccessToken(user.id);
       if (!accessToken) {
         return new Response(
           JSON.stringify({ error: "Not connected to Google", code: "NOT_CONNECTED" }),
-          { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          { status: 401, headers: { ...ch, "Content-Type": "application/json" } }
         );
       }
 
       const sheets = await getSheetNames(accessToken, spreadsheetId);
-      
+
       return new Response(
         JSON.stringify({ sheets }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { headers: { ...ch, "Content-Type": "application/json" } }
       );
     }
 
@@ -439,22 +447,22 @@ Deno.serve(async (req) => {
     if (path.startsWith("/data/") && req.method === "GET") {
       const authHeader = req.headers.get("authorization");
       const user = await getUserFromToken(authHeader);
-      
+
       if (!user) {
         return new Response(
           JSON.stringify({ error: "Unauthorized" }),
-          { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          { status: 401, headers: { ...ch, "Content-Type": "application/json" } }
         );
       }
 
       const pathParts = path.replace("/data/", "").split("/");
       const spreadsheetId = pathParts[0];
       const sheetName = decodeURIComponent(pathParts.slice(1).join("/"));
-      
+
       if (!spreadsheetId || !sheetName) {
         return new Response(
           JSON.stringify({ error: "Missing spreadsheetId or sheetName" }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          { status: 400, headers: { ...ch, "Content-Type": "application/json" } }
         );
       }
 
@@ -462,28 +470,28 @@ Deno.serve(async (req) => {
       if (!accessToken) {
         return new Response(
           JSON.stringify({ error: "Not connected to Google", code: "NOT_CONNECTED" }),
-          { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          { status: 401, headers: { ...ch, "Content-Type": "application/json" } }
         );
       }
 
       const maxRows = parseInt(url.searchParams.get("maxRows") || "1000");
       const data = await getSheetData(accessToken, spreadsheetId, sheetName, maxRows);
-      
+
       return new Response(
         JSON.stringify(data),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { headers: { ...ch, "Content-Type": "application/json" } }
       );
     }
 
     return new Response(
       JSON.stringify({ error: "Not found" }),
-      { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { status: 404, headers: { ...ch, "Content-Type": "application/json" } }
     );
   } catch (error) {
     console.error("Unhandled error:", error);
     return new Response(
       JSON.stringify({ error: (error as Error).message }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { status: 500, headers: { ...ch, "Content-Type": "application/json" } }
     );
   }
 });

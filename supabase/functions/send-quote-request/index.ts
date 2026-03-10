@@ -1,28 +1,56 @@
+// @ts-ignore
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import {
+    handleCors,
+    applyRateLimit,
+    jsonResponse,
+    errorResponse,
+} from "../_shared/security.ts";
 
-const corsHeaders = {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+declare const Deno: any;
 
 serve(async (req: Request) => {
-    if (req.method === "OPTIONS") {
-        return new Response("ok", { headers: corsHeaders });
-    }
+    // 1. CORS preflight
+    const preflight = handleCors(req);
+    if (preflight) return preflight;
+
+    // 2. Rate-limit by IP.  This is a public contact form endpoint,
+    //    so we apply a tight limit to prevent spam / email-bombing.
+    //    20 requests per minute per IP address.
+    const rateLimitResp = applyRateLimit(req, { prefix: "quote-request", max: 20 });
+    if (rateLimitResp) return rateLimitResp;
 
     try {
-        const { firstName, lastName, email, company, message, volume } = await req.json();
+        const body = await req.json();
+        const { firstName, lastName, email, company, message, volume } = body;
 
+        // Basic input validation — never trust client data
         if (!email || !firstName) {
-            throw new Error("Missing required fields");
+            return errorResponse(req, 400, "Missing required fields: firstName and email");
         }
 
-        console.log(`Received quote request from ${firstName} ${lastName} (${email})`);
+        // Rudimentary email format check (the email service does final validation)
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            return errorResponse(req, 400, "Invalid email address");
+        }
 
-        // Integration with Email Provider (e.g., Resend)
+        // Sanitize string inputs to prevent template injection in the HTML email body
+        const sanitize = (s: unknown) =>
+            String(s ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+
+        const safeFirst = sanitize(firstName);
+        const safeLast = sanitize(lastName);
+        const safeEmail = sanitize(email);
+        const safeCompany = sanitize(company);
+        const safeVolume = sanitize(volume);
+        const safeMessage = sanitize(message);
+
+        console.log(`Quote request from ${safeFirst} ${safeLast} (${safeEmail})`);
+
         const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-
-        // Target email to receive the quote requests (e.g., the sales team)
         const ADMIN_EMAIL = Deno.env.get("ADMIN_EMAIL") || "support@systrocode.com";
 
         if (RESEND_API_KEY) {
@@ -30,53 +58,38 @@ serve(async (req: Request) => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${RESEND_API_KEY}`,
+                    Authorization: `Bearer ${RESEND_API_KEY}`,
                 },
                 body: JSON.stringify({
-                    from: "WA Connect Hub <onboarding@resend.dev>", // Or your verified domain
+                    from: "WA Connect Hub <onboarding@resend.dev>",
                     to: ADMIN_EMAIL,
                     reply_to: email,
-                    subject: `New Quote Request from ${company}`,
+                    subject: `New Quote Request from ${safeCompany}`,
                     html: `
             <h2>New Quote Request</h2>
-            <p><strong>Name:</strong> ${firstName} ${lastName}</p>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Company:</strong> ${company}</p>
-            <p><strong>Message Volume:</strong> ${volume}</p>
+            <p><strong>Name:</strong> ${safeFirst} ${safeLast}</p>
+            <p><strong>Email:</strong> ${safeEmail}</p>
+            <p><strong>Company:</strong> ${safeCompany}</p>
+            <p><strong>Message Volume:</strong> ${safeVolume}</p>
             <hr />
             <p><strong>Requirement:</strong></p>
-            <p>${message}</p>
+            <p>${safeMessage}</p>
           `,
                 }),
             });
 
             const data = await res.json();
-            console.log("Email API response:", data);
-
             if (!res.ok) {
+                // Log server-side but don't leak internal error details to client
                 console.error("Failed to send email via API", data);
-                // We might still return success to the user to not block them, but log error
             }
         } else {
-            console.log("Mocking email send. configured RESEND_API_KEY to send real emails.");
+            console.log("RESEND_API_KEY not set — skipping email send in dev mode.");
         }
 
-        return new Response(
-            JSON.stringify({ success: true, message: "Quote request received" }),
-            {
-                headers: { ...corsHeaders, "Content-Type": "application/json" },
-                status: 200,
-            }
-        );
-
+        return jsonResponse(req, { success: true, message: "Quote request received" });
     } catch (error) {
         console.error("Error processing quote request:", error);
-        return new Response(
-            JSON.stringify({ error: (error as Error).message }),
-            {
-                headers: { ...corsHeaders, "Content-Type": "application/json" },
-                status: 400,
-            }
-        );
+        return errorResponse(req, 400, (error as Error).message);
     }
 });

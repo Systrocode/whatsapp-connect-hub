@@ -104,7 +104,8 @@ export function LandingHeader({ variant = 'default' }: { variant?: 'default' | '
             <div className="container mx-auto px-4 sm:px-6 flex items-center justify-between">
                 {/* Logo */}
                 <Link to="/" className="flex items-center gap-2">
-                    <img src="/logos/avelo logo.png" alt="Avelo" className="h-10 md:h-14 lg:h-20 w-auto object-contain mix-blend-multiply brightness-105 contrast-110 dark:mix-blend-screen dark:grayscale dark:invert dark:brightness-200" />
+                    <img src="/logos/avelo-logo.png" alt="Avelo" className="h-10 md:h-14 lg:h-20 w-auto object-contain mix-blend-multiply brightness-105 contrast-110 block dark:hidden" />
+                    <img src="/logos/avelo-logo.png" alt="Avelo" className="h-10 md:h-14 lg:h-20 w-auto object-contain mix-blend-screen hidden dark:block" style={{ filter: 'contrast(100) grayscale(1) invert(1) brightness(100)' }} />
                 </Link>
 
                 {/* Desktop Navigation */}

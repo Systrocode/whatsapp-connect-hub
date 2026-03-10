@@ -183,11 +183,12 @@ const Auth = () => {
           <div className="absolute bottom-20 right-20 w-96 h-96 rounded-full bg-whatsapp blur-3xl" />
         </div>
 
-        <div className="relative z-10 flex flex-col justify-center px-16 text-white">
+        <div className="relative flex flex-col justify-center px-16 text-white h-full">
           <img
-            src="/avelo-logo-auth.png"
+            src="/logos/avelo-logo-trimmed.png"
             alt="Avelo"
-            className="h-12 w-auto object-contain"
+            className="h-[46px] w-auto object-contain mix-blend-screen"
+            style={{ filter: 'contrast(100) grayscale(1) invert(1) brightness(100)' }}
           />
 
           <h1 className="text-4xl font-bold mb-4 leading-tight">
@@ -226,14 +227,20 @@ const Auth = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="w-full max-w-md"
+          className="w-full max-w-md bg-background"
         >
           {/* Mobile Logo */}
           <div className="flex items-center gap-3 mb-8 lg:hidden">
             <img
-              src="/avelo-logo-auth.png"
+              src="/logos/avelo-logo-trimmed.png"
               alt="Avelo"
-              className="h-10 w-auto object-contain"
+              className="h-[38px] w-auto object-contain block dark:hidden mix-blend-multiply brightness-105 contrast-110"
+            />
+            <img
+              src="/logos/avelo-logo-trimmed.png"
+              alt="Avelo"
+              className="h-[38px] w-auto object-contain hidden dark:block mix-blend-screen"
+              style={{ filter: 'contrast(100) grayscale(1) invert(1) brightness(100)' }}
             />
           </div>
 

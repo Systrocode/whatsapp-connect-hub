@@ -131,9 +131,10 @@ export function LandingFooter() {
                             <div className="flex flex-wrap items-center gap-6 mb-6">
                                 <Link to="/" className="flex items-center gap-2 text-white group">
                                     <img
-                                        src="/logos/avelo logo.png"
+                                        src="/logos/avelo-logo.png"
                                         alt="Avelo"
-                                        className="h-10 w-auto object-contain grayscale invert brightness-200 mix-blend-screen transition-all duration-300 hover:scale-105 hover:brightness-[1.2]"
+                                        className="h-10 w-auto object-contain mix-blend-screen transition-all duration-300 hover:scale-105 hover:brightness-[1.2]"
+                                        style={{ filter: 'contrast(100) grayscale(1) invert(1) brightness(100)' }}
                                     />
                                 </Link>
 

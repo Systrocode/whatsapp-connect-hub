@@ -2,24 +2,46 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 // @ts-ignore
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import {
+  handleCors,
+  corsHeaders,
+  applyRateLimit,
+  requireAuth,
+  jsonResponse,
+  errorResponse,
+  RATE_LIMIT_WEBHOOK_MAX,
+} from "../_shared/security.ts";
 
 declare const Deno: any;
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
-
-// Webhook verify token - should match what you set in Meta Dashboard
-const VERIFY_TOKEN = Deno.env.get('WHATSAPP_VERIFY_TOKEN') || "your_chosen_secret_verify_token";
+// Webhook verify token – MUST be set in Supabase secrets, never hard-coded
+const VERIFY_TOKEN = Deno.env.get('WHATSAPP_VERIFY_TOKEN');
+if (!VERIFY_TOKEN) {
+  console.error("CRITICAL: WHATSAPP_VERIFY_TOKEN secret is not set. Webhook verification will fail.");
+}
 
 serve(async (req: Request) => {
   const url = new URL(req.url);
 
+  // Resolve CORS headers for this specific request origin once,
+  // then spread them just like the old `...corsHeaders` pattern.
+  // This is needed because corsHeaders is now a function (returns
+  // origin-specific headers), not a plain object.
+  const ch = corsHeaders(req.headers.get("origin"));
+
   // 1. Handle CORS preflight
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
-  }
+  const preflightResponse = handleCors(req);
+  if (preflightResponse) return preflightResponse;
+
+  // 2. Rate-limit ALL inbound requests by IP before any processing.
+  //    Webhook payloads from Meta get a higher limit (they can be bursty),
+  //    dashboard API calls get the default (stricter) limit.
+  const isWebhookGet = req.method === 'GET';
+  const rateLimitResp = applyRateLimit(req, {
+    prefix: "whatsapp-api",
+    max: isWebhookGet ? RATE_LIMIT_WEBHOOK_MAX : undefined,
+  });
+  if (rateLimitResp) return rateLimitResp;
 
   const supabaseServiceRole = createClient(
     Deno.env.get('SUPABASE_URL')!,
@@ -33,6 +55,11 @@ serve(async (req: Request) => {
     const challenge = url.searchParams.get("hub.challenge");
 
     console.log("Webhook verification request:", { mode, token, challenge });
+
+    if (!VERIFY_TOKEN) {
+      console.error("Webhook verify token not configured");
+      return errorResponse(req, 500, "Server configuration error");
+    }
 
     if (mode === "subscribe" && token === VERIFY_TOKEN) {
       console.log("Webhook Verified Successfully!");
@@ -83,7 +110,7 @@ serve(async (req: Request) => {
             console.log(`Message ${statusUpdate.id} status updated to ${statusUpdate.status}`);
           }
         }
-        return new Response("STATUS_UPDATED", { status: 200, headers: corsHeaders });
+        return new Response("STATUS_UPDATED", { status: 200, headers: ch });
       }
 
       // --- 2. Handle New Incoming Messages ---
@@ -174,7 +201,7 @@ serve(async (req: Request) => {
 
             if (!whatsappSettings) {
               console.error("No WhatsApp settings found - cannot assign contact");
-              return new Response("NO_SETTINGS", { status: 200, headers: corsHeaders });
+              return new Response("NO_SETTINGS", { status: 200, headers: ch });
             }
             userId = whatsappSettings.user_id;
             accessToken = whatsappSettings.access_token;
@@ -209,7 +236,7 @@ serve(async (req: Request) => {
 
             if (contactError) {
               console.error("Error creating contact:", contactError);
-              return new Response("CONTACT_ERROR", { status: 200, headers: corsHeaders });
+              return new Response("CONTACT_ERROR", { status: 200, headers: ch });
             }
 
             contactId = newContact.id;
@@ -260,7 +287,7 @@ serve(async (req: Request) => {
 
             if (convError) {
               console.error("Error creating conversation:", convError);
-              return new Response("CONVERSATION_ERROR", { status: 200, headers: corsHeaders });
+              return new Response("CONVERSATION_ERROR", { status: 200, headers: ch });
             }
 
             conversationId = newConversation.id;
@@ -347,31 +374,27 @@ serve(async (req: Request) => {
           }
         }
 
-        return new Response("MESSAGE_PROCESSED", { status: 200, headers: corsHeaders });
+        return new Response("MESSAGE_PROCESSED", { status: 200, headers: ch });
       }
 
-      return new Response("EVENT_RECEIVED", { status: 200, headers: corsHeaders });
+      return new Response("EVENT_RECEIVED", { status: 200, headers: ch });
     }
 
     // --- Dashboard API Actions (requires auth) ---
-    const authHeader = req.headers.get('Authorization');
-    if (!authHeader) {
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-        status: 401,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      });
-    }
+    // Validate JWT using the shared auth middleware.
+    // This validates the token signature, expiry, and revocation.
+    const { user, response: authError } = await requireAuth(req);
+    if (authError) return authError;
+    // requireAuth guarantees user is non-null if authError is null
+    const authenticatedUser = user!;
 
-    // Get user from token
-    const token = authHeader.replace('Bearer ', '');
-    const { data: { user }, error: userError } = await supabaseServiceRole.auth.getUser(token);
-
-    if (userError || !user) {
-      return new Response(JSON.stringify({ error: 'Invalid token' }), {
-        status: 401,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      });
-    }
+    // Per-user rate limit for dashboard actions (stricter: 60 req/min)
+    const dashboardRateLimit = applyRateLimit(req, {
+      prefix: "whatsapp-dashboard",
+      userId: authenticatedUser.id,
+      max: 60,
+    });
+    if (dashboardRateLimit) return dashboardRateLimit;
 
     const { action, ...params } = payload;
 
@@ -382,7 +405,7 @@ serve(async (req: Request) => {
         if (!media_id) {
           return new Response(JSON.stringify({ error: 'Missing media_id' }), {
             status: 400,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            headers: { ...ch, 'Content-Type': 'application/json' }
           });
         }
 
@@ -390,13 +413,13 @@ serve(async (req: Request) => {
         const { data: settings } = await supabaseServiceRole
           .from('whatsapp_settings')
           .select('access_token:access_token_encrypted')
-          .eq('user_id', user.id)
+          .eq('user_id', authenticatedUser.id)
           .single();
 
         if (!settings?.access_token) {
           return new Response(JSON.stringify({ error: 'WhatsApp not connected' }), {
             status: 400,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            headers: { ...ch, 'Content-Type': 'application/json' }
           });
         }
 
@@ -410,7 +433,7 @@ serve(async (req: Request) => {
           console.error('Meta API Error:', mediaJson);
           return new Response(JSON.stringify({ error: mediaJson.error?.message || 'Failed to get media info' }), {
             status: 400,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            headers: { ...ch, 'Content-Type': 'application/json' }
           });
         }
 
@@ -428,7 +451,7 @@ serve(async (req: Request) => {
           if (!location) {
             return new Response(JSON.stringify({ error: 'Redirect location missing' }), {
               status: 400,
-              headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+              headers: { ...ch, 'Content-Type': 'application/json' }
             });
           }
           // Follow redirect WITHOUT Authorization header
@@ -439,7 +462,7 @@ serve(async (req: Request) => {
           console.error('Media Download Error status:', fileRes.status);
           return new Response(JSON.stringify({ error: 'Failed to download media file' }), {
             status: 400,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            headers: { ...ch, 'Content-Type': 'application/json' }
           });
         }
 
@@ -458,7 +481,7 @@ serve(async (req: Request) => {
         const { data: settings } = await supabaseServiceRole
           .from('whatsapp_settings')
           .select('phone_number_id, access_token:access_token_encrypted')
-          .eq('user_id', user.id)
+          .eq('user_id', authenticatedUser.id)
           .single();
 
         return new Response(JSON.stringify({
@@ -466,7 +489,7 @@ serve(async (req: Request) => {
           has_token: !!settings?.access_token,
           has_phone_number_id: !!settings?.phone_number_id
         }), {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          headers: { ...ch, 'Content-Type': 'application/json' }
         });
       }
 
@@ -476,7 +499,7 @@ serve(async (req: Request) => {
         const { error } = await supabaseServiceRole
           .from('whatsapp_settings')
           .upsert({
-            user_id: user.id,
+            user_id: authenticatedUser.id,
             access_token_encrypted: access_token,
             updated_at: new Date().toISOString()
           }, { onConflict: 'user_id' });
@@ -484,12 +507,12 @@ serve(async (req: Request) => {
         if (error) {
           return new Response(JSON.stringify({ error: error.message }), {
             status: 400,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            headers: { ...ch, 'Content-Type': 'application/json' }
           });
         }
 
         return new Response(JSON.stringify({ success: true }), {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          headers: { ...ch, 'Content-Type': 'application/json' }
         });
       }
 
@@ -500,13 +523,13 @@ serve(async (req: Request) => {
         const { data: settings } = await supabaseServiceRole
           .from('whatsapp_settings')
           .select('phone_number_id, access_token:access_token_encrypted')
-          .eq('user_id', user.id)
+          .eq('user_id', authenticatedUser.id)
           .single();
 
         if (!settings?.phone_number_id || !settings?.access_token) {
           return new Response(JSON.stringify({ error: 'WhatsApp not configured' }), {
             status: 400,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            headers: { ...ch, 'Content-Type': 'application/json' }
           });
         }
 
@@ -560,7 +583,7 @@ serve(async (req: Request) => {
         if (!response.ok) {
           return new Response(JSON.stringify({ error: result.error?.message || 'Failed to send message' }), {
             status: 400,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            headers: { ...ch, 'Content-Type': 'application/json' }
           });
         }
 
@@ -571,7 +594,7 @@ serve(async (req: Request) => {
             .from('contacts')
             .select('id')
             .eq('phone_number', to)
-            .eq('user_id', user.id) // Ensure we search within the current user's contacts
+            .eq('user_id', authenticatedUser.id) // Ensure we search within the current user's contacts
             .single();
 
           let contactId: string;
@@ -583,7 +606,7 @@ serve(async (req: Request) => {
             const { data: newContact, error: contactError } = await supabaseServiceRole
               .from('contacts')
               .insert({
-                user_id: user.id,
+                user_id: authenticatedUser.id,
                 phone_number: to,
                 name: to, // Default name to phone number
               })
@@ -599,7 +622,7 @@ serve(async (req: Request) => {
             .from('conversations')
             .select('id')
             .eq('contact_id', contactId)
-            .eq('user_id', user.id)
+            .eq('user_id', authenticatedUser.id)
             .single();
 
           let conversationId: string;
@@ -616,7 +639,7 @@ serve(async (req: Request) => {
             const { data: newConversation, error: convError } = await supabaseServiceRole
               .from('conversations')
               .insert({
-                user_id: user.id,
+                user_id: authenticatedUser.id,
                 contact_id: contactId,
                 status: 'active',
                 last_message_at: new Date().toISOString()
@@ -637,7 +660,7 @@ serve(async (req: Request) => {
               .from('message_templates')
               .select('content')
               .eq('name', template_name)
-              .eq('user_id', user.id)
+              .eq('user_id', authenticatedUser.id)
               .maybeSingle();
 
             if (templateData?.content) {
@@ -688,7 +711,7 @@ serve(async (req: Request) => {
             details: dbError
           }), {
             status: 500,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            headers: { ...ch, 'Content-Type': 'application/json' }
           });
         }
 
@@ -696,7 +719,7 @@ serve(async (req: Request) => {
           success: true,
           message_id: result.messages?.[0]?.id
         }), {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          headers: { ...ch, 'Content-Type': 'application/json' }
         });
       }
 
@@ -704,13 +727,13 @@ serve(async (req: Request) => {
         const { data: settings } = await supabaseServiceRole
           .from('whatsapp_settings')
           .select('phone_number_id, access_token:access_token_encrypted')
-          .eq('user_id', user.id)
+          .eq('user_id', authenticatedUser.id)
           .single();
 
         if (!settings?.phone_number_id || !settings?.access_token) {
           return new Response(JSON.stringify({ error: 'WhatsApp not configured' }), {
             status: 400,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            headers: { ...ch, 'Content-Type': 'application/json' }
           });
         }
 
@@ -730,12 +753,12 @@ serve(async (req: Request) => {
           console.error('Meta API Error:', data.error);
           return new Response(JSON.stringify({ error: data.error.message }), {
             status: 400,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            headers: { ...ch, 'Content-Type': 'application/json' }
           });
         }
 
         return new Response(JSON.stringify(data.data?.[0] || {}), {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          headers: { ...ch, 'Content-Type': 'application/json' },
         });
       }
 
@@ -745,13 +768,13 @@ serve(async (req: Request) => {
         const { data: settings } = await supabaseServiceRole
           .from('whatsapp_settings')
           .select('phone_number_id, access_token:access_token_encrypted')
-          .eq('user_id', user.id)
+          .eq('user_id', authenticatedUser.id)
           .single();
 
         if (!settings?.phone_number_id || !settings?.access_token) {
           return new Response(JSON.stringify({ error: 'WhatsApp not configured' }), {
             status: 400,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            headers: { ...ch, 'Content-Type': 'application/json' }
           });
         }
 
@@ -786,12 +809,12 @@ serve(async (req: Request) => {
           console.error('Meta API Error:', data.error);
           return new Response(JSON.stringify({ error: data.error.message }), {
             status: 400,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            headers: { ...ch, 'Content-Type': 'application/json' }
           });
         }
 
         return new Response(JSON.stringify({ success: true }), {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          headers: { ...ch, 'Content-Type': 'application/json' },
         });
       }
 
@@ -801,20 +824,20 @@ serve(async (req: Request) => {
         if (!file || !(file instanceof File)) {
           return new Response(JSON.stringify({ error: 'No file uploaded' }), {
             status: 400,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            headers: { ...ch, 'Content-Type': 'application/json' }
           });
         }
 
         const { data: settings } = await supabaseServiceRole
           .from('whatsapp_settings')
           .select('phone_number_id, access_token:access_token_encrypted, business_account_id')
-          .eq('user_id', user.id)
+          .eq('user_id', authenticatedUser.id)
           .single();
 
         if (!settings?.phone_number_id || !settings?.access_token) {
           return new Response(JSON.stringify({ error: 'WhatsApp not configured' }), {
             status: 400,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            headers: { ...ch, 'Content-Type': 'application/json' }
           });
         }
 
@@ -838,7 +861,7 @@ serve(async (req: Request) => {
           console.error("Upload Session Error:", sessionData);
           return new Response(JSON.stringify({ error: sessionData.error?.message || 'Failed to start upload session' }), {
             status: 400,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            headers: { ...ch, 'Content-Type': 'application/json' }
           });
         }
 
@@ -862,7 +885,7 @@ serve(async (req: Request) => {
           console.error("File Upload Error:", uploadData);
           return new Response(JSON.stringify({ error: uploadData.error?.message || 'Failed to upload file content' }), {
             status: 400,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            headers: { ...ch, 'Content-Type': 'application/json' }
           });
         }
 
@@ -890,12 +913,12 @@ serve(async (req: Request) => {
           console.error("Profile Picture Update Error:", profileData);
           return new Response(JSON.stringify({ error: profileData.error.message }), {
             status: 400,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            headers: { ...ch, 'Content-Type': 'application/json' }
           });
         }
 
         return new Response(JSON.stringify({ success: true }), {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          headers: { ...ch, 'Content-Type': 'application/json' },
         });
       }
 
@@ -903,13 +926,13 @@ serve(async (req: Request) => {
         const { data: settings } = await supabaseServiceRole
           .from('whatsapp_settings')
           .select('phone_number_id, access_token:access_token_encrypted')
-          .eq('user_id', user.id)
+          .eq('user_id', authenticatedUser.id)
           .single();
 
         if (!settings?.phone_number_id || !settings?.access_token) {
           return new Response(JSON.stringify({ error: 'WhatsApp not configured' }), {
             status: 400,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            headers: { ...ch, 'Content-Type': 'application/json' }
           });
         }
 
@@ -932,12 +955,12 @@ serve(async (req: Request) => {
             commands: [],
             enable_welcome_message: false
           }), {
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            headers: { ...ch, 'Content-Type': 'application/json' },
           });
         }
 
         return new Response(JSON.stringify(data.data?.[0] || {}), {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          headers: { ...ch, 'Content-Type': 'application/json' },
         });
       }
 
@@ -947,13 +970,13 @@ serve(async (req: Request) => {
         const { data: settings } = await supabaseServiceRole
           .from('whatsapp_settings')
           .select('phone_number_id, access_token:access_token_encrypted')
-          .eq('user_id', user.id)
+          .eq('user_id', authenticatedUser.id)
           .single();
 
         if (!settings?.phone_number_id || !settings?.access_token) {
           return new Response(JSON.stringify({ error: 'WhatsApp not configured' }), {
             status: 400,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            headers: { ...ch, 'Content-Type': 'application/json' }
           });
         }
 
@@ -987,12 +1010,12 @@ serve(async (req: Request) => {
           console.error('Meta API Error:', data.error);
           return new Response(JSON.stringify({ error: data.error.message }), {
             status: 400,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            headers: { ...ch, 'Content-Type': 'application/json' }
           });
         }
 
         return new Response(JSON.stringify({ success: true }), {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          headers: { ...ch, 'Content-Type': 'application/json' },
         });
       }
 
@@ -1000,13 +1023,13 @@ serve(async (req: Request) => {
         const { data: settings } = await supabaseServiceRole
           .from('whatsapp_settings')
           .select('business_account_id, access_token:access_token_encrypted, user_id')
-          .eq('user_id', user.id)
+          .eq('user_id', authenticatedUser.id)
           .single();
 
         if (!settings?.business_account_id || !settings?.access_token) {
           return new Response(JSON.stringify({ error: 'WhatsApp not configured (Missing WABA ID or Token)' }), {
             status: 400,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            headers: { ...ch, 'Content-Type': 'application/json' }
           });
         }
 
@@ -1025,7 +1048,7 @@ serve(async (req: Request) => {
 
         if (data.error) {
           console.error('Meta Template Fetch Error:', data.error);
-          return new Response(JSON.stringify({ error: data.error.message }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+          return new Response(JSON.stringify({ error: data.error.message }), { status: 400, headers: { ...ch, 'Content-Type': 'application/json' } });
         }
 
         const templates = data.data || [];
@@ -1101,7 +1124,7 @@ serve(async (req: Request) => {
         }
 
         return new Response(JSON.stringify({ success: true, count: count, total_fetched: templates.length }), {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          headers: { ...ch, 'Content-Type': 'application/json' },
         });
       }
 
@@ -1110,13 +1133,13 @@ serve(async (req: Request) => {
         const { data: settings } = await supabaseServiceRole
           .from('whatsapp_settings')
           .select('phone_number_id, access_token:access_token_encrypted')
-          .eq('user_id', user.id)
+          .eq('user_id', authenticatedUser.id)
           .single();
 
         if (!settings?.phone_number_id || !settings?.access_token) {
           return new Response(JSON.stringify({ error: 'Not configured' }), {
             status: 400,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            headers: { ...ch, 'Content-Type': 'application/json' }
           });
         }
 
@@ -1136,12 +1159,12 @@ serve(async (req: Request) => {
           console.error('WhatsApp API Error:', data.error);
           return new Response(JSON.stringify({ error: data.error.message }), {
             status: 400,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            headers: { ...ch, 'Content-Type': 'application/json' }
           });
         }
 
         return new Response(JSON.stringify(data), {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          headers: { ...ch, 'Content-Type': 'application/json' },
         });
       }
 
@@ -1154,12 +1177,12 @@ serve(async (req: Request) => {
           .from('broadcast_campaigns')
           .select('*')
           .eq('id', campaign_id)
-          .eq('user_id', user.id)
+          .eq('user_id', authenticatedUser.id)
           .single();
 
         if (campaignError || !campaign) {
           console.error("Campaign Fetch Error:", campaignError);
-          return new Response(JSON.stringify({ error: 'Campaign not found', details: campaignError }), { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+          return new Response(JSON.stringify({ error: 'Campaign not found', details: campaignError }), { status: 404, headers: { ...ch, 'Content-Type': 'application/json' } });
         }
 
         let templateData = null;
@@ -1172,7 +1195,7 @@ serve(async (req: Request) => {
           templateData = t;
           if (!templateData) {
             console.error(`Template not found for ID: ${campaign.template_id}`);
-            return new Response(JSON.stringify({ error: 'Template defined in campaign but not found in database' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+            return new Response(JSON.stringify({ error: 'Template defined in campaign but not found in database' }), { status: 400, headers: { ...ch, 'Content-Type': 'application/json' } });
           }
         }
 
@@ -1181,11 +1204,11 @@ serve(async (req: Request) => {
         const { data: settings } = await supabaseServiceRole
           .from('whatsapp_settings')
           .select('phone_number_id, access_token:access_token_encrypted')
-          .eq('user_id', user.id)
+          .eq('user_id', authenticatedUser.id)
           .single();
 
         if (!settings?.phone_number_id || !settings?.access_token) {
-          return new Response(JSON.stringify({ error: 'WhatsApp not configured' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+          return new Response(JSON.stringify({ error: 'WhatsApp not configured' }), { status: 400, headers: { ...ch, 'Content-Type': 'application/json' } });
         }
 
         // 2. Get Recipients
@@ -1197,7 +1220,7 @@ serve(async (req: Request) => {
           .eq('status', 'pending');
 
         if (!recipients || recipients.length === 0) {
-          return new Response(JSON.stringify({ success: false, sent: 0, failed: 0, error: 'No pending recipients found for this campaign.' }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+          return new Response(JSON.stringify({ success: false, sent: 0, failed: 0, error: 'No pending recipients found for this campaign.' }), { headers: { ...ch, 'Content-Type': 'application/json' } });
         }
 
         // Update status to sending
@@ -1258,6 +1281,8 @@ serve(async (req: Request) => {
               // except maybe if we repurposed 'campaign.media_url' column if it existed?
               // For now, let's assume the user MUST strictly follow the template content.
               // BUT wait, a broadcast usually needs a customizable image if the template has a header image.
+
+              let mediaUrl: string | undefined;
 
               if (!mediaUrl) {
                 try {
@@ -1350,7 +1375,7 @@ serve(async (req: Request) => {
               let conversationId = conv?.id;
               if (!conversationId) {
                 const { data: newConv } = await supabaseServiceRole.from('conversations').insert({
-                  user_id: user.id,
+                  user_id: authenticatedUser.id,
                   contact_id: recipient.contact_id,
                   status: 'active',
                   last_message_at: new Date().toISOString()
@@ -1405,16 +1430,16 @@ serve(async (req: Request) => {
           last_api_response: sentCount > 0 ? 'Last Message Accepted' : 'Check Logs',
           debug_payload_sample: recipients.length > 0 ? 'Enabled' : 'None'
         }), {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          headers: { ...ch, 'Content-Type': 'application/json' },
         });
       }
       default:
         return new Response(JSON.stringify({ error: 'Unknown action' }), {
           status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          headers: { ...ch, 'Content-Type': 'application/json' }
         });
     }
   }
 
-  return new Response("Not Found", { status: 404, headers: corsHeaders });
+  return new Response("Not Found", { status: 404, headers: ch });
 });

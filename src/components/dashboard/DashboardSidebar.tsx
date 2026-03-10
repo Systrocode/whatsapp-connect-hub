@@ -105,9 +105,15 @@ const DashboardSidebar = () => {
       {/* Logo */}
       <div className="p-4 border-b border-sidebar-border h-[88px] flex items-center justify-center">
         <img
-          src="/logos/avelo logo.png"
+          src="/logos/avelo-logo.png"
           alt="Logo"
-          className="h-16 w-auto object-contain mix-blend-multiply brightness-105 contrast-110 dark:mix-blend-screen dark:grayscale dark:invert dark:brightness-200"
+          className="h-16 w-auto object-contain mix-blend-multiply brightness-105 contrast-110 block dark:hidden"
+        />
+        <img
+          src="/logos/avelo-logo.png"
+          alt="Logo"
+          className="h-16 w-auto object-contain mix-blend-screen hidden dark:block"
+          style={{ filter: 'contrast(100) grayscale(1) invert(1) brightness(100)' }}
         />
       </div>
 

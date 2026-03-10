@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import basicSsl from "@vitejs/plugin-basic-ssl";
+import viteCompression from "vite-plugin-compression";
 
 // https://vitejs.dev/config/ -- Updated to trigger reload
 export default defineConfig(({ mode }) => ({
@@ -12,6 +13,8 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     basicSsl(),
+    viteCompression({ algorithm: "gzip", ext: ".gz" }),
+    viteCompression({ algorithm: "brotliCompress", ext: ".br" }),
   ].filter(Boolean),
   resolve: {
     alias: {
