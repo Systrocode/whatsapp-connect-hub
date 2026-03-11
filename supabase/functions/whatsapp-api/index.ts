@@ -581,8 +581,11 @@ serve(async (req: Request) => {
         console.log("WhatsApp API response:", result);
 
         if (!response.ok) {
-          return new Response(JSON.stringify({ error: result.error?.message || 'Failed to send message' }), {
-            status: 400,
+          return new Response(JSON.stringify({ 
+            success: false, 
+            error: result.error?.message || 'Failed to send message' 
+          }), {
+            status: 200,
             headers: { ...ch, 'Content-Type': 'application/json' }
           });
         }
@@ -707,10 +710,11 @@ serve(async (req: Request) => {
         } catch (dbError) {
           console.error("Error saving sent message to DB:", dbError);
           return new Response(JSON.stringify({
+            success: false,
             error: 'Message sent but failed to save to history',
             details: dbError
           }), {
-            status: 500,
+            status: 200,
             headers: { ...ch, 'Content-Type': 'application/json' }
           });
         }

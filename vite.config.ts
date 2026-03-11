@@ -19,6 +19,7 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "lucide-react": path.resolve(__dirname, "./src/icons8-proxy.tsx"),
     },
   },
   build: {
@@ -26,7 +27,7 @@ export default defineConfig(({ mode }) => ({
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom', 'react-router-dom'],
-          ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-popover', '@radix-ui/react-tooltip', 'lucide-react', 'framer-motion'],
+          ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-popover', '@radix-ui/react-tooltip', 'framer-motion'],
           supabase: ['@supabase/supabase-js'],
           charts: ['recharts'],
           utils: ['date-fns', 'zod', 'clsx', 'tailwind-merge'],

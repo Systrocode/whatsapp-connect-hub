@@ -377,7 +377,7 @@ export default function ReviewsPage() {
                                             <ul className="space-y-1">
                                                 {review.pros.map((pro, idx) => (
                                                     <li key={idx} className="text-sm text-slate-600 dark:text-slate-400 flex items-start gap-2">
-                                                        <span className="text-green-500">✓</span>
+                                                        <img src="https://img.icons8.com/fluency/48/checkmark.png" className="w-4 h-4" alt="check" />
                                                         {pro}
                                                     </li>
                                                 ))}

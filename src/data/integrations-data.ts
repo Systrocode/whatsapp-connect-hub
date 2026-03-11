@@ -292,7 +292,7 @@ export const INTEGRATIONS_DATA: Record<string, Integration> = {
         icon: TableProperties,
         // No local logo for sheets found, will rely on Icon fallback or generic table icon
         color: "#0F9D58",
-        heroImage: "https://images.unsplash.com/photo-1543286386-713df548e9cc?auto=format&fit=crop&q=80&w=2000",
+        heroImage: "https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&q=80&w=2000",
         features: [
             {
                 title: "Sheet to WhatsApp",

@@ -48,7 +48,7 @@ const ALLOWED_ORIGINS: Set<string> = new Set(
         .map((o: string) => o.trim())
         .filter(Boolean)
         // Always allow local dev
-        .concat(["http://localhost:3000", "http://localhost:5173", "http://localhost:8080", "https://localhost:8080"])
+        .concat(["http://localhost:3000", "http://localhost:5173", "http://localhost:8080", "https://localhost:8080", "https://avelo.in", "https://www.avelo.in"])
 );
 
 const SAFE_METHODS = "GET,POST,PUT,PATCH,DELETE,OPTIONS";

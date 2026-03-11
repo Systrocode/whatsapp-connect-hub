@@ -444,8 +444,8 @@ export default function MarketingPage() {
                                 transition={{ delay: 0.5 }}
                                 className="flex items-start gap-3"
                             >
-                                <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                                    <span className="text-white text-xl">✓</span>
+                                <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <img src="https://img.icons8.com/fluency/48/checked.png" alt="check" className="w-8 h-8" />
                                 </div>
                                 <div>
                                     <h4 className="font-bold text-slate-900 dark:text-white mb-1">Automatic lead capture</h4>
@@ -460,8 +460,8 @@ export default function MarketingPage() {
                                 transition={{ delay: 0.6 }}
                                 className="flex items-start gap-3"
                             >
-                                <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                                    <span className="text-white text-xl">✓</span>
+                                <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <img src="https://img.icons8.com/fluency/48/checked.png" alt="check" className="w-8 h-8" />
                                 </div>
                                 <div>
                                     <h4 className="font-bold text-slate-900 dark:text-white mb-1">Two-way real-time engagement</h4>
@@ -476,8 +476,8 @@ export default function MarketingPage() {
                                 transition={{ delay: 0.7 }}
                                 className="flex items-start gap-3"
                             >
-                                <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                                    <span className="text-white text-xl">✓</span>
+                                <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <img src="https://img.icons8.com/fluency/48/checked.png" alt="check" className="w-8 h-8" />
                                 </div>
                                 <div>
                                     <h4 className="font-bold text-slate-900 dark:text-white mb-1">Reduced acquisition costs</h4>

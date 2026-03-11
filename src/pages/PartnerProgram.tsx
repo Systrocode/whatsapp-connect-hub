@@ -190,7 +190,7 @@ export default function PartnerProgram() {
                             const formData = new FormData(e.currentTarget);
                             const subject = `Partner Application: ${formData.get('company')} - ${formData.get('type')}`;
                             const body = `Name: ${formData.get('first_name')} ${formData.get('last_name')}\nEmail: ${formData.get('email')}\nCompany: ${formData.get('company')}\nType: ${formData.get('type')}`;
-                            window.location.href = `mailto:partners@wabusiness.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                            window.location.href = `mailto:partners@avelo.in?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
                         }}>
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-1">

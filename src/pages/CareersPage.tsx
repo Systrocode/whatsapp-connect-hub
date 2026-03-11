@@ -225,7 +225,7 @@ export default function CareersPage() {
                         We are always looking for talented individuals to join our team. Even if you don't see an open role, we'd love to hear from you.
                     </p>
                     <Button size="lg" className="bg-white text-purple-900 hover:bg-purple-100 rounded-full px-8 h-14 font-bold text-lg">
-                        Email Us: careers@wabusiness.com
+                        Email Us: careers@avelo.in
                     </Button>
                 </div>
             </section>

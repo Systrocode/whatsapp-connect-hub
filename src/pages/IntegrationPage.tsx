@@ -2,7 +2,7 @@ import { useParams, Navigate, Link } from "react-router-dom";
 import { LandingHeader } from "@/components/landing/LandingHeader";
 import { LandingFooter } from "@/components/landing/LandingFooter";
 import { Button } from "@/components/ui/button";
-import { Check, ArrowRight, Zap, Puzzle, RefreshCw } from "lucide-react";
+import { Check, ArrowRight, Zap, Puzzle, RefreshCw, Calendar } from "lucide-react";
 import { INTEGRATIONS_DATA } from "@/data/integrations-data";
 import { motion } from "framer-motion";
 
@@ -64,9 +64,15 @@ const IntegrationPage = () => {
                                 transition={{ delay: 0.2 }}
                                 className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start"
                             >
-                                <Button disabled size="lg" className="h-14 px-8 rounded-full text-lg font-bold bg-slate-200 text-slate-500 dark:bg-slate-800 dark:text-slate-400 cursor-not-allowed opacity-100">
-                                    Coming Soon
-                                </Button>
+                                <a
+                                    href="https://calendly.com/systrocode/new-meeting"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-8 rounded-full transition-colors inline-flex items-center gap-2 group justify-center text-lg h-14"
+                                >
+                                    <Calendar className="w-5 h-5" />
+                                    Book Demo
+                                </a>
                                 <Link to="/docs">
                                     <Button variant="outline" size="lg" className="h-14 px-8 rounded-full text-lg border-slate-300 dark:border-slate-700">
                                         View Documentation
@@ -184,11 +190,17 @@ const IntegrationPage = () => {
                         Ready to connect?
                     </h2>
                     <p className="text-xl text-slate-600 dark:text-slate-400 mb-10">
-                        We are working hard to bring this integration to you.
+                        Book a demo to learn how Avelo connects with your tools.
                     </p>
-                    <Button disabled size="lg" className="h-14 px-10 rounded-full text-lg font-bold bg-slate-200 text-slate-500 dark:bg-slate-800 dark:text-slate-400 cursor-not-allowed opacity-100">
-                        Coming Soon
-                    </Button>
+                    <a
+                        href="https://calendly.com/systrocode/new-meeting"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-10 rounded-full transition-colors inline-flex items-center gap-2 justify-center text-lg h-14"
+                    >
+                        <Calendar className="w-5 h-5" />
+                        Book Demo
+                    </a>
                 </div>
             </section>
 

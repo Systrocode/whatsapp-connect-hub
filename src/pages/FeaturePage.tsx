@@ -379,9 +379,11 @@ const renderFeatureVisual = (title: string, Icon: any, visualType?: string, desc
                                         { name: "Thomas S.", phone: "+91...890", active: false }
                                     ].map((contact, i) => (
                                         <div key={i} className="p-2 flex items-center gap-3 hover:bg-slate-50">
-                                            <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${contact.active ? 'bg-green-500 border-green-500' : 'border-slate-300'}`}>
-                                                {contact.active && <div className="text-white text-[8px]">✓</div>}
-                                            </div>
+                                            {contact.active ? (
+                                                <img src="https://img.icons8.com/fluency/48/checked.png" alt="check" className="w-4 h-4" />
+                                            ) : (
+                                                <div className="w-4 h-4 rounded border border-slate-300"></div>
+                                            )}
                                             <div>
                                                 <div className="text-[10px] font-bold text-slate-800">{contact.name}</div>
                                                 <div className="text-[8px] text-slate-400">{contact.phone}</div>
@@ -521,7 +523,7 @@ const renderFeatureVisual = (title: string, Icon: any, visualType?: string, desc
                                 </div>
                                 <div className="bg-white border border-slate-200 rounded-lg p-3 flex justify-between items-center shadow-sm">
                                     <span className="text-xs font-medium text-slate-700">Weekends Only</span>
-                                    <div className="w-4 h-4 rounded-full bg-green-500 flex items-center justify-center text-white text-[10px]">✓</div>
+                                    <img src="https://img.icons8.com/fluency/48/checked.png" alt="check" className="w-4 h-4" />
                                 </div>
                             </div>
                         </div>

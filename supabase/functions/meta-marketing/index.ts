@@ -61,7 +61,14 @@ async function createMetaCampaign(name: string, objective: string, status: strin
   const response = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, objective, status, special_ad_categories: [], access_token: marketingToken }),
+    body: JSON.stringify({ 
+      name, 
+      objective, 
+      status, 
+      special_ad_categories: ["NONE"],
+      is_adset_budget_sharing_enabled: false,
+      access_token: marketingToken 
+    }),
   });
   const data = await response.json();
   if (data.error) {
@@ -70,7 +77,9 @@ async function createMetaCampaign(name: string, objective: string, status: strin
     if (data.error.code === 190 || data.error.error_subcode === 463) {
       throw new Error("Your Meta Ad Account connection has expired. Please disconnect and reconnect your Ad Account in the dashboard.");
     }
-    throw new Error(data.error.message);
+    const metaErrorParams = data.error.error_user_msg || data.error.message || "Unknown error";
+    const metaErrorDetails = data.error.error_user_title ? `${data.error.error_user_title}: ` : "";
+    throw new Error(`${metaErrorDetails}${metaErrorParams} (Code: ${data.error.code})`);
   }
   return data;
 }
@@ -203,10 +212,9 @@ serve(async (req: Request) => {
     return jsonResponse(req, { success: true, data: result });
   } catch (error) {
     console.error("Error:", error);
-    return errorResponse(
-      req,
-      500,
-      error instanceof Error ? error.message : "Unknown error"
-    );
+    return jsonResponse(req, {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error"
+    }, 200);
   }
 });

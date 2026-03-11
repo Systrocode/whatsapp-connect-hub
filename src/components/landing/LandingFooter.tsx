@@ -105,8 +105,8 @@ export function LandingFooter() {
                             </ul>
                         </div>
 
-                        {/* Column 5: Free Tools & App */}
-                        <div className="space-y-10">
+                        {/* Column 5: Free Tools */}
+                        <div>
                             <div>
                                 <h3 className="text-green-500 font-bold mb-6 text-lg">Free Tools</h3>
                                 <ul className="space-y-4 text-sm font-medium">
@@ -115,12 +115,6 @@ export function LandingFooter() {
                                     <li><Link to="/tools/chat-button-generator" className="text-slate-300 hover:text-green-400 transition-colors">Chat Button Gen</Link></li>
                                     <li><Link to="/tools/roi-calculator" className="text-slate-300 hover:text-green-400 transition-colors">ROI Calculator</Link></li>
                                 </ul>
-                            </div>
-                            <div>
-                                <h3 className="text-green-500 font-bold mb-6 text-lg">Get the app</h3>
-                                <Link to="/mobile-app" className="bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 flex items-center justify-center gap-3 hover:bg-slate-800 transition-colors text-slate-300 hover:text-white group">
-                                    <span className="font-semibold">Coming Soon</span>
-                                </Link>
                             </div>
                         </div>
                     </div>
@@ -149,7 +143,7 @@ export function LandingFooter() {
                                     </div>
                                 </div>
                             </div>
-                            <p className="text-slate-500 text-base mb-8 font-medium">Business Messaging made simple</p>
+                            <p className="text-white text-base mb-8 font-medium">Business Messaging made simple</p>
                         </div>
 
                         {/* Trust Badges */}
@@ -162,7 +156,7 @@ export function LandingFooter() {
                         </div>
                     </div>
 
-                    <div className="mt-12 pt-8 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-medium text-slate-600">
+                    <div className="mt-12 pt-8 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-medium text-white">
                         <p>© {new Date().getFullYear()} Avelo. All rights reserved.</p>
                         <div className="flex gap-6 items-center">
                             <SocialLink
