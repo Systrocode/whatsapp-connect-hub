@@ -58,7 +58,7 @@ export default function PartnerPage() {
                             className="space-y-6"
                         >
                             <div className="w-16 h-16 bg-green-500 rounded-2xl flex items-center justify-center">
-                                <TrendingUp className="w-8 h-8 text-white" />
+                                <img src="https://img.icons8.com/color/48/combo-chart--v1.png" alt="trending up" className="w-8 h-8 object-contain" />
                             </div>
                             <h2 className="text-3xl font-bold text-slate-900 dark:text-white">
                                 Solution Partner: Sell, Implement, Customize
@@ -69,19 +69,19 @@ export default function PartnerPage() {
                             </p>
                             <ul className="space-y-4">
                                 <li className="flex items-start gap-3">
-                                    <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" />
+                                    <img src="https://img.icons8.com/color/48/checked--v1.png" alt="check" className="w-6 h-6 object-contain flex-shrink-0" />
                                     <span className="text-slate-700 dark:text-slate-300">
                                         Recurring revenue from every customer you bring
                                     </span>
                                 </li>
                                 <li className="flex items-start gap-3">
-                                    <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" />
+                                    <img src="https://img.icons8.com/color/48/checked--v1.png" alt="check" className="w-6 h-6 object-contain flex-shrink-0" />
                                     <span className="text-slate-700 dark:text-slate-300">
                                         Dedicated partner success manager
                                     </span>
                                 </li>
                                 <li className="flex items-start gap-3">
-                                    <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" />
+                                    <img src="https://img.icons8.com/color/48/checked--v1.png" alt="check" className="w-6 h-6 object-contain flex-shrink-0" />
                                     <span className="text-slate-700 dark:text-slate-300">
                                         Sales and technical training resources
                                     </span>
@@ -98,7 +98,7 @@ export default function PartnerPage() {
                             className="space-y-6"
                         >
                             <div className="w-16 h-16 bg-purple-500 rounded-2xl flex items-center justify-center">
-                                <Zap className="w-8 h-8 text-white" />
+                                <img src="https://img.icons8.com/color/48/source-code.png" alt="code" className="w-8 h-8 object-contain" />
                             </div>
                             <h2 className="text-3xl font-bold text-slate-900 dark:text-white">
                                 Technology Partner: Integrate Avelo
@@ -109,19 +109,19 @@ export default function PartnerPage() {
                             </p>
                             <ul className="space-y-4">
                                 <li className="flex items-start gap-3">
-                                    <CheckCircle2 className="w-6 h-6 text-purple-500 flex-shrink-0 mt-1" />
+                                    <img src="https://img.icons8.com/color/48/checked--v1.png" alt="check" className="w-6 h-6 object-contain flex-shrink-0" />
                                     <span className="text-slate-700 dark:text-slate-300">
                                         Access to comprehensive API documentation
                                     </span>
                                 </li>
                                 <li className="flex items-start gap-3">
-                                    <CheckCircle2 className="w-6 h-6 text-purple-500 flex-shrink-0 mt-1" />
+                                    <img src="https://img.icons8.com/color/48/checked--v1.png" alt="check" className="w-6 h-6 object-contain flex-shrink-0" />
                                     <span className="text-slate-700 dark:text-slate-300">
                                         Co-marketing opportunities
                                     </span>
                                 </li>
                                 <li className="flex items-start gap-3">
-                                    <CheckCircle2 className="w-6 h-6 text-purple-500 flex-shrink-0 mt-1" />
+                                    <img src="https://img.icons8.com/color/48/checked--v1.png" alt="check" className="w-6 h-6 object-contain flex-shrink-0" />
                                     <span className="text-slate-700 dark:text-slate-300">
                                         Technical support from our engineering team
                                     </span>
@@ -153,7 +153,7 @@ export default function PartnerPage() {
                             className="text-center space-y-4"
                         >
                             <div className="w-20 h-20 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto">
-                                <TrendingUp className="w-10 h-10 text-green-600 dark:text-green-400" />
+                                <img src="https://img.icons8.com/color/48/combo-chart--v1.png" alt="growth" className="w-10 h-10 object-contain" />
                             </div>
                             <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
                                 Grow Your Business
@@ -172,7 +172,7 @@ export default function PartnerPage() {
                             className="text-center space-y-4"
                         >
                             <div className="w-20 h-20 bg-blue-100 dark:bg-blue-900/20 rounded-full flex items-center justify-center mx-auto">
-                                <Users className="w-10 h-10 text-blue-600 dark:text-blue-400" />
+                                <img src="https://img.icons8.com/color/48/people-working-together.png" alt="users" className="w-10 h-10 object-contain" />
                             </div>
                             <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
                                 Solve Customer Problems
@@ -192,7 +192,7 @@ export default function PartnerPage() {
                             className="text-center space-y-4"
                         >
                             <div className="w-20 h-20 bg-purple-100 dark:bg-purple-900/20 rounded-full flex items-center justify-center mx-auto">
-                                <CheckCircle2 className="w-10 h-10 text-purple-600 dark:text-purple-400" />
+                                <img src="https://img.icons8.com/color/48/checked-checkbox--v1.png" alt="rewarded" className="w-10 h-10 object-contain" />
                             </div>
                             <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
                                 Get Rewarded for Success

@@ -81,19 +81,19 @@ export default function AffiliateProgram() {
 
                                 <ul className="space-y-4">
                                     <li className="flex items-center gap-3">
-                                        <CheckCircle2 className="text-green-500 w-6 h-6" />
+                                        <img src="https://img.icons8.com/color/48/get-revenue.png" alt="commission" className="w-6 h-6 object-contain" />
                                         <span className="font-medium">Industry-leading 20% recurring commission</span>
                                     </li>
                                     <li className="flex items-center gap-3">
-                                        <CheckCircle2 className="text-green-500 w-6 h-6" />
+                                        <img src="https://img.icons8.com/color/48/sand-timer.png" alt="cookie" className="w-6 h-6 object-contain" />
                                         <span className="font-medium">60-day cookie duration</span>
                                     </li>
                                     <li className="flex items-center gap-3">
-                                        <CheckCircle2 className="text-green-500 w-6 h-6" />
+                                        <img src="https://img.icons8.com/color/48/bank-cards.png" alt="payout" className="w-6 h-6 object-contain" />
                                         <span className="font-medium">Monthly payouts via UPI, Bank Transfer or PayPal</span>
                                     </li>
                                     <li className="flex items-center gap-3">
-                                        <CheckCircle2 className="text-green-500 w-6 h-6" />
+                                        <img src="https://img.icons8.com/color/48/manager.png" alt="manager" className="w-6 h-6 object-contain" />
                                         <span className="font-medium">Dedicated Affiliate Manager</span>
                                     </li>
                                 </ul>

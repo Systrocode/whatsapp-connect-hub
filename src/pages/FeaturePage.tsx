@@ -380,7 +380,7 @@ const renderFeatureVisual = (title: string, Icon: any, visualType?: string, desc
                                     ].map((contact, i) => (
                                         <div key={i} className="p-2 flex items-center gap-3 hover:bg-slate-50">
                                             {contact.active ? (
-                                                <img src="https://img.icons8.com/fluency/48/checked.png" alt="check" className="w-4 h-4" />
+                                                <img src="https://img.icons8.com/color/48/checked-checkbox--v1.png" alt="check" className="w-4 h-4" />
                                             ) : (
                                                 <div className="w-4 h-4 rounded border border-slate-300"></div>
                                             )}
@@ -523,7 +523,7 @@ const renderFeatureVisual = (title: string, Icon: any, visualType?: string, desc
                                 </div>
                                 <div className="bg-white border border-slate-200 rounded-lg p-3 flex justify-between items-center shadow-sm">
                                     <span className="text-xs font-medium text-slate-700">Weekends Only</span>
-                                    <img src="https://img.icons8.com/fluency/48/checked.png" alt="check" className="w-4 h-4" />
+                                    <img src="https://img.icons8.com/color/48/checked-checkbox--v1.png" alt="check" className="w-4 h-4" />
                                 </div>
                             </div>
                         </div>
@@ -1396,7 +1396,7 @@ const renderFeatureVisual = (title: string, Icon: any, visualType?: string, desc
                             <div className="flex gap-4 mt-auto">
                                 <div className="bg-white dark:bg-slate-800 p-3 md:p-4 rounded-2xl shadow-md border border-slate-100 dark:border-slate-700 flex-1">
                                     <div className="flex items-center gap-2 mb-1">
-                                        <CheckCircle className="text-green-500 w-5 h-5" />
+                                        <img src="https://img.icons8.com/color/48/double-tick.png" alt="delivery status" className="w-5 h-5 object-contain" />
                                         <span className="font-bold text-slate-700 dark:text-slate-200 text-xs md:text-sm">Delivery</span>
                                     </div>
                                     <div className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white">99.9%</div>
@@ -1580,8 +1580,8 @@ const renderFeatureVisual = (title: string, Icon: any, visualType?: string, desc
                             {/* Stats Display */}
                             <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-lg space-y-4">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <CheckCircle className="w-7 h-7 text-white" />
+                                    <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                        <img src="https://img.icons8.com/color/48/double-tick.png" alt="delivery status" className="w-7 h-7 object-contain" />
                                     </div>
                                     <div>
                                         <div className="text-xs text-slate-500 dark:text-slate-400">Delivery marketing</div>
@@ -1910,7 +1910,7 @@ const renderFeatureVisual = (title: string, Icon: any, visualType?: string, desc
                         <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl border-2 border-slate-900 dark:border-slate-700 p-4 min-w-[160px]">
                             <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
-                                    <CheckCircle className="w-6 h-6 text-green-600" />
+                                    <img src="https://img.icons8.com/color/48/double-tick.png" alt="delivery status" className="w-6 h-6 object-contain" />
                                 </div>
                                 <div>
                                     <div className="text-xs text-slate-500 dark:text-slate-400 font-bold">Delivery</div>
@@ -2078,7 +2078,7 @@ const renderFeatureVisual = (title: string, Icon: any, visualType?: string, desc
                     >
                         <div className="flex items-center gap-2">
                             <div className="w-9 h-9 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
-                                <CheckCircle className="w-5 h-5 text-green-600" />
+                                <img src="https://img.icons8.com/color/48/double-tick.png" alt="delivery status" className="w-5 h-5 object-contain" />
                             </div>
                             <div>
                                 <div className="text-[10px] text-slate-500 dark:text-slate-400 font-bold">Delivery</div>

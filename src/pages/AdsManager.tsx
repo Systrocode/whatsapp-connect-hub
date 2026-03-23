@@ -21,6 +21,31 @@ export default function AdsManager() {
     const [isConnected, setIsConnected] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [isCreateOpen, setIsCreateOpen] = useState(false);
+    const [campaigns, setCampaigns] = useState<any[]>([]);
+    const [adAccountInfo, setAdAccountInfo] = useState<any>(null);
+
+    const fetchAdData = async () => {
+        try {
+            const [campaignsRes, accountRes] = await Promise.all([
+                supabase.functions.invoke('meta-marketing', {
+                    body: { action: 'list_campaigns' }
+                }),
+                supabase.functions.invoke('meta-marketing', {
+                    body: { action: 'get_account' }
+                })
+            ]);
+
+            if (campaignsRes.data?.success) {
+                setCampaigns(campaignsRes.data.data || []);
+            }
+            if (accountRes.data?.success) {
+                setAdAccountInfo(accountRes.data.data);
+            }
+        } catch (err) {
+            console.error("Error fetching ad data:", err);
+            toast.error("Failed to load Meta ad campaigns.");
+        }
+    };
 
     const checkConnection = async () => {
         try {
@@ -35,6 +60,7 @@ export default function AdsManager() {
 
             if ((data as any)?.ad_account_id) {
                 setIsConnected(true);
+                fetchAdData();
             }
         } catch (error) {
             console.error("Error checking connection:", error);
@@ -120,63 +146,95 @@ export default function AdsManager() {
                             <img src={icons.spend} alt="Spend" className="w-8 h-8" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">₹0.00</div>
-                            <p className="text-xs text-muted-foreground mt-1">+0% from last month</p>
+                            <div className="text-2xl font-bold">
+                                {adAccountInfo?.amount_spent ? `${adAccountInfo.currency === 'INR' ? '₹' : (adAccountInfo.currency + ' ')}${(adAccountInfo.amount_spent / 100).toFixed(2)}` : '₹0.00'}
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-1 text-green-600 font-medium">Active Account Status</p>
                         </CardContent>
                     </Card>
                     <Card className="border-l-4 border-l-green-500 shadow-sm hover:shadow-md transition-all">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Messages Started</CardTitle>
+                            <CardTitle className="text-sm font-medium">Live Campaigns</CardTitle>
                             <img src={icons.messages} alt="Messages" className="w-8 h-8" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">0</div>
-                            <p className="text-xs text-muted-foreground mt-1">Via Click-to-WhatsApp</p>
+                            <div className="text-2xl font-bold">{campaigns.filter((c: any) => c.status === 'ACTIVE').length}</div>
+                            <p className="text-xs text-muted-foreground mt-1">Driving traffic to WhatsApp</p>
                         </CardContent>
                     </Card>
                     <Card className="shadow-sm hover:shadow-md transition-all">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Impressions</CardTitle>
+                            <CardTitle className="text-sm font-medium">Total Campagins</CardTitle>
                             <img src={icons.impressions} alt="Impressions" className="w-8 h-8" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">0</div>
+                            <div className="text-2xl font-bold">{campaigns.length}</div>
                         </CardContent>
                     </Card>
                     <Card className="shadow-sm hover:shadow-md transition-all">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Cost Per Message</CardTitle>
+                            <CardTitle className="text-sm font-medium">Account ID</CardTitle>
                             <img src={icons.cost} alt="Cost" className="w-8 h-8" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">₹0.00</div>
+                            <div className="text-lg font-bold truncate">
+                                {adAccountInfo?.id ? adAccountInfo.id.replace('act_', '') : 'Not Connected'}
+                            </div>
                         </CardContent>
                     </Card>
                 </div>
 
                 {/* Empty State / Campaigns List */}
-                <Card className="min-h-[400px] flex flex-col items-center justify-center p-8 text-center border-dashed">
-                    <div className="bg-primary/5 p-4 rounded-full mb-4">
-                        <img src={icons.empty} alt="Marketing" className="w-16 h-16 opacity-80" />
+                {campaigns.length === 0 ? (
+                    <Card className="min-h-[400px] flex flex-col items-center justify-center p-8 text-center border-dashed">
+                        <div className="bg-primary/5 p-4 rounded-full mb-4">
+                            <img src={icons.empty} alt="Marketing" className="w-16 h-16 opacity-80" />
+                        </div>
+                        <h3 className="text-lg font-semibold mb-2">No Active Campaigns</h3>
+                        <p className="text-muted-foreground max-w-sm mb-6">
+                            You haven't launched any ads yet. Start a campaign to drive traffic to your WhatsApp Business number.
+                        </p>
+                        {!isConnected ? (
+                            <Button onClick={handleConnectAds} variant="outline" className="border-[#1877F2] text-[#1877F2] hover:bg-[#1877F2]/5">
+                                Connect Ad Account
+                            </Button>
+                        ) : (
+                            <Button
+                                onClick={() => setIsCreateOpen(true)}
+                                className="bg-[#1877F2] hover:bg-[#1864D0]"
+                            >
+                                <Plus className="w-4 h-4 mr-2" />
+                                Create First Campaign
+                            </Button>
+                        )}
+                    </Card>
+                ) : (
+                    <div className="space-y-4">
+                        <h3 className="text-lg font-semibold py-2 border-b">Your Meta Campaigns</h3>
+                        {campaigns.map(camp => (
+                            <Card key={camp.id} className="shadow-sm hover:shadow-md transition-all border-l-4 border-l-[#1877F2]">
+                                <CardContent className="p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                                    <div>
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <h4 className="font-bold text-lg">{camp.name}</h4>
+                                            <Badge variant={camp.status === 'ACTIVE' ? 'default' : 'secondary'} className={camp.status === 'ACTIVE' ? 'bg-green-500 hover:bg-green-600' : ''}>
+                                                {camp.status}
+                                            </Badge>
+                                        </div>
+                                        <div className="text-sm text-muted-foreground flex items-center gap-3">
+                                            <span className="capitalize">Objective: {camp.objective.toLowerCase().replace('_', ' ')}</span>
+                                            {camp.daily_budget && <span>• Daily Limit: {adAccountInfo?.currency === 'INR' ? '₹' : (adAccountInfo?.currency + ' ')}{(camp.daily_budget / 100).toFixed(2)}</span>}
+                                        </div>
+                                    </div>
+                                    <div className="text-right flex flex-col items-end">
+                                        <div className="text-xs font-medium text-slate-500 mb-1 uppercase tracking-wider">Created on</div>
+                                        <div className="text-sm font-medium">{new Date(camp.created_time).toLocaleDateString()}</div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        ))}
                     </div>
-                    <h3 className="text-lg font-semibold mb-2">No Active Campaigns</h3>
-                    <p className="text-muted-foreground max-w-sm mb-6">
-                        You haven't launched any ads yet. Start a campaign to drive traffic to your WhatsApp Business number.
-                    </p>
-                    {!isConnected ? (
-                        <Button onClick={handleConnectAds} variant="outline" className="border-[#1877F2] text-[#1877F2] hover:bg-[#1877F2]/5">
-                            Connect Ad Account
-                        </Button>
-                    ) : (
-                        <Button
-                            onClick={() => setIsCreateOpen(true)}
-                            className="bg-[#1877F2] hover:bg-[#1864D0]"
-                        >
-                            <Plus className="w-4 h-4 mr-2" />
-                            Create First Campaign
-                        </Button>
-                    )}
-                </Card>
+                )}
 
                 <CreateCampaignDialog open={isCreateOpen} onOpenChange={setIsCreateOpen} />
             </div>

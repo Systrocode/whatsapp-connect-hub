@@ -40,7 +40,7 @@ const IntegrationPage = () => {
                                 {data.logo ? (
                                     <img src={data.logo} alt={data.title} className="w-16 h-16 object-contain" />
                                 ) : (
-                                    <Icon className="w-12 h-12" style={{ color: data.color }} />
+                                    <img src={Icon as unknown as string} alt={data.title} className="w-12 h-12 object-contain" />
                                 )}
                             </motion.div>
                             <motion.h1
@@ -70,7 +70,7 @@ const IntegrationPage = () => {
                                     rel="noopener noreferrer"
                                     className="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-8 rounded-full transition-colors inline-flex items-center gap-2 group justify-center text-lg h-14"
                                 >
-                                    <Calendar className="w-5 h-5" />
+                                    <img src="https://img.icons8.com/color/48/calendar--v1.png" alt="calendar" className="w-5 h-5 object-contain" />
                                     Book Demo
                                 </a>
                                 <Link to="/docs">
@@ -94,7 +94,7 @@ const IntegrationPage = () => {
                                 <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent flex items-end p-8">
                                     <div className="text-white">
                                         <div className="flex items-center gap-2 mb-2 font-bold text-sm uppercase tracking-wider opacity-90">
-                                            <Puzzle className="w-4 h-4" /> Integration
+                                            <img src="https://img.icons8.com/color/48/puzzle.png" alt="puzzle" className="w-4 h-4 object-contain" /> Integration
                                         </div>
                                         <div className="text-2xl font-bold">Seamless Sync</div>
                                     </div>
@@ -121,7 +121,7 @@ const IntegrationPage = () => {
                         {data.features.map((feature, idx) => (
                             <div key={idx} className="bg-slate-50 dark:bg-slate-900 p-8 rounded-3xl border border-slate-100 dark:border-slate-800 hover:border-green-500/50 transition-all hover:shadow-lg">
                                 <div className="w-14 h-14 bg-white dark:bg-slate-800 rounded-2xl shadow-sm flex items-center justify-center mb-6 text-green-600">
-                                    <feature.icon className="w-7 h-7" />
+                                    <img src={feature.icon as unknown as string} alt={feature.title} className="w-7 h-7 object-contain" />
                                 </div>
                                 <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">
                                     {feature.title}
@@ -147,8 +147,8 @@ const IntegrationPage = () => {
                             <ul className="space-y-6">
                                 {data.benefits.map((benefit, idx) => (
                                     <li key={idx} className="flex items-center gap-4 text-lg">
-                                        <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0 text-green-500">
-                                            <Check className="w-5 h-5" />
+                                        <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center flex-shrink-0">
+                                            <img src="https://img.icons8.com/color/48/checked--v1.png" alt="check" className="w-5 h-5 object-contain" />
                                         </div>
                                         {benefit}
                                     </li>
@@ -184,7 +184,7 @@ const IntegrationPage = () => {
             <section className="py-20 px-6 bg-slate-50 dark:bg-slate-950 text-center">
                 <div className="container mx-auto max-w-3xl">
                     <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                        <Zap className="w-8 h-8" />
+                        <img src="https://img.icons8.com/color/48/launched-rocket.png" alt="rocket" className="w-8 h-8 object-contain" />
                     </div>
                     <h2 className="text-4xl font-black text-slate-900 dark:text-white mb-6">
                         Ready to connect?

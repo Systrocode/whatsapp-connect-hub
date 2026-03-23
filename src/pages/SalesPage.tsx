@@ -62,11 +62,11 @@ export default function SalesPage() {
                             </div>
                             <div className="mt-12 flex items-center justify-center lg:justify-start gap-8 text-slate-500 dark:text-slate-400 text-sm font-medium">
                                 <div className="flex items-center gap-2">
-                                    <CheckCircle2 className="w-5 h-5 text-green-500" />
+                                    <img src="https://img.icons8.com/color/48/checked-checkbox--v1.png" alt="check" className="w-5 h-5 object-contain" />
                                     No credit card required
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <CheckCircle2 className="w-5 h-5 text-green-500" />
+                                    <img src="https://img.icons8.com/color/48/checked-checkbox--v1.png" alt="check" className="w-5 h-5 object-contain" />
                                     14-day free trial
                                 </div>
                             </div>
@@ -429,34 +429,25 @@ export default function SalesPage() {
                         {/* Card 1 */}
                         <div className="bg-[#FFF5FF] dark:bg-purple-900/10 p-8 rounded-2xl border-2 border-slate-900 dark:border-slate-100 shadow-[8px_8px_0px_0px_#0f172a] dark:shadow-[8px_8px_0px_0px_#f8fafc] flex flex-col items-start transition-transform hover:-translate-y-1">
                             <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Centralized Conversation Oversight</h3>
-                            <p className="text-slate-700 dark:text-slate-300 mb-8 flex-1 leading-relaxed">
+                            <p className="text-slate-700 dark:text-slate-300 flex-1 leading-relaxed">
                                 Keep a pulse on every chat. Oversee your team's interactions and sync important context directly to your CRM, ensuring quality control without micromanagement.
                             </p>
-                            <div className="px-6 py-2 rounded-full border-2 border-slate-900 dark:border-slate-100 text-sm font-bold bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
-                                Coming soon
-                            </div>
                         </div>
 
                         {/* Card 2 */}
                         <div className="bg-[#FFF5FF] dark:bg-purple-900/10 p-8 rounded-2xl border-2 border-slate-900 dark:border-slate-100 shadow-[8px_8px_0px_0px_#0f172a] dark:shadow-[8px_8px_0px_0px_#f8fafc] flex flex-col items-start transition-transform hover:-translate-y-1">
                             <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Sales Rep Performance Analytics</h3>
-                            <p className="text-slate-700 dark:text-slate-300 mb-8 flex-1 leading-relaxed">
-                                Identify your top performers. Analyze key metrics like response times and resolution rates. Coming soon: Advanced ROI attribution to see who drives the most revenue.
+                            <p className="text-slate-700 dark:text-slate-300 flex-1 leading-relaxed">
+                                Identify your top performers. Analyze key metrics like response times and resolution rates, and use advanced ROI attribution to see who drives the most revenue.
                             </p>
-                            <div className="px-6 py-2 rounded-full border-2 border-slate-900 dark:border-slate-100 text-sm font-bold bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
-                                Coming soon
-                            </div>
                         </div>
 
                         {/* Card 3 */}
                         <div className="bg-[#FFF5FF] dark:bg-purple-900/10 p-8 rounded-2xl border-2 border-slate-900 dark:border-slate-100 shadow-[8px_8px_0px_0px_#0f172a] dark:shadow-[8px_8px_0px_0px_#f8fafc] flex flex-col items-start transition-transform hover:-translate-y-1">
                             <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Pipeline Health Monitoring</h3>
-                            <p className="text-slate-700 dark:text-slate-300 mb-8 flex-1 leading-relaxed">
+                            <p className="text-slate-700 dark:text-slate-300 flex-1 leading-relaxed">
                                 Visualize your deal flow in real-time. Spot bottlenecks in your funnel and understand exactly where prospects are dropping off to improve conversion rates.
                             </p>
-                            <div className="px-6 py-2 rounded-full border-2 border-slate-900 dark:border-slate-100 text-sm font-bold bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
-                                Coming soon
-                            </div>
                         </div>
                     </div>
                 </div>

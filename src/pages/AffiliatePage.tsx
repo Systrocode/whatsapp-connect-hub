@@ -40,25 +40,25 @@ export default function AffiliatePage() {
 
     const benefits = [
         {
-            icon: DollarSign,
+            icon: "https://img.icons8.com/color/48/money-bag.png",
             title: "Generous Commissions",
             description: "Earn up to 20% recurring commission on every customer you refer",
             color: "green"
         },
         {
-            icon: Users,
+            icon: "https://img.icons8.com/color/48/people-working-together.png",
             title: "Global Network",
             description: "Join 5,000+ affiliates promoting to 100+ countries worldwide",
             color: "blue"
         },
         {
-            icon: TrendingUp,
+            icon: "https://img.icons8.com/color/48/combo-chart--v1.png",
             title: "High Conversion",
             description: "Promote a product that businesses love with proven conversion rates",
             color: "purple"
         },
         {
-            icon: Gift,
+            icon: "https://img.icons8.com/color/48/gift--v1.png",
             title: "Marketing Support",
             description: "Get access to banners, landing pages, and promotional materials",
             color: "orange"
@@ -196,7 +196,6 @@ export default function AffiliatePage() {
 
                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
                         {benefits.map((benefit, index) => {
-                            const Icon = benefit.icon;
                             const colorClasses = {
                                 green: "bg-green-100 dark:bg-green-900/20 text-green-600 dark:text-green-400",
                                 blue: "bg-blue-100 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400",
@@ -214,7 +213,7 @@ export default function AffiliatePage() {
                                     className="text-center space-y-4"
                                 >
                                     <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto ${colorClasses[benefit.color as keyof typeof colorClasses]}`}>
-                                        <Icon className="w-10 h-10" />
+                                        <img src={benefit.icon} alt={benefit.title} className="w-10 h-10 object-contain" />
                                     </div>
                                     <h3 className="text-xl font-bold text-slate-900 dark:text-white">
                                         {benefit.title}

@@ -42,7 +42,7 @@ const BrandingPage = () => {
                     <div className="flex flex-col md:flex-row gap-12 items-start">
                         <div className="md:w-1/3 sticky top-24">
                             <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-3">
-                                <Palette className="w-8 h-8 text-slate-400" />
+                                <img src="https://img.icons8.com/color/48/paint-palette.png" alt="palette" className="w-8 h-8 object-contain" />
                                 Our Colors
                             </h2>
                             <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
@@ -51,8 +51,8 @@ const BrandingPage = () => {
                             <div className="p-4 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800">
                                 <div className="text-sm font-bold text-slate-900 dark:text-white mb-2">Usage Tips</div>
                                 <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
-                                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-green-500" /> Use Primary Green for primary actions.</li>
-                                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-green-500" /> Use Slate 900 for headings.</li>
+                                    <li className="flex items-center gap-2"><img src="https://img.icons8.com/color/48/checked--v1.png" alt="check" className="w-4 h-4 object-contain" /> Use Primary Green for primary actions.</li>
+                                    <li className="flex items-center gap-2"><img src="https://img.icons8.com/color/48/checked--v1.png" alt="check" className="w-4 h-4 object-contain" /> Use Slate 900 for headings.</li>
                                 </ul>
                             </div>
                         </div>
@@ -120,7 +120,7 @@ const BrandingPage = () => {
                     <div className="flex flex-col md:flex-row gap-12 items-start">
                         <div className="md:w-1/3 sticky top-24">
                             <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-3">
-                                <FileImage className="w-8 h-8 text-slate-400" />
+                                <img src="https://img.icons8.com/color/48/image-file.png" alt="logo assets" className="w-8 h-8 object-contain" />
                                 Our Logo
                             </h2>
                             <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
@@ -135,16 +135,16 @@ const BrandingPage = () => {
                             {/* Logo Grid */}
                             <div className="grid grid-cols-1 gap-6">
                                 <div className="bg-white dark:bg-slate-950 p-12 rounded-2xl border border-slate-200 dark:border-slate-800 flex items-center justify-center">
-                                    <img src="/logos/avelo-logo-transparent.png" alt="Avelo Logo" className="h-24 w-auto object-contain dark:invert" />
+                                    <img src="/logos/avelo-logo.png" alt="Avelo Logo" className="h-24 w-auto object-contain mix-blend-multiply dark:invert" />
                                 </div>
                                 <div className="grid grid-cols-2 gap-6">
                                     <div className="bg-slate-900 p-8 rounded-2xl flex items-center justify-center">
                                         {/* Dark Mode Version */}
-                                        <img src="/logos/avelo-logo-transparent.png" alt="Avelo Logo Dark" className="h-10 w-auto object-contain invert brightness-0 invert" />
+                                        <img src="/logos/avelo-logo.png" alt="Avelo Logo Dark" className="h-10 w-auto object-contain mix-blend-screen" style={{ filter: 'contrast(100) grayscale(1) invert(1) brightness(100)' }} />
                                     </div>
                                     <div className="bg-white border p-8 rounded-2xl flex items-center justify-center">
                                         {/* Mark Only */}
-                                        <img src="/logos/Logomark.png" alt="Avelo Mark" className="h-16 w-16 object-contain" />
+                                        <img src="/logos/logomark-transparent.png" alt="Avelo Mark" className="h-16 w-16 object-contain" />
                                     </div>
                                 </div>
                             </div>
@@ -152,7 +152,7 @@ const BrandingPage = () => {
                             {/* Clear Space Guide */}
                             <div className="relative border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl p-8 flex items-center justify-center bg-slate-100/50 dark:bg-slate-800/30">
                                 <div className="absolute top-2 left-2 text-xs font-mono text-slate-400">CLEAR SPACE</div>
-                                <img src="/logos/avelo-logo-transparent.png" alt="Avelo Logo" className="h-16 w-auto object-contain dark:invert relative z-10" />
+                                <img src="/logos/avelo-logo.png" alt="Avelo Logo" className="h-16 w-auto object-contain dark:invert mix-blend-multiply relative z-10" />
                             </div>
                         </div>
                     </div>
@@ -165,7 +165,7 @@ const BrandingPage = () => {
                     <div className="flex flex-col md:flex-row gap-12 items-start">
                         <div className="md:w-1/3">
                             <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-3">
-                                <Type className="w-8 h-8 text-slate-400" />
+                                <img src="https://img.icons8.com/color/48/type.png" alt="typography" className="w-8 h-8 object-contain" />
                                 Typography
                             </h2>
                             <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
@@ -202,7 +202,7 @@ const BrandingPage = () => {
                 <div className="container mx-auto max-w-6xl">
                     <div className="mb-12 text-center md:text-left">
                         <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4 flex items-center justify-center md:justify-start gap-3">
-                            <Shield className="w-8 h-8 text-slate-400" />
+                            <img src="https://img.icons8.com/color/48/shield.png" alt="guidelines shield" className="w-8 h-8 object-contain" />
                             Logo Guidelines
                         </h2>
                     </div>
@@ -211,10 +211,10 @@ const BrandingPage = () => {
                         {/* Correct Usage */}
                         <div className="space-y-4">
                             <div className="flex items-center gap-2 text-green-600 font-bold">
-                                <Check className="w-5 h-5" /> DO
+                                <img src="https://img.icons8.com/color/48/checked--v1.png" alt="check" className="w-5 h-5 object-contain" /> DO
                             </div>
                             <div className="bg-white dark:bg-slate-800 p-8 rounded-xl border-l-4 border-green-500 shadow-sm h-64 flex items-center justify-center">
-                                <img src="/logos/avelo-logo-transparent.png" alt="Avelo Logo" className="h-12 w-auto object-contain dark:invert" />
+                                <img src="/logos/avelo-logo.png" alt="Avelo Logo" className="h-12 w-auto object-contain mix-blend-multiply dark:invert" />
                             </div>
                             <p className="text-sm text-slate-600 dark:text-slate-400 pl-1">
                                 Use the standard full logo on white or light backgrounds.
@@ -223,10 +223,10 @@ const BrandingPage = () => {
 
                         <div className="space-y-4">
                             <div className="flex items-center gap-2 text-green-600 font-bold">
-                                <Check className="w-5 h-5" /> DO
+                                <img src="https://img.icons8.com/color/48/checked--v1.png" alt="check" className="w-5 h-5 object-contain" /> DO
                             </div>
                             <div className="bg-slate-900 p-8 rounded-xl border-l-4 border-green-500 shadow-sm h-64 flex items-center justify-center">
-                                <img src="/logos/avelo-logo-transparent.png" alt="Avelo Logo" className="h-12 w-auto object-contain invert brightness-0 invert" />
+                                <img src="/logos/avelo-logo.png" alt="Avelo Logo" className="h-12 w-auto object-contain mix-blend-screen" style={{ filter: 'contrast(100) grayscale(1) invert(1) brightness(100)' }} />
                             </div>
                             <p className="text-sm text-slate-600 dark:text-slate-400 pl-1">
                                 Use the white text version on dark or photo backgrounds.
@@ -237,10 +237,10 @@ const BrandingPage = () => {
                         {/* Incorrect Usage */}
                         <div className="space-y-4">
                             <div className="flex items-center gap-2 text-red-500 font-bold">
-                                <X className="w-5 h-5" /> DON'T
+                                <img src="https://img.icons8.com/color/48/cancel--v1.png" alt="x" className="w-5 h-5 object-contain" /> DON'T
                             </div>
                             <div className="bg-white dark:bg-slate-800 p-8 rounded-xl border-l-4 border-red-500 shadow-sm h-64 flex items-center justify-center relative overflow-hidden">
-                                <img src="/logos/avelo-logo-transparent.png" alt="Avelo Logo" className="h-12 w-auto object-contain transform rotate-12 opacity-50 hue-rotate-90" />
+                                <img src="/logos/avelo-logo.png" alt="Avelo Logo" className="h-12 w-auto object-contain transform rotate-12 opacity-50 hue-rotate-90 mix-blend-multiply" />
                                 <div className="absolute inset-0 flex items-center justify-center">
                                     <div className="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-bold">Never change colors</div>
                                 </div>
@@ -252,10 +252,10 @@ const BrandingPage = () => {
 
                         <div className="space-y-4">
                             <div className="flex items-center gap-2 text-red-500 font-bold">
-                                <X className="w-5 h-5" /> DON'T
+                                <img src="https://img.icons8.com/color/48/cancel--v1.png" alt="x" className="w-5 h-5 object-contain" /> DON'T
                             </div>
                             <div className="bg-white dark:bg-slate-800 p-8 rounded-xl border-l-4 border-red-500 shadow-sm h-64 flex items-center justify-center relative overflow-hidden">
-                                <img src="/logos/avelo-logo-transparent.png" alt="Avelo Logo" className="h-12 w-auto object-contain transform scale-x-50 opacity-50 dark:invert" />
+                                <img src="/logos/avelo-logo.png" alt="Avelo Logo" className="h-12 w-auto object-contain transform scale-x-50 opacity-50 dark:invert mix-blend-multiply" />
                                 <div className="absolute inset-0 flex items-center justify-center">
                                     <div className="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-bold">Do not stretch</div>
                                 </div>

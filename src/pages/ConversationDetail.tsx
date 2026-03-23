@@ -414,13 +414,26 @@ const ConversationDetail = () => {
                               {formatToIST(new Date(message.created_at), { hour: '2-digit', minute: '2-digit' })}
                             </p>
                             {message.direction === 'outbound' && (
-                              <span className="text-[10px]">
+                              <span className="flex items-center ml-0.5">
                                 {message.status === 'read' ? (
-                                  <CheckCheck className="w-3 h-3 text-blue-500" />
+                                  // Double blue ticks (read)
+                                  <svg width="16" height="11" viewBox="0 0 16 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M11.071 0.5L4.921 7.29L2.5 4.68" stroke="#53BDEB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M15.5 0.5L9.35 7.29L8.5 6.36" stroke="#53BDEB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M4.921 7.29L2.5 4.68" stroke="#53BDEB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                  </svg>
                                 ) : message.status === 'delivered' ? (
-                                  <CheckCheck className="w-3 h-3 text-muted-foreground" />
+                                  // Double grey ticks (delivered)
+                                  <svg width="16" height="11" viewBox="0 0 16 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M11.071 0.5L4.921 7.29L2.5 4.68" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M15.5 0.5L9.35 7.29L8.5 6.36" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M4.921 7.29L2.5 4.68" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                  </svg>
                                 ) : (
-                                  <Check className="w-3 h-3 text-muted-foreground" />
+                                  // Single grey tick (sent)
+                                  <svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M1 5.5L4.5 9L11 1" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                  </svg>
                                 )}
                               </span>
                             )}

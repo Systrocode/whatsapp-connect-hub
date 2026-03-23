@@ -14,7 +14,7 @@ export default function PartnerProgram() {
                 <section className="pt-32 pb-20 px-6 bg-slate-50 dark:bg-slate-900/50">
                     <div className="max-w-4xl mx-auto text-center space-y-6">
                         <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full text-sm font-semibold mb-6">
-                            <Handshake className="w-4 h-4" />
+                            <img src="https://img.icons8.com/color/48/handshake.png" alt="handshake" className="w-4 h-4 object-contain" />
                             <span>Avelo Partner Program</span>
                         </div>
 
@@ -72,7 +72,7 @@ export default function PartnerProgram() {
                             {/* Solution Partner */}
                             <div className="bg-white dark:bg-card p-8 rounded-3xl border border-slate-200 dark:border-slate-800 hover:shadow-xl transition-all hover:border-blue-500/50 group">
                                 <div className="w-14 h-14 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                                    <Globe2 className="w-7 h-7" />
+                                    <img src="https://img.icons8.com/color/48/geography.png" alt="globe" className="w-7 h-7 object-contain" />
                                 </div>
                                 <h3 className="text-xl font-bold mb-4 text-slate-900 dark:text-white">Solution Partner</h3>
                                 <p className="text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
@@ -80,13 +80,13 @@ export default function PartnerProgram() {
                                 </p>
                                 <ul className="space-y-3 mb-8">
                                     <li className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
-                                        <CheckCircle2 className="w-4 h-4 text-blue-500" /> Recurring commissions
+                                        <img src="https://img.icons8.com/color/48/checked--v1.png" alt="check" className="w-4 h-4 object-contain" /> Recurring commissions
                                     </li>
                                     <li className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
-                                        <CheckCircle2 className="w-4 h-4 text-blue-500" /> Sales & Tech support
+                                        <img src="https://img.icons8.com/color/48/checked--v1.png" alt="check" className="w-4 h-4 object-contain" /> Sales & Tech support
                                     </li>
                                     <li className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
-                                        <CheckCircle2 className="w-4 h-4 text-blue-500" /> Verified Partner Badge
+                                        <img src="https://img.icons8.com/color/48/checked--v1.png" alt="check" className="w-4 h-4 object-contain" /> Verified Partner Badge
                                     </li>
                                 </ul>
                             </div>
@@ -94,7 +94,7 @@ export default function PartnerProgram() {
                             {/* Technology Partner */}
                             <div className="bg-white dark:bg-card p-8 rounded-3xl border border-slate-200 dark:border-slate-800 hover:shadow-xl transition-all hover:border-purple-500/50 group">
                                 <div className="w-14 h-14 bg-purple-100 dark:bg-purple-900/30 text-purple-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                                    <Code2 className="w-7 h-7" />
+                                    <img src="https://img.icons8.com/color/48/source-code.png" alt="code" className="w-7 h-7 object-contain" />
                                 </div>
                                 <h3 className="text-xl font-bold mb-4 text-slate-900 dark:text-white">Technology Partner</h3>
                                 <p className="text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
@@ -102,13 +102,13 @@ export default function PartnerProgram() {
                                 </p>
                                 <ul className="space-y-3 mb-8">
                                     <li className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
-                                        <CheckCircle2 className="w-4 h-4 text-purple-500" /> Deep API Integration
+                                        <img src="https://img.icons8.com/color/48/checked--v1.png" alt="check" className="w-4 h-4 object-contain" /> Deep API Integration
                                     </li>
                                     <li className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
-                                        <CheckCircle2 className="w-4 h-4 text-purple-500" /> Co-marketing opportunities
+                                        <img src="https://img.icons8.com/color/48/checked--v1.png" alt="check" className="w-4 h-4 object-contain" /> Co-marketing opportunities
                                     </li>
                                     <li className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
-                                        <CheckCircle2 className="w-4 h-4 text-purple-500" /> Marketplace listing
+                                        <img src="https://img.icons8.com/color/48/checked--v1.png" alt="check" className="w-4 h-4 object-contain" /> Marketplace listing
                                     </li>
                                 </ul>
                             </div>
@@ -116,7 +116,7 @@ export default function PartnerProgram() {
                             {/* Affiliate Partner */}
                             <div className="bg-white dark:bg-card p-8 rounded-3xl border border-slate-200 dark:border-slate-800 hover:shadow-xl transition-all hover:border-green-500/50 group">
                                 <div className="w-14 h-14 bg-green-100 dark:bg-green-900/30 text-green-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                                    <Megaphone className="w-7 h-7" />
+                                    <img src="https://img.icons8.com/color/48/megaphone.png" alt="megaphone" className="w-7 h-7 object-contain" />
                                 </div>
                                 <h3 className="text-xl font-bold mb-4 text-slate-900 dark:text-white">Affiliate Partner</h3>
                                 <p className="text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
@@ -124,13 +124,13 @@ export default function PartnerProgram() {
                                 </p>
                                 <ul className="space-y-3 mb-8">
                                     <li className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
-                                        <CheckCircle2 className="w-4 h-4 text-green-500" /> 20% commission
+                                        <img src="https://img.icons8.com/color/48/checked--v1.png" alt="check" className="w-4 h-4 object-contain" /> 20% commission
                                     </li>
                                     <li className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
-                                        <CheckCircle2 className="w-4 h-4 text-green-500" /> No setup required
+                                        <img src="https://img.icons8.com/color/48/checked--v1.png" alt="check" className="w-4 h-4 object-contain" /> No setup required
                                     </li>
                                     <li className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
-                                        <CheckCircle2 className="w-4 h-4 text-green-500" /> 60-day cookie life
+                                        <img src="https://img.icons8.com/color/48/checked--v1.png" alt="check" className="w-4 h-4 object-contain" /> 60-day cookie life
                                     </li>
                                 </ul>
                             </div>
@@ -147,28 +147,28 @@ export default function PartnerProgram() {
                         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
                             <div className="space-y-4">
                                 <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center mb-4">
-                                    <TrendingUp className="w-6 h-6 text-green-400" />
+                                    <img src="https://img.icons8.com/color/48/combo-chart--v1.png" alt="trending up" className="w-6 h-6 object-contain" />
                                 </div>
                                 <h3 className="text-xl font-bold">Recurring Revenue</h3>
                                 <p className="text-slate-400 leading-relaxed text-sm">Earn generous commissions to build a sustainable revenue stream.</p>
                             </div>
                             <div className="space-y-4">
                                 <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center mb-4">
-                                    <Users className="w-6 h-6 text-blue-400" />
+                                    <img src="https://img.icons8.com/color/48/people-working-together.png" alt="users" className="w-6 h-6 object-contain" />
                                 </div>
                                 <h3 className="text-xl font-bold">Dedicated Support</h3>
                                 <p className="text-slate-400 leading-relaxed text-sm">Get access to priority partner support and dedicated account managers.</p>
                             </div>
                             <div className="space-y-4">
                                 <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center mb-4">
-                                    <Globe2 className="w-6 h-6 text-purple-400" />
+                                    <img src="https://img.icons8.com/color/48/geography.png" alt="globe" className="w-6 h-6 object-contain" />
                                 </div>
                                 <h3 className="text-xl font-bold">Global Reach</h3>
                                 <p className="text-slate-400 leading-relaxed text-sm">Partner with a global brand and access customers in 100+ countries.</p>
                             </div>
                             <div className="space-y-4">
                                 <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center mb-4">
-                                    <CheckCircle2 className="w-6 h-6 text-yellow-400" />
+                                    <img src="https://img.icons8.com/color/48/checked-checkbox--v1.png" alt="check box" className="w-6 h-6 object-contain" />
                                 </div>
                                 <h3 className="text-xl font-bold">Easy Onboarding</h3>
                                 <p className="text-slate-400 leading-relaxed text-sm">We provide all the training and assets you need to succeed quickly.</p>

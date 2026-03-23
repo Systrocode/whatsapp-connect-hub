@@ -1,27 +1,70 @@
 import React from 'react';
 
-const createIcons8Component = (name) => {
-  return React.forwardRef(({ size = 24, className = '', color, ...props }, ref) => {
+interface Icons8Props extends React.ImgHTMLAttributes<HTMLImageElement> {
+  size?: number;
+  className?: string;
+  color?: string;
+}
+
+const createIcons8Component = (name: string) => {
+  return React.forwardRef<HTMLImageElement, Icons8Props>(({ size = 24, className = '', color, ...props }, ref) => {
     let iconName = name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
     
     // General mapping
-    const overrides = {
-      'check-circle-2': 'ok',
+    const overrides: Record<string, string> = {
+      // Status & Check icons
+      'check-circle-2': 'checked--v1',
+      'check-circle': 'checked--v1',
+      'check': 'check--v1',
+      'check-check': 'double-tick',
+      'check-square': 'checked-checkbox--v1',
+      'check-square-2': 'checked-checkbox--v1',
+      // Navigation
       'x': 'multiply',
       'chevron-right': 'forward',
       'chevron-left': 'back',
-      'chevron-down': 'expand-arrow',
+      'chevron-down': 'expand-arrow--v1',
       'chevron-up': 'collapse-arrow',
-      'message-square': 'messaging-',
-      'file-text': 'document',
-      'bar-chart-3': 'bar-chart',
-      'send': 'paper-plane',
       'arrow-right': 'arrow',
-      'settings-2': 'settings',
+      'arrow-left': 'back',
+      // Messaging
+      'message-square': 'speech-bubble',
+      'messages-square': 'chat',
+      'send': 'paper-plane',
+      // Files & Media
+      'file-text': 'document',
+      'image': 'image',
+      'music': 'music',
+      'paperclip': 'attach',
+      'layout-template': 'template',
+      // Users & Contacts
       'user-plus': 'add-user-male',
-      'plus': 'plus-math',
+      'users': 'group',
+      'user': 'user-male-circle',
+      'user-check': 'checked-user-male',
+      'contact-2': 'address-book',
+      // UI Controls
+      'more-vertical': 'more',
+      'info': 'info',
+      'search': 'search',
+      'bell': 'bell',
+      'trash-2': 'trash',
+      'trash': 'trash',
+      'phone': 'phone',
+      // Charts & Analytics
+      'bar-chart-3': 'bar-chart',
+      'trending-up': 'positive-dynamic',
+      // Status
+      'clock': 'clock',
+      'target': 'target',
+      'alert-circle': 'error',
+      // Settings
+      'settings-2': 'settings',
       'menu': 'menu',
       'layout-dashboard': 'dashboard',
+      'plus': 'plus-math',
+      // Security
+      'shield': 'security-checked',
     };
     if (overrides[iconName]) iconName = overrides[iconName];
 

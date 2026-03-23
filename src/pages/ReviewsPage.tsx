@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { LandingHeader } from "@/components/landing/LandingHeader";
 import { LandingFooter } from "@/components/landing/LandingFooter";
-import { Star, ThumbsUp, Filter, Calendar } from "lucide-react";
+import { Star, ThumbsUp, Filter, Calendar, ArrowRight } from "lucide-react";
 
 export default function ReviewsPage() {
     const [selectedFilter, setSelectedFilter] = useState("all");
@@ -232,9 +232,17 @@ export default function ReviewsPage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
-                        className="text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto"
+                        className="text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto mb-4"
                     >
                         See what our customers have to say about their experience with Avelo
+                    </motion.p>
+                    <motion.p
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.15 }}
+                        className="text-base text-slate-500 dark:text-slate-500 max-w-2xl mx-auto"
+                    >
+                        Over 2,800 verified reviews from businesses across e-commerce, education, healthcare, SaaS, and retail. Avelo is trusted by more than 10,000 companies worldwide to automate WhatsApp marketing, sales, and customer support at scale.
                     </motion.p>
                 </div>
             </section>
@@ -413,6 +421,32 @@ export default function ReviewsPage() {
             </section>
 
 
+            {/* Internal Links — Related Pages */}
+            <section className="py-16 px-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50">
+                <div className="max-w-7xl mx-auto">
+                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Explore more from Avelo</h2>
+                    <p className="text-slate-500 dark:text-slate-400 mb-8">See how leading businesses use WhatsApp to grow revenue, cut support costs, and delight customers.</p>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        {[
+                            { label: "Read Detailed Case Studies", to: "/customers/case-studies" },
+                            { label: "Explore Customer Stories", to: "/customers/stories" },
+                            { label: "WhatsApp for Marketing", to: "/solutions/marketing" },
+                            { label: "WhatsApp for Support", to: "/solutions/support" },
+                            { label: "View Pricing Plans", to: "/pricing" },
+                            { label: "Read Our Blog", to: "/blog" },
+                        ].map((link) => (
+                            <Link
+                                key={link.to}
+                                to={link.to}
+                                className="flex items-center gap-2 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-green-400 hover:bg-green-50 dark:hover:bg-green-900/10 transition-all text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-green-700 dark:hover:text-green-400 group"
+                            >
+                                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                {link.label}
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+            </section>
 
             <LandingFooter />
         </div>

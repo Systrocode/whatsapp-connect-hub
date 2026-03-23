@@ -30,9 +30,9 @@ const ROICalculator = () => {
                         <motion.div
                             initial={{ opacity: 0, scale: 0.8 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6"
+                            className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center mx-auto mb-6"
                         >
-                            <Calculator className="w-8 h-8" />
+                            <img src="https://img.icons8.com/color/96/calculator--v1.png" alt="calculator" className="w-10 h-10 object-contain" />
                         </motion.div>
                         <h1 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-6">
                             WhatsApp ROI Calculator

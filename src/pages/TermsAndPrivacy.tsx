@@ -17,7 +17,7 @@ export default function TermsAndPrivacy() {
                         animate={{ opacity: 1, y: 0 }}
                         className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium text-sm mb-6"
                     >
-                        <Shield className="w-4 h-4" />
+                        <img src="https://img.icons8.com/color/48/shield.png" alt="shield" className="w-4 h-4 object-contain" />
                         GDPR & CCPA Compliant
                     </motion.div>
                     <motion.h1
@@ -53,7 +53,7 @@ export default function TermsAndPrivacy() {
                             <TabsContent value="privacy" className="mt-0 space-y-8 animate-in fade-in-50 duration-500">
                                 <div className="prose prose-slate dark:prose-invert max-w-none">
                                     <div className="flex items-center gap-3 mb-6">
-                                        <Lock className="w-8 h-8 text-green-500" />
+                                        <img src="https://img.icons8.com/color/48/lock.png" alt="lock" className="w-8 h-8 object-contain" />
                                         <h2 className="text-2xl font-bold m-0 text-slate-900 dark:text-white">Privacy Policy</h2>
                                     </div>
                                     <p className="text-lg text-slate-600 dark:text-slate-300">
@@ -62,7 +62,7 @@ export default function TermsAndPrivacy() {
 
                                     <div className="my-8 p-6 bg-green-50 dark:bg-green-900/10 rounded-xl border border-green-100 dark:border-green-900/20">
                                         <h3 className="text-green-700 dark:text-green-400 font-bold text-lg mb-2 flex items-center gap-2">
-                                            <CheckCircle className="w-5 h-5" />
+                                            <img src="https://img.icons8.com/color/48/checked--v1.png" alt="check" className="w-6 h-6 object-contain" />
                                             Our Data Promise
                                         </h3>
                                         <p className="mb-0 text-green-800 dark:text-green-300">
@@ -132,7 +132,7 @@ export default function TermsAndPrivacy() {
                             <TabsContent value="terms" className="mt-0 space-y-8 animate-in fade-in-50 duration-500">
                                 <div className="prose prose-slate dark:prose-invert max-w-none">
                                     <div className="flex items-center gap-3 mb-6">
-                                        <FileText className="w-8 h-8 text-blue-500" />
+                                        <img src="https://img.icons8.com/color/48/document.png" alt="document" className="w-8 h-8 object-contain" />
                                         <h2 className="text-2xl font-bold m-0 text-slate-900 dark:text-white">Terms of Service</h2>
                                     </div>
                                     <p className="text-lg text-slate-600 dark:text-slate-300">
@@ -164,20 +164,20 @@ export default function TermsAndPrivacy() {
                             <TabsContent value="security" className="mt-0 space-y-8 animate-in fade-in-50 duration-500">
                                 <div className="prose prose-slate dark:prose-invert max-w-none">
                                     <div className="flex items-center gap-3 mb-6">
-                                        <Shield className="w-8 h-8 text-purple-500" />
+                                        <img src="https://img.icons8.com/color/48/shield.png" alt="shield" className="w-8 h-8 object-contain" />
                                         <h2 className="text-2xl font-bold m-0 text-slate-900 dark:text-white">Security & Compliance</h2>
                                     </div>
 
                                     <div className="grid md:grid-cols-2 gap-6 mb-8 not-prose">
                                         <div className="p-6 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700">
-                                            <Globe className="w-8 h-8 text-blue-500 mb-4" />
+                                            <img src="https://img.icons8.com/color/48/geography.png" alt="globe" className="w-8 h-8 object-contain mb-4" />
                                             <h4 className="font-bold text-lg mb-2 text-slate-900 dark:text-white">Data Residency</h4>
                                             <p className="text-sm text-slate-600 dark:text-slate-400">
                                                 We utilize top-tier enterprise cloud infrastructure (powered by AWS) with servers located in the US and EU, ensuring low latency and strict data sovereignty compliance.
                                             </p>
                                         </div>
                                         <div className="p-6 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700">
-                                            <Server className="w-8 h-8 text-green-500 mb-4" />
+                                            <img src="https://img.icons8.com/color/48/server.png" alt="server" className="w-8 h-8 object-contain mb-4" />
                                             <h4 className="font-bold text-lg mb-2 text-slate-900 dark:text-white">Encryption</h4>
                                             <p className="text-sm text-slate-600 dark:text-slate-400">
                                                 All data in transit is encrypted via TLS 1.3. Data at rest is encrypted using AES-256 standards.
@@ -191,11 +191,11 @@ export default function TermsAndPrivacy() {
                                     </p>
                                     <ul className="grid sm:grid-cols-2 gap-x-12 gap-y-6 list-none pl-0 mt-6">
                                         <li className="flex items-start gap-3">
-                                            <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
+                                            <img src="https://img.icons8.com/color/48/checked--v1.png" alt="check" className="w-6 h-6 object-contain flex-shrink-0" />
                                             <span>GDPR (General Data Protection Regulation)</span>
                                         </li>
                                         <li className="flex items-start gap-3">
-                                            <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
+                                            <img src="https://img.icons8.com/color/48/checked--v1.png" alt="check" className="w-6 h-6 object-contain flex-shrink-0" />
                                             <span>CCPA (California Consumer Privacy Act)</span>
                                         </li>
                                     </ul>

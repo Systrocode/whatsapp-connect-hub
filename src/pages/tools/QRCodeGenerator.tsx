@@ -50,9 +50,9 @@ const QRCodeGenerator = () => {
                         <motion.div
                             initial={{ opacity: 0, scale: 0.8 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            className="w-16 h-16 bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400 rounded-2xl flex items-center justify-center mx-auto mb-6"
+                            className="w-16 h-16 bg-purple-100 dark:bg-purple-900/30 rounded-2xl flex items-center justify-center mx-auto mb-6"
                         >
-                            <QrCode className="w-8 h-8" />
+                            <img src="https://img.icons8.com/color/96/qr-code--v1.png" alt="qr code" className="w-10 h-10 object-contain" />
                         </motion.div>
                         <h1 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-6">
                             Free WhatsApp QR Code Generator

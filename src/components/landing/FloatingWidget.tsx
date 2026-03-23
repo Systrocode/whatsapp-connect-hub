@@ -42,7 +42,7 @@ export const FloatingWidget = () => {
                                 onClick={(e) => { e.stopPropagation(); setIsOpen(false); }}
                                 className="text-white/80 hover:text-white transition-colors"
                             >
-                                <X className="w-5 h-5" />
+                                <img src="https://img.icons8.com/sf-regular-filled/48/FFFFFF/multiply.png" className="w-5 h-5 opacity-90 hover:opacity-100 transition-opacity" alt="Close" />
                             </button>
                         </div>
 
@@ -72,7 +72,7 @@ export const FloatingWidget = () => {
                                 rel="noopener noreferrer"
                                 className="flex items-center justify-center gap-2 w-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold py-3 rounded-full transition-all shadow-md hover:shadow-lg transform active:scale-95"
                             >
-                                <MessageCircle className="w-5 h-5 fill-current" />
+                                <img src="https://img.icons8.com/ios-filled/50/FFFFFF/whatsapp--v1.png" className="w-6 h-6 object-contain" alt="WhatsApp" />
                                 Start Chat
                             </a>
                             <div className="text-center mt-2">

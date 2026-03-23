@@ -1,15 +1,13 @@
 
-import {
-    ShoppingCart,
-    CreditCard,
-    Link as LinkIcon,
-    Users,
-    TableProperties,
-    BarChart,
-    Megaphone,
-    ArrowRightLeft,
-    RefreshCw
-} from "lucide-react";
+const ShoppingCart = "https://img.icons8.com/color/48/shopping-cart--v1.png";
+const CreditCard = "https://img.icons8.com/color/48/bank-cards.png";
+const LinkIcon = "https://img.icons8.com/color/48/link--v1.png";
+const Users = "https://img.icons8.com/color/48/people-working-together.png";
+const TableProperties = "https://img.icons8.com/color/48/grid.png";
+const BarChart = "https://img.icons8.com/color/48/bar-chart--v1.png";
+const Megaphone = "https://img.icons8.com/color/48/megaphone.png";
+const ArrowRightLeft = "https://img.icons8.com/color/48/sorting-arrows.png";
+const RefreshCw = "https://img.icons8.com/color/48/refresh.png";
 
 export interface Integration {
     id: string;
@@ -184,7 +182,7 @@ export const INTEGRATIONS_DATA: Record<string, Integration> = {
         icon: ShoppingCart,
         logo: "/logos/woocommerce.svg",
         color: "#96588A",
-        heroImage: "https://images.unsplash.com/photo-1556742102-fab954492e01?auto=format&fit=crop&q=80&w=2000",
+        heroImage: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&q=80&w=2000",
         features: [
             {
                 title: "Order Updates",

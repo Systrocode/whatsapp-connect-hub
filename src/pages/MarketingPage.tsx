@@ -13,9 +13,9 @@ export default function MarketingPage() {
     ];
 
     const benefits = [
-        { icon: TrendingUp, label: "Higher Response Rate" },
-        { icon: DollarSign, label: "Higher ROI" },
-        { icon: Users, label: "Lower Customer Acquisition" }
+        { icon: "https://img.icons8.com/color/48/combo-chart--v1.png", label: "Higher Response Rate" },
+        { icon: "https://img.icons8.com/color/48/money-bag.png", label: "Higher ROI" },
+        { icon: "https://img.icons8.com/color/48/group.png", label: "Lower Customer Acquisition" }
     ];
 
     return (
@@ -128,7 +128,7 @@ export default function MarketingPage() {
                                         className="flex items-center gap-4 p-6 bg-white dark:bg-slate-800 rounded-lg"
                                     >
                                         <div className="w-12 h-12 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center flex-shrink-0">
-                                            <Icon className="w-6 h-6 text-green-600 dark:text-green-400" />
+                                            <img src={benefit.icon} alt={benefit.label} className="w-8 h-8 object-contain" />
                                         </div>
                                         <span className="font-semibold text-slate-900 dark:text-white">{benefit.label}</span>
                                     </motion.div>
@@ -160,7 +160,7 @@ export default function MarketingPage() {
                             </p>
                             <div className="space-y-4">
                                 <div className="flex items-start gap-3">
-                                    <Zap className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" />
+                                    <img src="https://img.icons8.com/color/48/positive-dynamic.png" alt="engagement" className="w-8 h-8 object-contain flex-shrink-0 mt-1" />
                                     <div>
                                         <h4 className="font-bold text-slate-900 dark:text-white mb-1">
                                             Drive higher engagement than email & SMS
@@ -171,7 +171,7 @@ export default function MarketingPage() {
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-3">
-                                    <MessageSquare className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" />
+                                    <img src="https://img.icons8.com/color/48/megaphone.png" alt="ads" className="w-8 h-8 object-contain flex-shrink-0 mt-1" />
                                     <div>
                                         <h4 className="font-bold text-slate-900 dark:text-white mb-1">
                                             Click-to-WhatsApp Ads
@@ -234,7 +234,7 @@ export default function MarketingPage() {
                             </p>
                             <div className="space-y-4">
                                 <div className="flex items-start gap-3">
-                                    <ShoppingCart className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" />
+                                    <img src="https://img.icons8.com/color/48/shopping-cart--v1.png" alt="cart" className="w-8 h-8 object-contain flex-shrink-0 mt-1" />
                                     <div>
                                         <h4 className="font-bold text-slate-900 dark:text-white mb-1">
                                             Remove checkout friction or drop-offs
@@ -245,7 +245,7 @@ export default function MarketingPage() {
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-3">
-                                    <Zap className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" />
+                                    <img src="https://img.icons8.com/color/48/shop.png" alt="catalog" className="w-8 h-8 object-contain flex-shrink-0 mt-1" />
                                     <div>
                                         <h4 className="font-bold text-slate-900 dark:text-white mb-1">
                                             WhatsApp Catalog & Product Showcase
@@ -282,7 +282,7 @@ export default function MarketingPage() {
                             </p>
                             <div className="space-y-4">
                                 <div className="flex items-start gap-3">
-                                    <Heart className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" />
+                                    <img src="https://img.icons8.com/color/48/like--v1.png" alt="heart" className="w-8 h-8 object-contain flex-shrink-0 mt-1" />
                                     <div>
                                         <h4 className="font-bold text-slate-900 dark:text-white mb-1">
                                             Set up automations to drive repeat sales
@@ -293,7 +293,7 @@ export default function MarketingPage() {
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-3">
-                                    <Users className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" />
+                                    <img src="https://img.icons8.com/color/48/handshake.png" alt="loyalty" className="w-8 h-8 object-contain flex-shrink-0 mt-1" />
                                     <div>
                                         <h4 className="font-bold text-slate-900 dark:text-white mb-1">
                                             Build customer loyalty programs
@@ -445,7 +445,7 @@ export default function MarketingPage() {
                                 className="flex items-start gap-3"
                             >
                                 <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0">
-                                    <img src="https://img.icons8.com/fluency/48/checked.png" alt="check" className="w-8 h-8" />
+                                    <img src="https://img.icons8.com/color/48/magnet.png" alt="lead capture" className="w-8 h-8" />
                                 </div>
                                 <div>
                                     <h4 className="font-bold text-slate-900 dark:text-white mb-1">Automatic lead capture</h4>
@@ -461,7 +461,7 @@ export default function MarketingPage() {
                                 className="flex items-start gap-3"
                             >
                                 <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0">
-                                    <img src="https://img.icons8.com/fluency/48/checked.png" alt="check" className="w-8 h-8" />
+                                    <img src="https://img.icons8.com/color/48/chat--v1.png" alt="engagement" className="w-8 h-8" />
                                 </div>
                                 <div>
                                     <h4 className="font-bold text-slate-900 dark:text-white mb-1">Two-way real-time engagement</h4>
@@ -477,7 +477,7 @@ export default function MarketingPage() {
                                 className="flex items-start gap-3"
                             >
                                 <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0">
-                                    <img src="https://img.icons8.com/fluency/48/checked.png" alt="check" className="w-8 h-8" />
+                                    <img src="https://img.icons8.com/color/48/price-tag-usd.png" alt="cut costs" className="w-8 h-8" />
                                 </div>
                                 <div>
                                     <h4 className="font-bold text-slate-900 dark:text-white mb-1">Reduced acquisition costs</h4>

@@ -453,7 +453,7 @@ export default function SupportPage() {
                         <div className="space-y-8">
                             <div className="flex gap-4">
                                 <div className="mt-1">
-                                    <CheckSquare className="w-6 h-6 text-slate-900 dark:text-white fill-slate-100 dark:fill-slate-800" />
+                                    <img src="https://img.icons8.com/color/48/inbox.png" alt="inbox" className="w-8 h-8 object-contain" />
                                 </div>
                                 <div>
                                     <p className="text-lg text-slate-700 dark:text-slate-300">
@@ -463,7 +463,7 @@ export default function SupportPage() {
                             </div>
                             <div className="flex gap-4">
                                 <div className="mt-1">
-                                    <CheckSquare className="w-6 h-6 text-slate-900 dark:text-white fill-slate-100 dark:fill-slate-800" />
+                                    <img src="https://img.icons8.com/color/48/filter--v1.png" alt="filter" className="w-8 h-8 object-contain" />
                                 </div>
                                 <div>
                                     <p className="text-lg text-slate-700 dark:text-slate-300">
@@ -473,7 +473,7 @@ export default function SupportPage() {
                             </div>
                             <div className="flex gap-4">
                                 <div className="mt-1">
-                                    <CheckSquare className="w-6 h-6 text-slate-900 dark:text-white fill-slate-100 dark:fill-slate-800" />
+                                    <img src="https://img.icons8.com/color/48/flow-chart.png" alt="workflows" className="w-8 h-8 object-contain" />
                                 </div>
                                 <div>
                                     <p className="text-lg text-slate-700 dark:text-slate-300">

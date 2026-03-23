@@ -318,8 +318,8 @@ const Index = () => {
                   {/* Resolution Card Mockup */}
                   <div className="absolute bottom-[-20px] left-1/2 -translate-x-1/2 bg-white dark:bg-card w-[90%] p-4 rounded-2xl shadow-xl border border-blue-100 flex items-center justify-between gap-3 z-20">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-green-50 rounded-full flex items-center justify-center text-xl text-green-600">
-                        <CheckCircle className="w-6 h-6" />
+                      <div className="w-10 h-10 bg-green-50 rounded-full flex items-center justify-center">
+                        <img src="https://img.icons8.com/color/48/approval--v1.png" alt="Resolved" className="w-7 h-7" />
                       </div>
                       <div className="text-left">
                         <div className="font-bold text-gray-900 dark:text-gray-100">Ticket Solved</div>
@@ -369,16 +369,16 @@ const Index = () => {
 
                   <div className="space-y-4">
                     {[
-                      "Capture leads instantly: Turn Facebook & Instagram clicks directly into qualified WhatsApp subscribers.",
-                      "Retarget & Recover: Automatically nudge customers who abandoned carts with personalized offers.",
-                      "Broadcast with impact: Send campaigns that get read, not ignored, with rich media and interactive buttons.",
-                      "Analyze & Optimize: Track every open, click, and sale to maximize your campaign ROI in real-time."
+                      { text: "Capture leads instantly: Turn Facebook & Instagram clicks directly into qualified WhatsApp subscribers.", icon: "https://img.icons8.com/color/48/magnet.png" },
+                      { text: "Retarget & Recover: Automatically nudge customers who abandoned carts with personalized offers.", icon: "https://img.icons8.com/color/48/return-purchase.png" },
+                      { text: "Broadcast with impact: Send campaigns that get read, not ignored, with rich media and interactive buttons.", icon: "https://img.icons8.com/color/48/megaphone.png" },
+                      { text: "Analyze & Optimize: Track every open, click, and sale to maximize your campaign ROI in real-time.", icon: "https://img.icons8.com/color/48/bar-chart--v1.png" }
                     ].map((item, i) => (
                       <div key={i} className="flex gap-3 items-start">
-                        <div className="mt-1 min-w-5 min-h-5 flex items-center justify-center">
-                          <img src="https://img.icons8.com/fluency/48/checked.png" alt="Check" className="w-5 h-5" />
+                        <div className="mt-1 min-w-6 min-h-6 flex items-center justify-center flex-shrink-0">
+                          <img src={item.icon} alt="Feature icon" className="w-6 h-6 object-contain" />
                         </div>
-                        <p className="text-slate-600 dark:text-slate-300 leading-relaxed font-medium">{item}</p>
+                        <p className="text-slate-600 dark:text-slate-300 leading-relaxed font-medium">{item.text}</p>
                       </div>
                     ))}
                   </div>
@@ -632,16 +632,16 @@ const Index = () => {
 
                   <div className="space-y-4 md:space-y-5">
                     {[
-                      "One single workspace for all your sales reps to collaborate, communicate, and convert leads",
-                      "Ensure no sales-ready leads slip through the cracks with real-time, instant qualification",
-                      "Manage high lead volume easily on WhatsApp with Connect AI automation",
-                      "Monitor customer chats ensures high-quality customer experience"
+                      { text: "One single workspace for all your sales reps to collaborate, communicate, and convert leads", icon: "https://img.icons8.com/color/48/conference-call.png" },
+                      { text: "Ensure no sales-ready leads slip through the cracks with real-time, instant qualification", icon: "https://img.icons8.com/color/48/bullseye.png" },
+                      { text: "Manage high lead volume easily on WhatsApp with Connect AI automation", icon: "https://img.icons8.com/color/48/bot.png" },
+                      { text: "Monitor customer chats ensures high-quality customer experience", icon: "https://img.icons8.com/color/48/search-property.png" }
                     ].map((item, i) => (
                       <div key={i} className="flex gap-3 md:gap-4 items-start group">
-                        <div className="mt-1 min-w-5 min-h-5 md:min-w-6 md:min-h-6 flex items-center justify-center">
-                          <img src="https://img.icons8.com/fluency/48/checked.png" alt="Check" className="w-5 h-5 md:w-6 md:h-6" />
+                        <div className="mt-1 min-w-6 min-h-6 flex items-center justify-center flex-shrink-0">
+                          <img src={item.icon} alt="Feature icon" className="w-6 h-6 md:w-7 md:h-7 object-contain" />
                         </div>
-                        <p className="text-slate-600 dark:text-slate-300 text-base md:text-lg leading-relaxed font-medium">{item}</p>
+                        <p className="text-slate-600 dark:text-slate-300 text-base md:text-lg leading-relaxed font-medium">{item.text}</p>
                       </div>
                     ))}
                   </div>
@@ -716,16 +716,16 @@ const Index = () => {
                   </h3>
                   <div className="space-y-4 md:space-y-5">
                     {[
-                      "Provide instant, accurate answers grounded in your knowledge base 24/7 and resolve most queries without human involvement",
-                      "Intelligently route complex conversations to the right human agent by setting advanced routing rules",
-                      "Collaborate better with a unified Team Inbox for all messaging platforms, with tags, contact attributes, history, and more",
-                      "Enhance your support operations with data-driven insights on response time, resolutions, and agent-wise performance"
+                      { text: "Provide instant, accurate answers grounded in your knowledge base 24/7 and resolve most queries without human involvement", icon: "https://img.icons8.com/color/48/books.png" },
+                      { text: "Intelligently route complex conversations to the right human agent by setting advanced routing rules", icon: "https://img.icons8.com/color/48/mind-map.png" },
+                      { text: "Collaborate better with a unified Team Inbox for all messaging platforms, with tags, contact attributes, history, and more", icon: "https://img.icons8.com/color/48/inbox.png" },
+                      { text: "Enhance your support operations with data-driven insights on response time, resolutions, and agent-wise performance", icon: "https://img.icons8.com/color/48/combo-chart--v1.png" }
                     ].map((item, i) => (
                       <div key={i} className="flex gap-3 md:gap-4 items-start group">
-                        <div className="mt-1 min-w-5 min-h-5 md:min-w-6 md:min-h-6 flex items-center justify-center">
-                          <img src="https://img.icons8.com/fluency/48/checked.png" alt="Check" className="w-5 h-5 md:w-6 md:h-6" />
+                        <div className="mt-1 min-w-6 min-h-6 flex items-center justify-center flex-shrink-0">
+                          <img src={item.icon} alt="Feature icon" className="w-6 h-6 md:w-7 md:h-7 object-contain" />
                         </div>
-                        <p className="text-slate-600 dark:text-slate-300 text-base md:text-lg leading-relaxed font-medium">{item}</p>
+                        <p className="text-slate-600 dark:text-slate-300 text-base md:text-lg leading-relaxed font-medium">{item.text}</p>
                       </div>
                     ))}
                   </div>
@@ -1126,6 +1126,59 @@ const Index = () => {
       </section >
 
 
+
+      {/* Social Proof Banner */}
+      <section className="py-20 px-6 bg-white dark:bg-background border-t border-border">
+        <div className="container mx-auto max-w-6xl text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-10"
+          >
+            <span className="text-sm font-bold text-muted-foreground uppercase tracking-widest">What our customers say</span>
+            <h2 className="text-3xl sm:text-4xl font-bold text-foreground mt-4 mb-4">
+              Trusted by 10,000+ businesses worldwide
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              From fast-growing startups to enterprise teams, businesses across e-commerce, education, healthcare, and SaaS rely on Avelo to automate WhatsApp marketing, sales, and support.
+            </p>
+          </motion.div>
+
+          <div className="grid sm:grid-cols-3 gap-6 mb-12">
+            {[
+              { stat: "4.8★", label: "Average Rating", sub: "Based on 2,800+ verified reviews" },
+              { stat: "96%", label: "Open Rate", sub: "vs 18% average for email" },
+              { stat: "10,000+", label: "Active Businesses", sub: "Across 40+ countries" },
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="p-6 bg-muted/30 rounded-2xl border border-border"
+              >
+                <div className="text-4xl font-black text-foreground mb-1">{item.stat}</div>
+                <div className="font-bold text-foreground mb-1">{item.label}</div>
+                <div className="text-sm text-muted-foreground">{item.sub}</div>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="flex flex-wrap justify-center gap-4">
+            <Link to="/customers/reviews" className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-border hover:border-green-500 hover:bg-green-50 dark:hover:bg-green-900/20 text-sm font-bold transition-all text-foreground hover:text-green-700">
+              Read Customer Reviews <ArrowRight className="w-4 h-4" />
+            </Link>
+            <Link to="/customers/case-studies" className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-border hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-sm font-bold transition-all text-foreground hover:text-blue-700">
+              View Case Studies <ArrowRight className="w-4 h-4" />
+            </Link>
+            <Link to="/customers/stories" className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-border hover:border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-900/20 text-sm font-bold transition-all text-foreground hover:text-purple-700">
+              Customer Stories <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* Footer */}
       < LandingFooter />

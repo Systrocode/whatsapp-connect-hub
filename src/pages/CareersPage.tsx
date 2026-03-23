@@ -57,29 +57,29 @@ export default function CareersPage() {
                 <div className="max-w-7xl mx-auto">
                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
                         <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 hover:shadow-lg transition-all">
-                            <div className="w-12 h-12 bg-pink-100 dark:bg-pink-900/30 rounded-xl flex items-center justify-center mb-4 text-pink-600">
-                                <Heart className="w-6 h-6" />
+                            <div className="w-12 h-12 bg-pink-100 dark:bg-pink-900/30 rounded-xl flex items-center justify-center mb-4">
+                                <img src="https://img.icons8.com/color/48/like--v1.png" alt="heart" className="w-8 h-8 object-contain" />
                             </div>
                             <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-2">Customer Obsession</h3>
                             <p className="text-slate-600 dark:text-slate-400 text-sm">We start with the customer and work backward. Their success is our success.</p>
                         </div>
                         <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 hover:shadow-lg transition-all">
-                            <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mb-4 text-blue-600">
-                                <Zap className="w-6 h-6" />
+                            <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mb-4">
+                                <img src="https://img.icons8.com/color/48/launched-rocket.png" alt="rocket" className="w-8 h-8 object-contain" />
                             </div>
                             <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-2">Move Fast & Ship</h3>
                             <p className="text-slate-600 dark:text-slate-400 text-sm">We believe in rapid iteration and learning. Done is better than perfect.</p>
                         </div>
                         <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 hover:shadow-lg transition-all">
-                            <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center mb-4 text-green-600">
-                                <Globe className="w-6 h-6" />
+                            <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center mb-4">
+                                <img src="https://img.icons8.com/color/48/geography.png" alt="globe" className="w-8 h-8 object-contain" />
                             </div>
                             <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-2">Global Mindset</h3>
                             <p className="text-slate-600 dark:text-slate-400 text-sm">We build for the world. Our team works from 10+ countries across 4 continents.</p>
                         </div>
                         <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 hover:shadow-lg transition-all">
-                            <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center mb-4 text-purple-600">
-                                <Users className="w-6 h-6" />
+                            <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center mb-4">
+                                <img src="https://img.icons8.com/color/48/people-working-together.png" alt="team" className="w-8 h-8 object-contain" />
                             </div>
                             <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-2">One Team</h3>
                             <p className="text-slate-600 dark:text-slate-400 text-sm">We leave egos at the door. We support each other and win together.</p>
@@ -104,8 +104,8 @@ export default function CareersPage() {
                         {/* Team Card 1 */}
                         <div className="bg-white dark:bg-slate-950 p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm hover:border-purple-200 dark:hover:border-purple-800 transition-all group">
                             <div className="flex items-start justify-between mb-6">
-                                <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-2xl text-blue-600">
-                                    <Code className="w-8 h-8" />
+                                <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center">
+                                    <img src="https://img.icons8.com/color/48/source-code.png" alt="engineering" className="w-8 h-8 object-contain" />
                                 </div>
                                 <ArrowRight className="text-slate-300 group-hover:text-blue-600 transition-colors" />
                             </div>
@@ -123,8 +123,8 @@ export default function CareersPage() {
                         {/* Team Card 2 */}
                         <div className="bg-white dark:bg-slate-950 p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm hover:border-purple-200 dark:hover:border-purple-800 transition-all group">
                             <div className="flex items-start justify-between mb-6">
-                                <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-2xl text-green-600">
-                                    <LineChart className="w-8 h-8" />
+                                <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-2xl flex items-center justify-center">
+                                    <img src="https://img.icons8.com/color/48/combo-chart--v1.png" alt="marketing" className="w-8 h-8 object-contain" />
                                 </div>
                                 <ArrowRight className="text-slate-300 group-hover:text-green-600 transition-colors" />
                             </div>
@@ -142,8 +142,8 @@ export default function CareersPage() {
                         {/* Team Card 3 */}
                         <div className="bg-white dark:bg-slate-950 p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm hover:border-purple-200 dark:hover:border-purple-800 transition-all group">
                             <div className="flex items-start justify-between mb-6">
-                                <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-2xl text-purple-600">
-                                    <Headphones className="w-8 h-8" />
+                                <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-2xl flex items-center justify-center">
+                                    <img src="https://img.icons8.com/color/48/headset.png" alt="support" className="w-8 h-8 object-contain" />
                                 </div>
                                 <ArrowRight className="text-slate-300 group-hover:text-purple-600 transition-colors" />
                             </div>
@@ -160,8 +160,8 @@ export default function CareersPage() {
                         {/* Team Card 4 */}
                         <div className="bg-white dark:bg-slate-950 p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm hover:border-purple-200 dark:hover:border-purple-800 transition-all group">
                             <div className="flex items-start justify-between mb-6">
-                                <div className="p-3 bg-orange-100 dark:bg-orange-900/30 rounded-2xl text-orange-600">
-                                    <PenTool className="w-8 h-8" />
+                                <div className="p-3 bg-orange-100 dark:bg-orange-900/30 rounded-2xl flex items-center justify-center">
+                                    <img src="https://img.icons8.com/color/48/paint-palette.png" alt="design" className="w-8 h-8 object-contain" />
                                 </div>
                                 <ArrowRight className="text-slate-300 group-hover:text-orange-600 transition-colors" />
                             </div>
@@ -186,29 +186,29 @@ export default function CareersPage() {
                     </h2>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                         <div className="flex flex-col items-center">
-                            <div className="w-16 h-16 bg-slate-100 dark:bg-slate-900 rounded-full flex items-center justify-center mb-4 text-slate-700 dark:text-slate-300">
-                                <Laptop className="w-8 h-8" />
+                            <div className="w-16 h-16 bg-slate-100 dark:bg-slate-900 rounded-full flex items-center justify-center mb-4">
+                                <img src="https://img.icons8.com/color/48/laptop.png" alt="laptop" className="w-8 h-8 object-contain" />
                             </div>
                             <div className="font-bold mb-1">Remote-First</div>
                             <div className="text-sm text-slate-500">Work from anywhere</div>
                         </div>
                         <div className="flex flex-col items-center">
-                            <div className="w-16 h-16 bg-slate-100 dark:bg-slate-900 rounded-full flex items-center justify-center mb-4 text-slate-700 dark:text-slate-300">
-                                <Heart className="w-8 h-8" />
+                            <div className="w-16 h-16 bg-slate-100 dark:bg-slate-900 rounded-full flex items-center justify-center mb-4">
+                                <img src="https://img.icons8.com/color/48/heart-with-pulse.png" alt="health" className="w-8 h-8 object-contain" />
                             </div>
                             <div className="font-bold mb-1">Health & Wellness</div>
                             <div className="text-sm text-slate-500">Comprehensive coverage</div>
                         </div>
                         <div className="flex flex-col items-center">
-                            <div className="w-16 h-16 bg-slate-100 dark:bg-slate-900 rounded-full flex items-center justify-center mb-4 text-slate-700 dark:text-slate-300">
-                                <Coffee className="w-8 h-8" />
+                            <div className="w-16 h-16 bg-slate-100 dark:bg-slate-900 rounded-full flex items-center justify-center mb-4">
+                                <img src="https://img.icons8.com/color/48/cafe.png" alt="coffee" className="w-8 h-8 object-contain" />
                             </div>
                             <div className="font-bold mb-1">Unlimited PTO</div>
                             <div className="text-sm text-slate-500">Rest & recharge</div>
                         </div>
                         <div className="flex flex-col items-center">
-                            <div className="w-16 h-16 bg-slate-100 dark:bg-slate-900 rounded-full flex items-center justify-center mb-4 text-slate-700 dark:text-slate-300">
-                                <Smile className="w-8 h-8" />
+                            <div className="w-16 h-16 bg-slate-100 dark:bg-slate-900 rounded-full flex items-center justify-center mb-4">
+                                <img src="https://img.icons8.com/color/48/smiling.png" alt="smile" className="w-8 h-8 object-contain" />
                             </div>
                             <div className="font-bold mb-1">Team Retreats</div>
                             <div className="text-sm text-slate-500">Twice a year offsites</div>
