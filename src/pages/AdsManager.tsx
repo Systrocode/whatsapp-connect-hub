@@ -2,10 +2,26 @@ import { useState, useEffect, useCallback } from 'react';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, RefreshCw, ChevronDown, ChevronUp, Eye, MousePointer, Users, DollarSign, TrendingUp } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
+
+// Inline SVG sync icon — avoids icons8-proxy ? fallback
+const SyncIcon = ({ spinning = false }: { spinning?: boolean }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="16" height="16" viewBox="0 0 24 24"
+    fill="none" stroke="currentColor" strokeWidth="2"
+    strokeLinecap="round" strokeLinejoin="round"
+    className={spinning ? 'animate-spin' : ''}
+  >
+    <path d="M21 2v6h-6" />
+    <path d="M3 12a9 9 0 0 1 15-6.7L21 8" />
+    <path d="M3 22v-6h6" />
+    <path d="M21 12a9 9 0 0 1-15 6.7L3 16" />
+  </svg>
+);
 import { CreateCampaignDialog } from "@/components/campaigns/CreateCampaignDialog";
 
 const icons = {
@@ -179,7 +195,7 @@ export default function AdsManager() {
                                     disabled={isSyncing}
                                     className="gap-2"
                                 >
-                                    <RefreshCw className={`w-4 h-4 ${isSyncing ? 'animate-spin' : ''}`} />
+                                    <SyncIcon spinning={isSyncing} />
                                     {isSyncing ? 'Syncing...' : 'Sync from Meta'}
                                 </Button>
                                 <Button
@@ -315,11 +331,11 @@ export default function AdsManager() {
                                                 onClick={() => toggleInsights(camp.id)}
                                                 className="gap-1.5 text-[#1877F2] border-[#1877F2]/30 hover:bg-[#1877F2]/5"
                                             >
-                                                <TrendingUp className="w-3.5 h-3.5" />
+                                                <img src="https://img.icons8.com/fluency/20/positive-dynamic.png" className="w-3.5 h-3.5" alt="insights" />
                                                 Insights
                                                 {expandedCamp === camp.id
-                                                    ? <ChevronUp className="w-3.5 h-3.5" />
-                                                    : <ChevronDown className="w-3.5 h-3.5" />}
+                                                    ? <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+                                                    : <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>}
                                             </Button>
                                         </div>
                                     </div>
@@ -329,38 +345,38 @@ export default function AdsManager() {
                                         <div className="mt-4 pt-4 border-t border-border">
                                             {insightsLoading[camp.id] ? (
                                                 <div className="flex items-center justify-center py-6 gap-2 text-muted-foreground text-sm">
-                                                    <RefreshCw className="w-4 h-4 animate-spin" />
+                                                    <SyncIcon spinning={true} />
                                                     Loading insights from Meta...
                                                 </div>
                                             ) : insightsMap[camp.id] ? (
                                                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
                                                     <InsightStat
-                                                        icon={<Eye className="w-4 h-4 text-blue-500" />}
+                                                        iconUrl="https://img.icons8.com/fluency/48/visible.png"
                                                         label="Impressions"
                                                         value={Number(insightsMap[camp.id]?.impressions || 0).toLocaleString()}
                                                     />
                                                     <InsightStat
-                                                        icon={<MousePointer className="w-4 h-4 text-purple-500" />}
+                                                        iconUrl="https://img.icons8.com/fluency/48/cursor.png"
                                                         label="Clicks"
                                                         value={Number(insightsMap[camp.id]?.clicks || 0).toLocaleString()}
                                                     />
                                                     <InsightStat
-                                                        icon={<Users className="w-4 h-4 text-green-500" />}
+                                                        iconUrl="https://img.icons8.com/fluency/48/group.png"
                                                         label="Reach"
                                                         value={Number(insightsMap[camp.id]?.reach || 0).toLocaleString()}
                                                     />
                                                     <InsightStat
-                                                        icon={<DollarSign className="w-4 h-4 text-amber-500" />}
+                                                        iconUrl="https://img.icons8.com/fluency/48/money-bag.png"
                                                         label="Spend"
                                                         value={`${sym}${Number(insightsMap[camp.id]?.spend || 0).toFixed(2)}`}
                                                     />
                                                     <InsightStat
-                                                        icon={<TrendingUp className="w-4 h-4 text-cyan-500" />}
+                                                        iconUrl="https://img.icons8.com/fluency/48/positive-dynamic.png"
                                                         label="CTR"
                                                         value={`${Number(insightsMap[camp.id]?.ctr || 0).toFixed(2)}%`}
                                                     />
                                                     <InsightStat
-                                                        icon={<TrendingUp className="w-4 h-4 text-rose-500" />}
+                                                        iconUrl="https://img.icons8.com/fluency/48/rupee.png"
                                                         label="CPC"
                                                         value={`${sym}${Number(insightsMap[camp.id]?.cpc || 0).toFixed(2)}`}
                                                     />
@@ -370,7 +386,7 @@ export default function AdsManager() {
                                                     No insights data available for this period. Try a different date range.
                                                     <div className="mt-2">
                                                         <Button size="sm" variant="outline" onClick={() => fetchInsights(camp.id)}>
-                                                            <RefreshCw className="w-3.5 h-3.5 mr-1.5" /> Retry
+                                                            <SyncIcon /> Retry
                                                         </Button>
                                                     </div>
                                                 </div>
@@ -389,11 +405,11 @@ export default function AdsManager() {
     );
 }
 
-function InsightStat({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
+function InsightStat({ iconUrl, label, value }: { iconUrl: string; label: string; value: string }) {
     return (
         <div className="bg-muted/40 rounded-xl p-3 flex flex-col gap-1 hover:bg-muted/70 transition-colors">
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
-                {icon}
+                <img src={iconUrl} alt={label} className="w-4 h-4 object-contain" />
                 {label}
             </div>
             <div className="text-lg font-bold text-foreground">{value}</div>
