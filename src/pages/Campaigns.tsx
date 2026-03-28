@@ -14,6 +14,8 @@ import {
   Trash2,
   ExternalLink
 } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -61,12 +63,39 @@ const currencySymbol = (code?: string) => {
   return map[code.toUpperCase()] ?? code + ' ';
 };
 
+// Inline SVG — avoids icons8-proxy ? fallback
+const SyncIcon = ({ spinning = false }: { spinning?: boolean }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+    fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+    className={spinning ? 'animate-spin' : ''}>
+    <path d="M21 2v6h-6" />
+    <path d="M3 12a9 9 0 0 1 15-6.7L21 8" />
+    <path d="M3 22v-6h6" />
+    <path d="M21 12a9 9 0 0 1-15 6.7L3 16" />
+  </svg>
+);
+
 const Campaigns = () => {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [isSyncing, setIsSyncing] = useState(false);
 
+  const queryClient = useQueryClient();
   const { campaigns, isLoading, updateStatus, deleteCampaign, isDeleting } = useCampaigns();
   const { data: adAccount } = useAdAccount();
+
+  const handleSync = async () => {
+    setIsSyncing(true);
+    try {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["campaigns"] }),
+        queryClient.invalidateQueries({ queryKey: ["ad-account"] }),
+      ]);
+      toast.success("Synced from Meta successfully!");
+    } finally {
+      setIsSyncing(false);
+    }
+  };
 
   const handleStatusToggle = (campaignId: string, currentStatus: string) => {
     const newStatus = currentStatus === "active" ? "PAUSED" : "ACTIVE";
@@ -94,10 +123,16 @@ const Campaigns = () => {
               Manage your Meta Ads campaigns for Click-to-WhatsApp
             </p>
           </div>
-          <Button onClick={() => setIsCreateOpen(true)} variant="whatsapp">
-            <Plus className="w-4 h-4 mr-2" />
-            Create Campaign
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={handleSync} disabled={isSyncing} className="gap-2">
+              <SyncIcon spinning={isSyncing} />
+              {isSyncing ? 'Syncing...' : 'Sync from Meta'}
+            </Button>
+            <Button onClick={() => setIsCreateOpen(true)} variant="whatsapp">
+              <Plus className="w-4 h-4 mr-2" />
+              Create Campaign
+            </Button>
+          </div>
         </div>
 
         {/* Stats Cards */}
