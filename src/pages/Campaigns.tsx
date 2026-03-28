@@ -53,6 +53,14 @@ const statusColors: Record<string, string> = {
   archived: "bg-muted text-muted-foreground border-border",
 };
 
+const currencySymbol = (code?: string) => {
+  if (!code) return '₹';
+  const map: Record<string, string> = {
+    INR: '₹', USD: '$', EUR: '€', GBP: '£', AED: 'د.إ', SGD: 'S$', MYR: 'RM',
+  };
+  return map[code.toUpperCase()] ?? code + ' ';
+};
+
 const Campaigns = () => {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -144,7 +152,7 @@ const Campaigns = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {adAccount?.currency || "₹"}{totalSpend.toFixed(2)}
+                  {currencySymbol(adAccount?.currency)}{totalSpend.toFixed(2)}
                 </div>
               </CardContent>
             </Card>
@@ -164,7 +172,7 @@ const Campaigns = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {adAccount?.balance ? `${adAccount.currency}${(adAccount.balance / 100).toFixed(2)}` : "—"}
+                  {adAccount?.balance ? `${currencySymbol(adAccount.currency)}${(adAccount.balance / 100).toFixed(2)}` : "—"}
                 </div>
               </CardContent>
             </Card>

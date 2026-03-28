@@ -116,8 +116,14 @@ export const StatusWidget = () => {
 
     const formatTier = (tier: string) => {
         if (!tier) return 'N/A';
-        if (tier.startsWith('TIER_')) return tier.replace('TIER_', '');
-        return tier;
+        const tierMap: Record<string, string> = {
+            TIER_0: '250/day',
+            TIER_1: '2,000/day',
+            TIER_2: '10,000/day',
+            TIER_3: '100,000/day',
+            TIER_4: 'Unlimited',
+        };
+        return tierMap[tier] ?? tier;
     };
 
     if (loading) return <div className="p-4 flex gap-2 items-center text-sm text-muted-foreground"><Spinner className="w-4 h-4" /> Checking Status...</div>;

@@ -138,7 +138,7 @@ export function CreateCampaignDialog({ open, onOpenChange }: CreateCampaignDialo
               name="dailyBudget"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Daily Budget (INR)</FormLabel>
+                  <FormLabel>Daily Budget (₹)</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
