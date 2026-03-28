@@ -418,9 +418,9 @@ const ConversationDetail = () => {
                                 {message.status === 'read' ? (
                                   // Double blue ticks (read)
                                   <svg width="16" height="11" viewBox="0 0 16 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M11.071 0.5L4.921 7.29L2.5 4.68" stroke="#53BDEB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                    <path d="M15.5 0.5L9.35 7.29L8.5 6.36" stroke="#53BDEB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                    <path d="M4.921 7.29L2.5 4.68" stroke="#53BDEB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M11.071 0.5L4.921 7.29L2.5 4.68" stroke="rgba(255,255,255,0.95)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M15.5 0.5L9.35 7.29L8.5 6.36" stroke="rgba(255,255,255,0.95)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M4.921 7.29L2.5 4.68" stroke="rgba(255,255,255,0.95)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                   </svg>
                                 ) : message.status === 'delivered' ? (
                                   // Double grey ticks (delivered)
