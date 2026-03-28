@@ -3,8 +3,20 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
-import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+
+// Inline SVG spinner — avoids icons8-proxy fallback at small sizes
+const Spinner = ({ className = '' }: { className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className={`animate-spin ${className}`}
+    fill="none"
+    viewBox="0 0 24 24"
+  >
+    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+  </svg>
+);
 
 export const StatusWidget = () => {
     const [statusData, setStatusData] = useState<any>(null);
@@ -108,7 +120,7 @@ export const StatusWidget = () => {
         return tier;
     };
 
-    if (loading) return <div className="p-4 flex gap-2 items-center text-sm text-muted-foreground"><Loader2 className="w-4 h-4 animate-spin" /> Checking Status...</div>;
+    if (loading) return <div className="p-4 flex gap-2 items-center text-sm text-muted-foreground"><Spinner className="w-4 h-4" /> Checking Status...</div>;
 
     if (!statusData) {
         // Connect UI
@@ -119,7 +131,7 @@ export const StatusWidget = () => {
                     Link your WhatsApp API number to start sending messages and viewing analytics.
                 </p>
                 <Button onClick={launchWhatsAppSignup} disabled={isConnecting} className="bg-[#1877F2] hover:bg-[#1864D0]">
-                    {isConnecting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                    {isConnecting ? <Spinner className="w-4 h-4 mr-2" /> : null}
                     {isConnecting ? 'Connecting...' : 'Login with Facebook'}
                 </Button>
             </Card>

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Card } from "@/components/ui/card";
-import { MessageSquare, HelpCircle, GitBranch, Clock, Play } from "lucide-react";
 
 export default function Sidebar() {
     const onDragStart = (event: React.DragEvent, nodeType: string) => {
@@ -18,8 +17,8 @@ export default function Sidebar() {
                     onDragStart={(event) => onDragStart(event, 'trigger')}
                     draggable
                 >
-                    <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-md text-green-600 dark:text-green-400">
-                        <Play className="w-4 h-4" />
+                    <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-md">
+                        <img src="https://img.icons8.com/color/48/play.png" alt="trigger" className="w-4 h-4 object-contain" />
                     </div>
                     <div className="text-sm font-medium">Trigger</div>
                 </div>
@@ -29,8 +28,8 @@ export default function Sidebar() {
                     onDragStart={(event) => onDragStart(event, 'message')}
                     draggable
                 >
-                    <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-md text-blue-600 dark:text-blue-400">
-                        <MessageSquare className="w-4 h-4" />
+                    <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-md">
+                        <img src="https://img.icons8.com/color/48/speech-bubble.png" alt="message" className="w-4 h-4 object-contain" />
                     </div>
                     <div className="text-sm font-medium">Send Message</div>
                 </div>
@@ -40,8 +39,8 @@ export default function Sidebar() {
                     onDragStart={(event) => onDragStart(event, 'question')}
                     draggable
                 >
-                    <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-md text-purple-600 dark:text-purple-400">
-                        <HelpCircle className="w-4 h-4" />
+                    <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-md">
+                        <img src="https://img.icons8.com/color/48/faq.png" alt="question" className="w-4 h-4 object-contain" />
                     </div>
                     <div className="text-sm font-medium">Ask Question</div>
                 </div>
@@ -51,8 +50,8 @@ export default function Sidebar() {
                     onDragStart={(event) => onDragStart(event, 'condition')}
                     draggable
                 >
-                    <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-md text-orange-600 dark:text-orange-400">
-                        <GitBranch className="w-4 h-4" />
+                    <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-md">
+                        <img src="https://img.icons8.com/color/48/flow-chart.png" alt="condition" className="w-4 h-4 object-contain" />
                     </div>
                     <div className="text-sm font-medium">Condition</div>
                 </div>
@@ -62,8 +61,8 @@ export default function Sidebar() {
                     onDragStart={(event) => onDragStart(event, 'delay')}
                     draggable
                 >
-                    <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-md text-slate-600 dark:text-slate-400">
-                        <Clock className="w-4 h-4" />
+                    <div className="p-2 bg-slate-100 dark:bg-slate-700 rounded-md">
+                        <img src="https://img.icons8.com/color/48/clock.png" alt="delay" className="w-4 h-4 object-contain" />
                     </div>
                     <div className="text-sm font-medium">Delay</div>
                 </div>

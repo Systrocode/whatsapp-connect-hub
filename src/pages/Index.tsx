@@ -633,7 +633,7 @@ const Index = () => {
                   <div className="space-y-4 md:space-y-5">
                     {[
                       { text: "One single workspace for all your sales reps to collaborate, communicate, and convert leads", icon: "https://img.icons8.com/color/48/conference-call.png" },
-                      { text: "Ensure no sales-ready leads slip through the cracks with real-time, instant qualification", icon: "https://img.icons8.com/color/48/bullseye.png" },
+                      { text: "Ensure no sales-ready leads slip through the cracks with real-time, instant qualification", icon: "https://img.icons8.com/color/48/target.png" },
                       { text: "Manage high lead volume easily on WhatsApp with Connect AI automation", icon: "https://img.icons8.com/color/48/bot.png" },
                       { text: "Monitor customer chats ensures high-quality customer experience", icon: "https://img.icons8.com/color/48/search-property.png" }
                     ].map((item, i) => (

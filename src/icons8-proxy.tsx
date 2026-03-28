@@ -29,6 +29,7 @@ const createIcons8Component = (name: string) => {
       'arrow-left': 'back',
       // Messaging
       'message-square': 'speech-bubble',
+      'message-circle': 'speech-bubble',
       'messages-square': 'chat',
       'send': 'paper-plane',
       // Files & Media
@@ -45,6 +46,7 @@ const createIcons8Component = (name: string) => {
       'contact-2': 'address-book',
       // UI Controls
       'more-vertical': 'more',
+      'more-horizontal': 'more',
       'info': 'info',
       'search': 'search',
       'bell': 'bell',
@@ -57,6 +59,7 @@ const createIcons8Component = (name: string) => {
       // Status
       'clock': 'clock',
       'target': 'target',
+      'bullseye': 'target',
       'alert-circle': 'error',
       // Settings
       'settings-2': 'settings',
@@ -65,6 +68,31 @@ const createIcons8Component = (name: string) => {
       'plus': 'plus-math',
       // Security
       'shield': 'security-checked',
+      'plus-circle': 'plus-math',
+      'sparkles': 'sparkling-diamond',
+      'sparkle': 'sparkling-diamond',
+      'heart': 'hearts',
+      'map-pin': 'marker',
+      'messenger': 'facebook-messenger',
+      'instagram': 'instagram',
+      'facebook': 'facebook',
+      'whatsapp': 'whatsapp',
+      'save': 'save',
+      'key': 'key',
+      'globe': 'globe',
+      'eye': 'visible',
+      'copy': 'copy',
+      'code': 'source-code',
+      // Integrations & Misc
+      'sheet': 'google-sheets',
+      'google-sheets': 'google-sheets',
+      'zap': 'lightning-bolt',
+      'link-2': 'link',
+      'external-link': 'external-link',
+      'file-spreadsheet': 'google-sheets',
+      'clipboard-paste': 'clipboard',
+      'mail': 'envelope',
+      'log-out': 'exit',
     };
     if (overrides[iconName]) iconName = overrides[iconName];
 
@@ -89,7 +117,13 @@ const createIcons8Component = (name: string) => {
             e.target.dataset.tried3 = true;
             e.target.src = src3;
         } else {
-            e.target.src = "https://img.icons8.com/ios/50/checked-checkbox--v1.png"; // ultimate fallback
+            // Last resort: try a generic icon that's likely to exist, before the tick
+            if (!e.target.dataset.triedFinal) {
+                e.target.dataset.triedFinal = true;
+                e.target.src = "https://img.icons8.com/color/48/help.png";
+            } else {
+                e.target.src = "https://img.icons8.com/ios/50/help.png"; // final final fallback
+            }
         }
       },
       ...props
