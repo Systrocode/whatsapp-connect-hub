@@ -542,11 +542,16 @@ serve(async (req: Request) => {
 
         if (template_name) {
           messagePayload.type = 'template';
-          messagePayload.template = {
+          const templateObj: any = {
             name: template_name,
             language: { code: params.language_code || 'en_US' },
-            components: template_params || []
           };
+          // Only include components if template_params is a non-empty array.
+          // Sending components: [] when the template has no variables causes #132000.
+          if (Array.isArray(template_params) && template_params.length > 0) {
+            templateObj.components = template_params;
+          }
+          messagePayload.template = templateObj;
         } else if (type === 'image') {
           messagePayload.type = 'image';
           messagePayload.image = { link: media_url, caption: caption || message };
@@ -1267,9 +1272,10 @@ serve(async (req: Request) => {
             messagePayload.type = 'template';
             messagePayload.template = {
               name: templateName,
-              language: { code: templateData?.language || 'en_US' },
-              components: [] // Components inserted below
+              language: { code: templateData?.language || 'en_US' }
             };
+
+            const components: any[] = [];
 
             // Calculate Variables & Media
             // Note: For now, broadcasts are static (same message to everyone) unless we implement merge tags like {{name}}
@@ -1312,7 +1318,7 @@ serve(async (req: Request) => {
                   parameterObject = { type: 'document', document: { link: mediaUrl, filename: 'Attachment' } };
                 }
 
-                messagePayload.template.components.push({
+                components.push({
                   type: 'header',
                   parameters: [parameterObject]
                 });
@@ -1324,7 +1330,23 @@ serve(async (req: Request) => {
 
             // 2. Body Component (Variables)
             // If the template has variables {{1}}, we need to fill them.
-            // Currently assuming static or failed if variables missing.
+            const bodyVariables = templateVariables.filter((v: string) => v.startsWith('{{'));
+            if (bodyVariables.length > 0) {
+              const bodyParams: any[] = [];
+              const uniqueCount = new Set(bodyVariables.map((p: string) => p.replace(/\D/g, ''))).size;
+              const contactName = contact?.name || 'Customer';
+              for (let i = 1; i <= uniqueCount; i++) {
+                bodyParams.push({ type: 'text', text: i === 1 ? contactName : `Value${i}` });
+              }
+              components.push({
+                type: 'body',
+                parameters: bodyParams
+              });
+            }
+
+            if (components.length > 0) {
+              messagePayload.template.components = components;
+            }
 
           } else {
             // Fallback to text is DANGEROUS for broadcasts as it violates 24h window if not careful.

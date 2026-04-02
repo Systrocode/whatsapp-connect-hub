@@ -46,17 +46,38 @@ const ConversationDetail = () => {
 
   const handleSendTemplate = async (template: MessageTemplate) => {
     try {
-      // Basic sending without parameters for now
-      // If template requires parameters, this might fail or send placeholders.
-      // For MVP, we assume user selects templates that are ready to send or handles errors.
-
       const content = `Template: ${template.name}`;
+
+      // Count how many {{n}} placeholders exist in the template body
+      const placeholders = template.content.match(/\{\{\d+\}\}/g) || [];
+      const uniqueCount = new Set(placeholders.map(p => p.replace(/\D/g, ''))).size;
+
+      // Build the correct components array for Meta's API
+      // If there are no placeholders, send NO components (omit them entirely) to avoid #132000
+      let templateParams: any[] | undefined = undefined;
+
+      if (uniqueCount > 0) {
+        // Use the contact's name as {{1}}, fallback to 'Customer'
+        const contactName = contact?.name || 'Customer';
+        const paramValues: string[] = [];
+        for (let i = 1; i <= uniqueCount; i++) {
+          // {{1}} → contact name, {{2}}+ → placeholder text
+          paramValues.push(i === 1 ? contactName : `Value${i}`);
+        }
+
+        templateParams = [
+          {
+            type: 'body',
+            parameters: paramValues.map(val => ({ type: 'text', text: val })),
+          },
+        ];
+      }
 
       await sendMessage.mutateAsync({
         content: content,
         messageType: 'template',
         templateName: template.name,
-        // templateParams: [] // Pass variables if we build a form for them
+        templateParams: templateParams,
       });
       toast.success('Template sent');
     } catch (e: any) {

@@ -56,6 +56,7 @@ interface Insights {
     ctr?: string;
     cpc?: string;
     actions?: { action_type: string; value: string }[];
+    cost_per_action_type?: { action_type: string; value: string }[];
 }
 
 export default function AdsManager() {
@@ -349,7 +350,7 @@ export default function AdsManager() {
                                                     Loading insights from Meta...
                                                 </div>
                                             ) : insightsMap[camp.id] ? (
-                                                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+                                                <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
                                                     <InsightStat
                                                         iconUrl="https://img.icons8.com/fluency/48/visible.png"
                                                         label="Impressions"
@@ -380,6 +381,49 @@ export default function AdsManager() {
                                                         label="CPC"
                                                         value={`${sym}${Number(insightsMap[camp.id]?.cpc || 0).toFixed(2)}`}
                                                     />
+                                                    {(() => {
+                                                        const insights = insightsMap[camp.id];
+                                                        let cprValue = "0.00";
+                                                        
+                                                        // Fallback to computing CPR from exactly what we have: spend and actions
+                                                        if (insights?.actions && insights.actions.length > 0 && insights.spend) {
+                                                            // Find the primary conversion action representing "Results"
+                                                            // Order of priority: checkout -> purchase -> lead -> messaging started -> generic conversion
+                                                            const resultAction = insights.actions.find(a => 
+                                                                a.action_type.includes('checkout') || 
+                                                                a.action_type.includes('purchase') || 
+                                                                a.action_type.includes('lead') || 
+                                                                a.action_type.includes('messaging_conversation_started') ||
+                                                                a.action_type.includes('messaging_first_reply')
+                                                            ) || insights.actions.find(a => a.action_type.includes('conversion'));
+                                                            
+                                                            if (resultAction) {
+                                                                const resultsCount = Number(resultAction.value);
+                                                                if (resultsCount > 0) {
+                                                                    cprValue = (Number(insights.spend) / resultsCount).toFixed(2);
+                                                                }
+                                                            }
+                                                        } else if (insights?.cost_per_action_type && insights.cost_per_action_type.length > 0) {
+                                                            // Fallback to Meta's provided cost_per_action_type if available
+                                                            const resultAction = insights.cost_per_action_type.find(a => 
+                                                                a.action_type.includes('conversion') || 
+                                                                a.action_type.includes('checkout') || 
+                                                                a.action_type.includes('purchase') || 
+                                                                a.action_type.includes('lead') || 
+                                                                a.action_type.includes('messaging')
+                                                            ) || insights.cost_per_action_type.find(a => a.action_type !== 'link_click');
+                                                            
+                                                            if (resultAction) cprValue = Number(resultAction.value).toFixed(2);
+                                                        }
+
+                                                        return (
+                                                            <InsightStat
+                                                                iconUrl="https://img.icons8.com/fluency/48/target.png"
+                                                                label="CPR"
+                                                                value={`${sym}${cprValue}`}
+                                                            />
+                                                        );
+                                                    })()}
                                                 </div>
                                             ) : (
                                                 <div className="text-center py-6 text-muted-foreground text-sm">

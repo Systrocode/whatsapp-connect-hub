@@ -46,7 +46,7 @@ async function listMetaCampaigns(adAccountId: string, marketingToken: string) {
 
 // Get campaign insights
 async function getCampaignInsights(campaignId: string, datePreset: string = "last_7d", marketingToken: string) {
-  const url = `${META_GRAPH_URL}/${campaignId}/insights?fields=impressions,clicks,spend,reach,ctr,cpc,actions&date_preset=${datePreset}&access_token=${marketingToken}`;
+  const url = `${META_GRAPH_URL}/${campaignId}/insights?fields=impressions,clicks,spend,reach,ctr,cpc,actions,cost_per_action_type&date_preset=${datePreset}&access_token=${marketingToken}`;
   console.log(`Fetching insights for campaign ${campaignId}...`);
   const response = await fetch(url);
   const data = await response.json();

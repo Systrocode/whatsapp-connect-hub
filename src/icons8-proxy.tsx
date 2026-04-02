@@ -51,6 +51,7 @@ const createIcons8Component = (name: string) => {
       'search': 'search',
       'bell': 'bell',
       'trash-2': 'trash',
+      'trash2': 'trash',
       'trash': 'trash',
       'phone': 'phone',
       // Charts & Analytics
@@ -93,6 +94,8 @@ const createIcons8Component = (name: string) => {
       'clipboard-paste': 'clipboard',
       'mail': 'envelope',
       'log-out': 'exit',
+      'refresh-cw': 'synchronize',
+      'refresh-ccw': 'synchronize',
     };
     if (overrides[iconName]) iconName = overrides[iconName];
 
