@@ -139,7 +139,7 @@ export function LandingFooter() {
                                     <div className="h-6 w-px bg-slate-800"></div>
                                     <div className="flex flex-col justify-center">
                                         <span className="text-white font-bold text-[10px] leading-none mb-0.5">Meta</span>
-                                        <span className="text-slate-400 font-medium text-[9px] leading-none uppercase tracking-wide">Tech Partner</span>
+                                        <span className="text-slate-400 font-medium text-[9px] leading-none uppercase tracking-wide">Business Partner</span>
                                     </div>
                                 </div>
                             </div>
