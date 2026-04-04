@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Send, Phone, MoreVertical, CheckCircle2, Clock, User, Paperclip, Loader2, Image as ImageIcon, FileText, Music, LayoutTemplate, Info, Check, CheckCheck } from 'lucide-react';
+import { ArrowLeft, Send, Phone, MoreVertical, CheckCircle2, Clock, User, Paperclip, Loader2, Image as ImageIcon, FileText, Music, LayoutTemplate, Info, Check, CheckCheck, AlertCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
@@ -452,7 +452,9 @@ const ConversationDetail = () => {
                                   </svg>
                                 ) : message.status === 'failed' ? (
                                   // Red exclamation (failed)
-                                  <span className="text-red-500 font-bold ml-1" title="Delivery Failed">Failed!</span>
+                                  <span title="Delivery Failed" className="flex items-center">
+                                    <AlertCircle className="w-3.5 h-3.5 text-red-500 ml-1" />
+                                  </span>
                                 ) : (
                                   // Single grey tick (sent)
                                   <svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
