@@ -1159,7 +1159,7 @@ serve(async (req: Request) => {
         }
 
         const response = await fetch(
-          `https://graph.facebook.com/v21.0/${settings.phone_number_id}?fields=quality_rating,status,messaging_limit_tier`,
+          `https://graph.facebook.com/v21.0/${settings.phone_number_id}?fields=quality_rating,status,messaging_limit_tier,whatsapp_business_manager_messaging_limit`,
           {
             headers: {
               'Authorization': `Bearer ${settings.access_token}`,

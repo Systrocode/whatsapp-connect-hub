@@ -116,14 +116,26 @@ export const StatusWidget = () => {
 
     const formatTier = (tier: string) => {
         if (!tier) return 'N/A';
+        
+        // Handle new string/number format from whatsapp_business_manager_messaging_limit
+        const limitStr = tier.toString().toUpperCase();
+        if (limitStr === 'UNLIMITED') return 'Unlimited';
+        if (limitStr === '250') return '250/day (Unverified)';
+        
+        // If it's a raw numeric string/number
+        if (!isNaN(Number(limitStr))) {
+            return `${Number(limitStr).toLocaleString()}/day`;
+        }
+
+        // Legacy format fallback
         const tierMap: Record<string, string> = {
             TIER_NOT_SET: '250/day (Unverified)',
-            TIER_1K:      '1,000/day', // Update to 1,000 to match Meta documentation directly
+            TIER_1K:      '1,000/day',
             TIER_10K:     '10,000/day',
             TIER_100K:    '100,000/day',
             TIER_UNLIMITED: 'Unlimited',
         };
-        return tierMap[tier] ?? tier.replace('TIER_', '').replace('_', ' ');
+        return tierMap[limitStr] ?? limitStr.replace('TIER_', '').replace('_', ' ');
     };
 
     if (loading) return <div className="p-4 flex gap-2 items-center text-sm text-muted-foreground"><Spinner className="w-4 h-4" /> Checking Status...</div>;
@@ -162,7 +174,7 @@ export const StatusWidget = () => {
             <div className="flex flex-col gap-1.5">
                 <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Daily Messaging Limit</span>
                 <span className="text-lg font-bold text-foreground">
-                    {formatTier(statusData.messaging_limit_tier)}
+                    {formatTier(statusData.whatsapp_business_manager_messaging_limit || statusData.messaging_limit_tier)}
                 </span>
             </div>
         </Card>
