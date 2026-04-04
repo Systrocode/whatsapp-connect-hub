@@ -117,8 +117,8 @@ export const StatusWidget = () => {
     const formatTier = (tier: string) => {
         if (!tier) return 'N/A';
         const tierMap: Record<string, string> = {
-            TIER_NOT_SET: 'N/A',
-            TIER_1K:      '2,000/day',
+            TIER_NOT_SET: '250/day (Unverified)',
+            TIER_1K:      '1,000/day', // Update to 1,000 to match Meta documentation directly
             TIER_10K:     '10,000/day',
             TIER_100K:    '100,000/day',
             TIER_UNLIMITED: 'Unlimited',

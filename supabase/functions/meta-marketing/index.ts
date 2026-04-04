@@ -108,6 +108,34 @@ async function getAdAccountInfo(adAccountId: string, marketingToken: string) {
   return data;
 }
 
+// Create custom audience
+async function createCustomAudience(name: string, adAccountId: string, marketingToken: string) {
+  const url = `${META_GRAPH_URL}/act_${adAccountId}/customaudiences`;
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name: `Avelo: ${name}`,
+      subtype: "CUSTOM",
+      description: "Auto-synced from Avelo Smart Segments",
+      customer_file_source: "USER_PROVIDED_ONLY",
+      access_token: marketingToken
+    }),
+  });
+  const data = await response.json();
+  if (data.error) throw new Error(data.error.message);
+  return data;
+}
+
+// Get Custom Audience Insights
+async function getCustomAudienceInsights(customAudienceId: string, marketingToken: string) {
+  const url = `${META_GRAPH_URL}/${customAudienceId}?fields=name,approximate_count_upper_bound,approximate_count_lower_bound&access_token=${marketingToken}`;
+  const response = await fetch(url);
+  const data = await response.json();
+  if (data.error) throw new Error(data.error.message);
+  return data;
+}
+
 serve(async (req: Request) => {
   // 1. CORS preflight
   const preflight = handleCors(req);
@@ -203,6 +231,28 @@ serve(async (req: Request) => {
       case "exchange_token":
         if (!params.shortLivedToken) throw new Error("shortLivedToken is required");
         result = await getLongLivedToken(params.shortLivedToken, META_APP_ID, META_APP_SECRET);
+        break;
+
+      case "sync_segment":
+        if (!params.segmentId || !params.name) throw new Error("segmentId and name are required");
+        const caData = await createCustomAudience(params.name, META_AD_ACCOUNT_ID, MARKETING_API_TOKEN);
+        
+        // Update segment in database with new meta_custom_audience_id inside criteria
+        const { data: segment } = await supabaseAdmin.from('segments').select('criteria').eq('id', params.segmentId).single();
+        if (segment) {
+          const newCriteria = { 
+            ...segment.criteria, 
+            meta_custom_audience_id: caData.id, 
+            meta_synced_at: new Date().toISOString() 
+          };
+          await supabaseAdmin.from('segments').update({ criteria: newCriteria }).eq('id', params.segmentId);
+        }
+        result = caData;
+        break;
+
+      case "get_segment_insights":
+        if (!params.customAudienceId) throw new Error("customAudienceId is required");
+        result = await getCustomAudienceInsights(params.customAudienceId, MARKETING_API_TOKEN);
         break;
 
       default:

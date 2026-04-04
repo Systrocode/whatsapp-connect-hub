@@ -8,6 +8,8 @@ export interface SegmentCriteria {
     last_active_days?: number; // e.g., > 7 days
     signup_date_start?: string;
     signup_date_end?: string;
+    meta_custom_audience_id?: string;
+    meta_synced_at?: string;
 }
 
 export interface Segment {
@@ -83,10 +85,69 @@ export function useSegments() {
         },
     });
 
+    const syncSegmentToMeta = useMutation({
+        mutationFn: async (params: { segmentId: string; name: string }) => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) throw new Error('Not authenticated');
+
+            const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/meta-marketing`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${session.access_token}`,
+                },
+                body: JSON.stringify({
+                    action: 'sync_segment',
+                    segmentId: params.segmentId,
+                    name: params.name
+                })
+            });
+
+            const result = await res.json();
+            if (!result.success) throw new Error(result.error);
+            return result.data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['segments'] });
+            toast.success('Successfully synced segment to Meta Ads');
+        },
+        onError: (error: any) => {
+            toast.error('Failed to sync to Meta: ' + error.message);
+        }
+    });
+
+    const getMetaSegmentInsights = useMutation({
+        mutationFn: async (customAudienceId: string) => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) throw new Error('Not authenticated');
+
+            const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/meta-marketing`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${session.access_token}`,
+                },
+                body: JSON.stringify({
+                    action: 'get_segment_insights',
+                    customAudienceId
+                })
+            });
+
+            const result = await res.json();
+            if (!result.success) throw new Error(result.error);
+            return result.data;
+        },
+        onError: (error: any) => {
+            toast.error('Failed to load insights: ' + error.message);
+        }
+    });
+
     return {
         segments,
         isLoading,
         createSegment,
         deleteSegment,
+        syncSegmentToMeta,
+        getMetaSegmentInsights,
     };
 }

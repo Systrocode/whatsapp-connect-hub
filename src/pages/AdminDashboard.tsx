@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAdminStats } from '@/hooks/useAdminStats';
 import {
   Users,
-  MessageSquare,
+  MessageCircle,
   MessagesSquare,
   Contact2,
   UserCheck,
@@ -35,7 +35,7 @@ const AdminDashboard = () => {
     {
       label: 'Total Messages',
       value: stats?.totalMessages || 0,
-      icon: MessageSquare,
+      icon: MessageCircle,
       color: 'text-blue-500',
       bgColor: 'bg-blue-500/10'
     },

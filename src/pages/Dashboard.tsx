@@ -15,7 +15,7 @@ const icons = {
   chat: 'https://img.icons8.com/fluency/48/chat.png',
   group: 'https://img.icons8.com/fluency/48/group.png',
   bell: 'https://img.icons8.com/fluency/48/appointment-reminders.png', // bell is often named appointment-reminders or bell
-  comments: 'https://img.icons8.com/fluency/48/comments.png',
+  comments: 'https://img.icons8.com/fluency/48/speech-bubble-with-dots.png',
   megaphone: 'https://img.icons8.com/fluency/48/megaphone.png',
   clock: 'https://img.icons8.com/fluency/48/clock.png',
   template: 'https://img.icons8.com/fluency/48/template.png',

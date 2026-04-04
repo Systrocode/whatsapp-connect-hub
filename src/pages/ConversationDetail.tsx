@@ -450,6 +450,9 @@ const ConversationDetail = () => {
                                     <path d="M15.5 0.5L9.35 7.29L8.5 6.36" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                     <path d="M4.921 7.29L2.5 4.68" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                   </svg>
+                                ) : message.status === 'failed' ? (
+                                  // Red exclamation (failed)
+                                  <span className="text-red-500 font-bold ml-1" title="Delivery Failed">Failed!</span>
                                 ) : (
                                   // Single grey tick (sent)
                                   <svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
