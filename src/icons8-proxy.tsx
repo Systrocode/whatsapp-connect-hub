@@ -14,11 +14,13 @@ const createIcons8Component = (name: string) => {
     const overrides: Record<string, string> = {
       // Status & Check icons
       'check-circle-2': 'checked--v1',
+      'check-circle2': 'checked--v1',
       'check-circle': 'checked--v1',
       'check': 'check--v1',
       'check-check': 'double-tick',
       'check-square': 'checked-checkbox--v1',
       'check-square-2': 'checked-checkbox--v1',
+      'check-square2': 'checked-checkbox--v1',
       // Navigation
       'x': 'multiply',
       'chevron-right': 'forward',
@@ -28,8 +30,8 @@ const createIcons8Component = (name: string) => {
       'arrow-right': 'arrow',
       'arrow-left': 'back',
       // Messaging
-      'message-square': 'speech-bubble',
-      'message-circle': 'speech-bubble',
+      'message-square': 'chat',
+      'message-circle': 'chat',
       'messages-square': 'chat',
       'send': 'paper-plane',
       // Files & Media
@@ -44,6 +46,7 @@ const createIcons8Component = (name: string) => {
       'user': 'user-male-circle',
       'user-check': 'checked-user-male',
       'contact-2': 'address-book',
+      'contact2': 'address-book',
       // UI Controls
       'more-vertical': 'more',
       'more-horizontal': 'more',
@@ -56,6 +59,7 @@ const createIcons8Component = (name: string) => {
       'phone': 'phone',
       // Charts & Analytics
       'bar-chart-3': 'bar-chart',
+      'bar-chart3': 'bar-chart',
       'trending-up': 'positive-dynamic',
       // Status
       'clock': 'clock',
@@ -64,6 +68,7 @@ const createIcons8Component = (name: string) => {
       'alert-circle': 'error',
       // Settings
       'settings-2': 'settings',
+      'settings2': 'settings',
       'menu': 'menu',
       'layout-dashboard': 'dashboard',
       'plus': 'plus-math',
