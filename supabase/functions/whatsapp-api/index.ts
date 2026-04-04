@@ -99,9 +99,15 @@ serve(async (req: Request) => {
         for (const statusUpdate of statuses) {
           console.log("Processing status update:", statusUpdate);
 
+          let updatePayload: any = { status: statusUpdate.status };
+          
+          if (statusUpdate.status === 'failed' && statusUpdate.errors && statusUpdate.errors.length > 0) {
+            updatePayload.content = `[Delivery Failed] Reason: ${statusUpdate.errors[0]?.title} - ${statusUpdate.errors[0]?.message}`;
+          }
+
           const { error } = await supabaseServiceRole
             .from('messages')
-            .update({ status: statusUpdate.status })
+            .update(updatePayload)
             .eq('whatsapp_message_id', statusUpdate.id);
 
           if (error) {
