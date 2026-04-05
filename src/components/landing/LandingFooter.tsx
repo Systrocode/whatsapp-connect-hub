@@ -87,6 +87,7 @@ export function LandingFooter() {
                                 <li><Link to="/docs" className="text-slate-300 hover:text-green-400 transition-colors">Developer Docs</Link></li>
                                 <li><Link to="/" className="text-slate-300 hover:text-green-400 transition-colors">Community</Link></li>
                                 <li><Link to="/help" className="text-slate-300 hover:text-green-400 transition-colors">Help Center</Link></li>
+                                <li><Link to="/mobile-app" className="text-slate-300 hover:text-green-400 transition-colors">Mobile App</Link></li>
                             </ul>
                         </div>
 
