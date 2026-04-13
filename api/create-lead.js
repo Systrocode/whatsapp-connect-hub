@@ -27,7 +27,8 @@ export default async function handler(req, res) {
         "X-Api-Key": process.env.ESPO_API_KEY
       },
       body: JSON.stringify({
-        name,
+        firstName: name,
+        lastName: "WhatsApp",
         phoneNumber: phone,
         emailAddress: email,
         description: "Lead from Avelo WhatsApp"
