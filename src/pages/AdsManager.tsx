@@ -41,6 +41,7 @@ const currencySymbol = (code?: string) => {
 };
 
 const DATE_PRESETS = [
+    { label: 'Lifetime (Maximum)', value: 'maximum' },
     { label: 'Today', value: 'today' },
     { label: 'Yesterday', value: 'yesterday' },
     { label: 'Last 7 days', value: 'last_7d' },
@@ -71,7 +72,7 @@ export default function AdsManager() {
     const [expandedCamp, setExpandedCamp] = useState<string | null>(null);
     const [insightsMap, setInsightsMap] = useState<Record<string, Insights | null>>({});
     const [insightsLoading, setInsightsLoading] = useState<Record<string, boolean>>({});
-    const [datePreset, setDatePreset] = useState('last_7d');
+    const [datePreset, setDatePreset] = useState('maximum');
 
     const fetchAdData = useCallback(async () => {
         try {
@@ -115,6 +116,9 @@ export default function AdsManager() {
             await fetchAdData();
             // Clear cached insights so they re-fetch fresh
             setInsightsMap({});
+            if (expandedCamp) {
+                fetchInsights(expandedCamp, datePreset);
+            }
             toast.success('Synced from Meta successfully!');
         } catch {
             toast.error('Sync failed. Please try again.');
@@ -123,11 +127,11 @@ export default function AdsManager() {
         }
     };
 
-    const fetchInsights = async (campaignId: string) => {
+    const fetchInsights = async (campaignId: string, currentPreset: string = datePreset) => {
         setInsightsLoading(prev => ({ ...prev, [campaignId]: true }));
         try {
             const res = await supabase.functions.invoke('meta-marketing', {
-                body: { action: 'get_insights', campaignId, datePreset },
+                body: { action: 'get_insights', campaignId, datePreset: currentPreset },
             });
             if (res.data?.success) {
                 setInsightsMap(prev => ({ ...prev, [campaignId]: res.data.data }));
@@ -288,8 +292,12 @@ export default function AdsManager() {
                             <select
                                 value={datePreset}
                                 onChange={e => {
-                                    setDatePreset(e.target.value);
+                                    const newPreset = e.target.value;
+                                    setDatePreset(newPreset);
                                     setInsightsMap({});
+                                    if (expandedCamp) {
+                                        fetchInsights(expandedCamp, newPreset);
+                                    }
                                 }}
                                 className="ml-4 text-sm border border-border rounded-md px-3 py-1.5 bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                             >
