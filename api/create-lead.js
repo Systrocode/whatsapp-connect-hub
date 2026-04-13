@@ -4,7 +4,21 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { name, phone, email } = req.body;
+    let body = req.body;
+
+    if (!body) {
+      return res.status(400).json({ error: "Missing body" });
+    }
+
+    if (typeof body === "string") {
+      body = JSON.parse(body);
+    }
+
+    const { name, phone, email } = body;
+
+    if (!name || !phone) {
+      return res.status(400).json({ error: "Missing fields" });
+    }
 
     const response = await fetch("http://3.89.106.86:8080/api/v1/Lead", {
       method: "POST",
@@ -20,11 +34,21 @@ export default async function handler(req, res) {
       })
     });
 
-    const data = await response.json();
+    const text = await response.text();
 
-    return res.status(200).json(data);
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      data = { raw: text };
+    }
+
+    return res.status(200).json({
+      success: true,
+      espocrm_response: data
+    });
 
   } catch (err) {
-    return res.status(500).json({ error: err.message || "Server error" });
+    return res.status(500).json({ error: err.message });
   }
 }
