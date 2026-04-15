@@ -300,6 +300,17 @@ serve(async (req: Request) => {
               message.interactive?.list_reply?.title ||
               '[Interactive response]';
             messageType = 'text';
+          } else if (message.type === 'reaction') {
+            // Reaction events (emoji reactions to a message)
+            const emoji = message.reaction?.emoji || '👍';
+            content = `[Reaction: ${emoji}]`;
+            messageType = 'text';
+          } else {
+            // unsupported / unknown types (polls, voice notes meta marks unsupported, etc.)
+            // Log and skip — do NOT attempt DB insert with empty content.
+            const errCode = message.errors?.[0]?.code || 'unknown';
+            console.log(`Skipping unsupported message type '${message.type}' (code: ${errCode}) from ${senderPhone}`);
+            continue;
           }
 
 
@@ -410,7 +421,14 @@ serve(async (req: Request) => {
 
           if (msgError) {
             console.error("Error saving message:", msgError);
-            // Return 500 so Meta retries delivery instead of silently dropping the message
+            // Only retry (500) for constraint violations that might be transient.
+            // For check constraint errors (23514) – e.g. empty content – return 200
+            // so Meta stops retrying this delivery forever.
+            const isConstraintError = msgError.code === '23514';
+            if (isConstraintError) {
+              console.warn("Constraint violation – acknowledging to prevent Meta retry loop.");
+              continue; // skip to next message and ack 200 at end
+            }
             return new Response("MESSAGE_SAVE_ERROR", { status: 500, headers: ch });
           } else {
             console.log("Message saved successfully for conversation:", conversationId);
