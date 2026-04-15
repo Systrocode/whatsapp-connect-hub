@@ -690,9 +690,16 @@ serve(async (req: Request) => {
         console.log("WhatsApp API response:", result);
 
         if (!response.ok) {
+          const metaError = result.error;
+          console.error("Meta API error:", JSON.stringify(metaError));
+          // Build a human-readable error that includes the Meta error code
+          const errorMsg = metaError
+            ? `${metaError.message} (Code: ${metaError.code}${metaError.error_data ? ' — ' + metaError.error_data : ''})`
+            : 'Failed to send message';
           return new Response(JSON.stringify({ 
             success: false, 
-            error: result.error?.message || 'Failed to send message' 
+            error: errorMsg,
+            meta_error: metaError,
           }), {
             status: 200,
             headers: { ...ch, 'Content-Type': 'application/json' }
