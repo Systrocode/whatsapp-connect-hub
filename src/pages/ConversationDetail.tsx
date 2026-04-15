@@ -362,7 +362,7 @@ const ConversationDetail = () => {
                               // Handle Image
                               if (parsed.image) {
                                 const mediaId = parsed.image.id;
-                                let mediaUrl = parsed.image.link;
+                                let mediaUrl = parsed.media_url || parsed.image.link;
                                 if (isMetaUrl(mediaUrl)) mediaUrl = undefined;
                                 const caption = parsed.caption;
                                 return <WhatsAppMedia mediaId={mediaId} mediaUrl={mediaUrl} caption={caption} type="image" />;
@@ -371,7 +371,7 @@ const ConversationDetail = () => {
                               // Handle Video
                               if (parsed.video) {
                                 const mediaId = parsed.video.id;
-                                let mediaUrl = parsed.video.link || parsed.video.url;
+                                let mediaUrl = parsed.media_url || parsed.video.link || parsed.video.url;
                                 if (isMetaUrl(mediaUrl)) mediaUrl = undefined;
                                 const caption = parsed.caption;
                                 return <WhatsAppMedia mediaId={mediaId} mediaUrl={mediaUrl} caption={caption} type="video" />;
@@ -380,7 +380,7 @@ const ConversationDetail = () => {
                               // Handle Audio
                               if (parsed.audio) {
                                 const mediaId = parsed.audio.id;
-                                let mediaUrl = parsed.audio.link || parsed.audio.url;
+                                let mediaUrl = parsed.media_url || parsed.audio.link || parsed.audio.url;
                                 if (isMetaUrl(mediaUrl)) mediaUrl = undefined;
                                 return <WhatsAppMedia mediaId={mediaId} mediaUrl={mediaUrl} type="audio" />;
                               }
@@ -388,7 +388,7 @@ const ConversationDetail = () => {
                               // Handle Document
                               if (parsed.document) {
                                 const mediaId = parsed.document.id;
-                                let mediaUrl = parsed.document.link || parsed.document.url;
+                                let mediaUrl = parsed.media_url || parsed.document.link || parsed.document.url;
                                 if (isMetaUrl(mediaUrl)) mediaUrl = undefined;
                                 const filename = parsed.document.filename || parsed.filename || 'Document';
                                 return <WhatsAppMedia mediaId={mediaId} mediaUrl={mediaUrl} filename={filename} type="document" />;

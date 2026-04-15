@@ -131,32 +131,158 @@ serve(async (req: Request) => {
           const contactInfo = contacts?.find((c: any) => c.wa_id === senderPhone);
           const contactName = contactInfo?.profile?.name || senderPhone;
 
-          // Get message content based on type
+          // Resolve the user who owns this phone_number_id
+          const phoneNumberId = value?.metadata?.phone_number_id;
+          let userId: string | null = null;
+          let accessToken: string | null = null;
+
+          if (phoneNumberId) {
+            const { data: settingsByPhone } = await supabaseServiceRole
+              .from('whatsapp_settings')
+              .select('user_id, access_token:access_token_encrypted')
+              .eq('phone_number_id', phoneNumberId)
+              .maybeSingle();
+
+            if (settingsByPhone) {
+              userId = settingsByPhone.user_id;
+              accessToken = settingsByPhone.access_token;
+              console.log(`Matched phone_number_id ${phoneNumberId} to user_id: ${userId}`);
+            } else {
+              console.warn(`No whatsapp_settings found for phone_number_id: ${phoneNumberId}. Will try fallback.`);
+            }
+          }
+
+          if (!userId) {
+            console.log("No user found by phone_number_id, trying fallback...");
+            const { data: whatsappSettings } = await supabaseServiceRole
+              .from('whatsapp_settings')
+              .select('user_id, access_token:access_token_encrypted')
+              .limit(1)
+              .single();
+
+            if (!whatsappSettings) {
+              console.error("No WhatsApp settings found - cannot assign contact");
+              return new Response("NO_SETTINGS", { status: 200, headers: ch });
+            }
+            userId = whatsappSettings.user_id;
+            accessToken = whatsappSettings.access_token;
+          }
+
+          // Process and Download Media
           let content = '';
           let messageType = 'text';
+
+          const uploadMediaToStorage = async (mediaId: string, mimeType: string, extension: string) => {
+            if (!accessToken || !userId) return null;
+            try {
+              // 1. Get media URL
+              const mediaRes = await fetch(`https://graph.facebook.com/v21.0/${mediaId}`, {
+                headers: { 'Authorization': `Bearer ${accessToken}` }
+              });
+              const mediaJson = await mediaRes.json();
+              if (!mediaJson.url) {
+                console.error("Failed to get media URL from Meta:", mediaJson);
+                return null;
+              }
+              
+              // 2. Download media
+              let fileRes = await fetch(mediaJson.url, {
+                headers: { 'Authorization': `Bearer ${accessToken}` },
+                redirect: 'manual'
+              });
+              if (fileRes.status === 301 || fileRes.status === 302) {
+                 const location = fileRes.headers.get('Location');
+                 if (location) {
+                    fileRes = await fetch(location); // Fetch without Authorization header
+                 }
+              }
+              if (!fileRes.ok) {
+                console.error("Failed to download media bytes:", fileRes.status);
+                return null;
+              }
+              
+              const blob = await fileRes.blob();
+              
+              // 3. Upload to Supabase Storage
+              const filePath = `${userId}/${crypto.randomUUID()}.${extension}`;
+              const { data, error } = await supabaseServiceRole.storage
+                .from('chat-media')
+                .upload(filePath, blob, {
+                  contentType: mimeType || 'application/octet-stream',
+                  upsert: true
+                });
+                
+              if (error) {
+                console.error("Storage upload error:", error);
+                return null;
+              }
+              
+              // 4. Return the public URL
+              const { data: publicUrlData } = supabaseServiceRole.storage
+                .from('chat-media')
+                .getPublicUrl(filePath);
+                
+              return publicUrlData.publicUrl;
+            } catch (err) {
+              console.error("Media processing error:", err);
+              return null;
+            }
+          };
 
           if (message.type === 'text') {
             content = message.text?.body || '';
             messageType = 'text';
           } else if (message.type === 'image') {
-            // Store metadata in content field as JSON string
+            const mediaId = message.image?.id;
+            const mimeType = message.image?.mime_type || 'image/jpeg';
+            let publicUrl = null;
+            if (mediaId && accessToken) {
+                publicUrl = await uploadMediaToStorage(mediaId, mimeType, 'jpg');
+            }
+            
             content = JSON.stringify({
               caption: message.image?.caption || '',
-              image: message.image // contains id, mine_type, sha256
+              media_url: publicUrl,
+              image: message.image
             });
             messageType = 'image';
           } else if (message.type === 'document') {
+            const mediaId = message.document?.id;
+            const mimeType = message.document?.mime_type || 'application/pdf';
+            const originalName = message.document?.filename || 'document';
+            const extension = originalName.includes('.') ? originalName.split('.').pop() : 'pdf';
+            
+            let publicUrl = null;
+            if (mediaId && accessToken) {
+                publicUrl = await uploadMediaToStorage(mediaId, mimeType, extension);
+            }
+
             content = JSON.stringify({
-              filename: message.document?.filename || '',
+              filename: originalName,
+              media_url: publicUrl,
               document: message.document
             });
             messageType = 'document';
           } else if (message.type === 'audio') {
-            content = JSON.stringify({ audio: message.audio });
-            messageType = 'text'; // or 'audio' if supported by DB enum, but sticking to text for safety or keeping it
+            const mediaId = message.audio?.id;
+            const mimeType = message.audio?.mime_type || 'audio/ogg';
+            let publicUrl = null;
+            if (mediaId && accessToken) {
+                publicUrl = await uploadMediaToStorage(mediaId, mimeType, 'ogg');
+            }
+
+            content = JSON.stringify({ audio: message.audio, media_url: publicUrl });
+            messageType = 'audio';
           } else if (message.type === 'video') {
-            content = JSON.stringify({ video: message.video });
-            messageType = 'text';
+            const mediaId = message.video?.id;
+            const mimeType = message.video?.mime_type || 'video/mp4';
+            let publicUrl = null;
+            if (mediaId && accessToken) {
+                publicUrl = await uploadMediaToStorage(mediaId, mimeType, 'mp4');
+            }
+
+            content = JSON.stringify({ video: message.video, media_url: publicUrl });
+            messageType = 'video';
           } else if (message.type === 'sticker') {
             content = JSON.stringify({ sticker: message.sticker });
             messageType = 'text';
@@ -176,42 +302,6 @@ serve(async (req: Request) => {
             messageType = 'text';
           }
 
-          // 1. Find or create contact
-          const phoneNumberId = value?.metadata?.phone_number_id;
-
-          // Find the user who owns this WhatsApp number
-          let userId: string | null = null;
-          let accessToken: string | null = null;
-
-          if (phoneNumberId) {
-            const { data: whatsappSettings } = await supabaseServiceRole
-              .from('whatsapp_settings')
-              .select('user_id, access_token:access_token_encrypted')
-              .eq('phone_number_id', phoneNumberId)
-              .single();
-
-            if (whatsappSettings) {
-              userId = whatsappSettings.user_id;
-              accessToken = whatsappSettings.access_token;
-              console.log("Found user for phone_number_id:", phoneNumberId, "User ID:", userId);
-            }
-          }
-
-          if (!userId) {
-            console.log("No user found by phone_number_id, trying fallback...");
-            const { data: whatsappSettings } = await supabaseServiceRole
-              .from('whatsapp_settings')
-              .select('user_id, access_token:access_token_encrypted')
-              .limit(1)
-              .single();
-
-            if (!whatsappSettings) {
-              console.error("No WhatsApp settings found - cannot assign contact");
-              return new Response("NO_SETTINGS", { status: 200, headers: ch });
-            }
-            userId = whatsappSettings.user_id;
-            accessToken = whatsappSettings.access_token;
-          }
 
           // Search for contact - checking with and without '+' prefix
           // This handles cases where user saved contact as "+123..." but webhook sends "123..."
@@ -250,11 +340,16 @@ serve(async (req: Request) => {
           }
 
           // 2. Find or create conversation
-          const { data: existingConversation } = await supabaseServiceRole
+          const { data: existingConversation, error: convLookupError } = await supabaseServiceRole
             .from('conversations')
             .select('id')
             .eq('contact_id', contactId)
-            .single();
+            .eq('user_id', userId)  // CRITICAL: scope to the correct user
+            .maybeSingle(); // maybeSingle() returns null (not error) when 0 rows found
+
+          if (convLookupError) {
+            console.error("Error looking up conversation:", convLookupError);
+          }
 
           let conversationId: string;
 
@@ -262,21 +357,11 @@ serve(async (req: Request) => {
             conversationId = existingConversation.id;
             console.log("Found existing conversation:", conversationId);
 
-            // Update conversation - increment unread count
-            const { data: convData } = await supabaseServiceRole
-              .from('conversations')
-              .select('unread_count')
-              .eq('id', conversationId)
-              .single();
-
-            await supabaseServiceRole
-              .from('conversations')
-              .update({
-                last_message_at: new Date().toISOString(),
-                unread_count: (convData?.unread_count || 0) + 1,
-                status: 'active'
-              })
-              .eq('id', conversationId);
+            // Update conversation - atomic increment via RPC to avoid race conditions
+            await supabaseServiceRole.rpc('increment_unread_and_update_conversation', {
+              p_conversation_id: conversationId,
+              p_last_message_at: new Date().toISOString(),
+            });
           } else {
             // Create new conversation
             const { data: newConversation, error: convError } = await supabaseServiceRole
@@ -300,7 +385,18 @@ serve(async (req: Request) => {
             console.log("Created new conversation:", conversationId);
           }
 
-          // 3. Save the message
+          // 3. Save the message — guard against duplicate webhook deliveries from Meta
+          const { data: existingMsg } = await supabaseServiceRole
+            .from('messages')
+            .select('id')
+            .eq('whatsapp_message_id', message.id)
+            .maybeSingle();
+
+          if (existingMsg) {
+            console.log("Duplicate webhook — message already saved:", message.id);
+            continue;
+          }
+
           const { error: msgError } = await supabaseServiceRole
             .from('messages')
             .insert({
@@ -309,11 +405,13 @@ serve(async (req: Request) => {
               content: content,
               direction: 'inbound',
               message_type: messageType,
-              status: 'delivered', // Using 'delivered' as 'received' is not in allowed DB status enum
+              status: 'delivered',
             });
 
           if (msgError) {
             console.error("Error saving message:", msgError);
+            // Return 500 so Meta retries delivery instead of silently dropping the message
+            return new Response("MESSAGE_SAVE_ERROR", { status: 500, headers: ch });
           } else {
             console.log("Message saved successfully for conversation:", conversationId);
 
@@ -604,19 +702,26 @@ serve(async (req: Request) => {
         // --- Save to Database ---
         try {
           // 1. Find or create contact
-          const { data: existingContact } = await supabaseServiceRole
+          // The `to` value may have a '+' prefix (e.g. +919XXXXXXX) but contacts saved by the
+          // inbound webhook are stored without it (919XXXXXXX). Check both variants so we
+          // never create a duplicate contact/conversation.
+          const phoneWithoutPlus = to.replace(/^\+/, '');
+          const phoneWithPlus = `+${phoneWithoutPlus}`;
+
+          const { data: existingContacts } = await supabaseServiceRole
             .from('contacts')
             .select('id')
-            .eq('phone_number', to)
-            .eq('user_id', authenticatedUser.id) // Ensure we search within the current user's contacts
-            .single();
+            .eq('user_id', authenticatedUser.id)
+            .or(`phone_number.eq.${phoneWithoutPlus},phone_number.eq.${phoneWithPlus}`);
+
+          const existingContact = existingContacts?.[0];
 
           let contactId: string;
 
           if (existingContact) {
             contactId = existingContact.id;
           } else {
-            // Create new contact
+            // Create new contact – save exactly as received so subsequent lookups are consistent
             const { data: newContact, error: contactError } = await supabaseServiceRole
               .from('contacts')
               .insert({
@@ -631,13 +736,13 @@ serve(async (req: Request) => {
             contactId = newContact.id;
           }
 
-          // 2. Find or create conversation
+          // 2. Find or create conversation (use maybeSingle so no error when 0 rows)
           const { data: existingConversation } = await supabaseServiceRole
             .from('conversations')
             .select('id')
             .eq('contact_id', contactId)
             .eq('user_id', authenticatedUser.id)
-            .single();
+            .maybeSingle();
 
           let conversationId: string;
 
@@ -1147,7 +1252,7 @@ serve(async (req: Request) => {
         // Get settings
         const { data: settings } = await supabaseServiceRole
           .from('whatsapp_settings')
-          .select('phone_number_id, access_token:access_token_encrypted')
+          .select('phone_number_id, access_token:access_token_encrypted, business_account_id')
           .eq('user_id', authenticatedUser.id)
           .single();
 
@@ -1178,7 +1283,98 @@ serve(async (req: Request) => {
           });
         }
 
-        return new Response(JSON.stringify(data), {
+        // Also check webhook subscription status
+        let webhookStatus: any = null;
+        if (settings.business_account_id) {
+          try {
+            const wabaRes = await fetch(
+              `https://graph.facebook.com/v21.0/${settings.business_account_id}/subscribed_apps`,
+              { headers: { 'Authorization': `Bearer ${settings.access_token}` } }
+            );
+            const wabaData = await wabaRes.json();
+            webhookStatus = wabaData?.data?.[0] || null;
+          } catch (e) {
+            console.warn('Could not fetch webhook subscription status:', e);
+          }
+        }
+
+        return new Response(JSON.stringify({ ...data, webhook_subscription: webhookStatus }), {
+          headers: { ...ch, 'Content-Type': 'application/json' },
+        });
+      }
+
+      case 'check_webhook': {
+        // Diagnose webhook subscription — checks if 'messages' field is subscribed
+        const { data: settings } = await supabaseServiceRole
+          .from('whatsapp_settings')
+          .select('phone_number_id, access_token:access_token_encrypted, business_account_id')
+          .eq('user_id', authenticatedUser.id)
+          .single();
+
+        if (!settings?.business_account_id || !settings?.access_token) {
+          return new Response(JSON.stringify({ error: 'Missing WABA ID or access token' }), {
+            status: 400,
+            headers: { ...ch, 'Content-Type': 'application/json' }
+          });
+        }
+
+        const res = await fetch(
+          `https://graph.facebook.com/v21.0/${settings.business_account_id}/subscribed_apps`,
+          { headers: { 'Authorization': `Bearer ${settings.access_token}` } }
+        );
+        const data = await res.json();
+
+        const subscription = data?.data?.[0];
+        const subscribedFields: string[] = subscription?.subscribed_fields || [];
+        const hasMessages = subscribedFields.includes('messages');
+
+        return new Response(JSON.stringify({
+          subscribed: !!subscription,
+          subscribed_fields: subscribedFields,
+          messages_field_subscribed: hasMessages,
+          raw: data,
+        }), {
+          headers: { ...ch, 'Content-Type': 'application/json' },
+        });
+      }
+
+      case 'register_webhook': {
+        // Subscribe the WABA to the 'messages' webhook field so inbound messages are delivered
+        const { data: settings } = await supabaseServiceRole
+          .from('whatsapp_settings')
+          .select('access_token:access_token_encrypted, business_account_id')
+          .eq('user_id', authenticatedUser.id)
+          .single();
+
+        if (!settings?.business_account_id || !settings?.access_token) {
+          return new Response(JSON.stringify({ error: 'Missing WABA ID or access token' }), {
+            status: 400,
+            headers: { ...ch, 'Content-Type': 'application/json' }
+          });
+        }
+
+        const res = await fetch(
+          `https://graph.facebook.com/v21.0/${settings.business_account_id}/subscribed_apps`,
+          {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${settings.access_token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        const data = await res.json();
+
+        if (data.error) {
+          console.error('Webhook registration error:', data.error);
+          return new Response(JSON.stringify({ success: false, error: data.error.message }), {
+            status: 400,
+            headers: { ...ch, 'Content-Type': 'application/json' }
+          });
+        }
+
+        console.log('Webhook registered successfully:', data);
+        return new Response(JSON.stringify({ success: true, result: data }), {
           headers: { ...ch, 'Content-Type': 'application/json' },
         });
       }
