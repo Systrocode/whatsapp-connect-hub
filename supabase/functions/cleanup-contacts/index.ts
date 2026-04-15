@@ -2,8 +2,12 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.6";
 import { corsHeaders } from "../_shared/security.ts";
 
-serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+// @ts-ignore
+declare const Deno: any;
+
+serve(async (req: Request) => {
+  const origin = req.headers.get('origin');
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders(origin) });
 
   try {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
@@ -40,7 +44,7 @@ serve(async (req) => {
     let deletedCount = 0;
     for (const [key, similarContacts] of groups.entries()) {
       if (similarContacts.length > 1) {
-        similarContacts.sort((a, b) => {
+        similarContacts.sort((a: any, b: any) => {
           // Prefer contacts that have names over those that don't
           if (a.name && !b.name) return -1;
           if (b.name && !a.name) return 1;
@@ -67,9 +71,10 @@ serve(async (req) => {
     }
 
     return new Response(JSON.stringify({ success: true, updated: updatedCount, deleted: deletedCount }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      headers: { ...corsHeaders(origin), 'Content-Type': 'application/json' }
     });
   } catch (err: any) {
-    return new Response(JSON.stringify({ error: err.message }), { status: 500, headers: corsHeaders });
+    const origin = req.headers.get('origin');
+    return new Response(JSON.stringify({ error: err.message }), { status: 500, headers: corsHeaders(origin) });
   }
 });
