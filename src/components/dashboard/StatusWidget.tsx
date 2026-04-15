@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { useWhatsAppAPI } from '@/hooks/useWhatsAppAPI';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
@@ -23,6 +24,8 @@ export const StatusWidget = () => {
     const [loading, setLoading] = useState(true);
     const [isConnecting, setIsConnecting] = useState(false);
     const wabaDataRef = useRef<{ waba_id: string; phone_id: string } | null>(null);
+
+    const { webhookStatus, isCheckingWebhook, registerWebhook } = useWhatsAppAPI();
 
     const fetchStatus = async () => {
         try {
@@ -157,6 +160,9 @@ export const StatusWidget = () => {
     }
 
     // Status UI
+    const messagesSubscribed = webhookStatus?.messages_field_subscribed;
+    const webhookChecked = !isCheckingWebhook && webhookStatus !== undefined;
+
     return (
         <Card className="p-4 mb-4 flex flex-wrap gap-8 items-center bg-card border-border shadow-sm">
             <div className="flex flex-col gap-1.5">
@@ -176,6 +182,28 @@ export const StatusWidget = () => {
                 <span className="text-lg font-bold text-foreground">
                     {formatTier(statusData.whatsapp_business_manager_messaging_limit || statusData.messaging_limit_tier)}
                 </span>
+            </div>
+            <div className="flex flex-col gap-1.5">
+                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Incoming Messages</span>
+                {isCheckingWebhook ? (
+                    <span className="text-sm text-muted-foreground flex items-center gap-1"><Spinner className="w-3 h-3" /> Checking...</span>
+                ) : webhookChecked && !messagesSubscribed ? (
+                    <div className="flex items-center gap-2">
+                        <Badge variant="destructive" className="w-fit px-3 py-1">Webhook Not Active</Badge>
+                        <Button
+                            size="sm"
+                            variant="outline"
+                            className="h-7 text-xs border-red-400 text-red-600 hover:bg-red-50"
+                            disabled={registerWebhook.isPending}
+                            onClick={() => registerWebhook.mutate()}
+                        >
+                            {registerWebhook.isPending ? <Spinner className="w-3 h-3 mr-1" /> : null}
+                            Fix Now
+                        </Button>
+                    </div>
+                ) : webhookChecked && messagesSubscribed ? (
+                    <Badge className="w-fit px-3 py-1 bg-emerald-500 hover:bg-emerald-600">Active ✓</Badge>
+                ) : null}
             </div>
         </Card>
     );

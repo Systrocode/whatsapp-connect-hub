@@ -154,14 +154,50 @@ export const useWhatsAppAPI = () => {
     },
   });
 
+  // Register webhook subscription (subscribes WABA to 'messages' field)
+  const registerWebhook = useMutation({
+    mutationFn: async () => {
+      const { data, error } = await supabase.functions.invoke('whatsapp-api', {
+        body: { action: 'register_webhook' }
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['whatsapp_webhook_status'] });
+      toast.success('Webhook registered — incoming messages will now be received');
+    },
+    onError: (error: Error) => {
+      toast.error(`Webhook registration failed: ${error.message}`);
+    },
+  });
+
+  // Check webhook subscription status
+  const webhookStatusQuery = useQuery({
+    queryKey: ['whatsapp_webhook_status', user?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase.functions.invoke('whatsapp-api', {
+        body: { action: 'check_webhook' }
+      });
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user && !!connectionStatusQuery.data?.connected,
+    staleTime: 30_000,
+  });
+
   return {
     connectionStatus: connectionStatusQuery.data,
     isCheckingConnection: connectionStatusQuery.isLoading,
     businessProfile: businessProfileQuery.data,
     isLoadingProfile: businessProfileQuery.isLoading,
+    webhookStatus: webhookStatusQuery.data,
+    isCheckingWebhook: webhookStatusQuery.isLoading,
     updateBusinessProfile,
     uploadProfilePhoto,
     saveAccessToken,
     sendMessage,
+    registerWebhook,
   };
 };

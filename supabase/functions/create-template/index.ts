@@ -30,21 +30,25 @@ serve(async (req: Request) => {
             throw new Error('Unauthorized')
         }
 
-        const { name, category, content, headerType, language = 'en_US' } = await req.json()
+        const { name: rawName, category, content, headerType, language = 'en_US' } = await req.json()
+
+        // Sanitize: lowercase, replace spaces with underscore, strip anything not a-z 0-9 _
+        const name = rawName.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '')
+        if (!name) throw new Error('Template name is invalid. Use only letters, numbers, and underscores.')
 
         // 2. Get Credentials
         const { data: settings, error: settingsError } = await supabaseClient
             .from('whatsapp_settings')
-            .select('business_account_id, access_token_encrypted') // Assuming access_token_encrypted is the token
+            .select('business_account_id, access_token:access_token_encrypted')
             .eq('user_id', user.id)
             .single()
 
-        if (settingsError || !settings?.business_account_id || !settings?.access_token_encrypted) {
+        if (settingsError || !settings?.business_account_id || !settings?.access_token) {
             throw new Error('WhatsApp settings not found. Please connect your account first.')
         }
 
         const wabaId = settings.business_account_id
-        const accessToken = settings.access_token_encrypted
+        const accessToken = settings.access_token
 
         // 3. Construct Meta Payload
         const components = []
@@ -103,8 +107,11 @@ serve(async (req: Request) => {
         const result = await response.json()
 
         if (!response.ok) {
-            console.error('Meta API Error:', result)
-            throw new Error(result.error?.message || 'Failed to create template on Meta')
+            const metaErr = result.error;
+            console.error('Meta API Error:', JSON.stringify(metaErr));
+            const detail = metaErr?.error_user_title || metaErr?.error_user_msg || '';
+            const code = metaErr?.code ? ` (Code: ${metaErr.code}${metaErr.error_subcode ? '/' + metaErr.error_subcode : ''})` : '';
+            throw new Error(`${metaErr?.message || 'Failed to create template'}${detail ? ' — ' + detail : ''}${code}`)
         }
 
         // 5. Save to Database
@@ -153,8 +160,11 @@ serve(async (req: Request) => {
         })
 
     } catch (error) {
-        return new Response(JSON.stringify({ error: (error as Error).message }), {
-            status: 400,
+        const msg = (error as Error).message;
+        console.error('create-template error:', msg);
+        // Return 200 so the client can read data.error and show a proper toast
+        return new Response(JSON.stringify({ error: msg }), {
+            status: 200,
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         })
     }

@@ -55,9 +55,11 @@ export const useConversations = () => {
           event: '*',
           schema: 'public',
           table: 'conversations',
+          filter: `user_id=eq.${user.id}`,
         },
         () => {
-          queryClient.invalidateQueries({ queryKey: ['conversations'] });
+          // Key must match the query key exactly (includes user.id)
+          queryClient.invalidateQueries({ queryKey: ['conversations', user.id] });
         }
       )
       .subscribe();
@@ -76,6 +78,7 @@ export const useConversations = () => {
         .from('conversations')
         .select('*')
         .eq('contact_id', contactId)
+        .eq('user_id', user.id)
         .single();
 
       if (existing) return existing;

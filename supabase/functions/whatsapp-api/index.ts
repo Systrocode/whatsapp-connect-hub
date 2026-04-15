@@ -727,11 +727,11 @@ serve(async (req: Request) => {
         // --- Save to Database ---
         try {
           // 1. Find or create contact
-          // The `to` value may have a '+' prefix (e.g. +919XXXXXXX) but contacts saved by the
-          // inbound webhook are stored without it (919XXXXXXX). Check both variants so we
-          // never create a duplicate contact/conversation.
-          const phoneWithoutPlus = to.replace(/^\+/, '');
-          const phoneWithPlus = `+${phoneWithoutPlus}`;
+          // Normalize: strip ALL non-digit characters then build variants.
+          // This handles "+91 96363 43773", "91 96363 43773", "+919636343773" etc.
+          const phoneDigitsOnly = to.replace(/\D/g, '');   // e.g. "919636343773"
+          const phoneWithoutPlus = phoneDigitsOnly;
+          const phoneWithPlus = `+${phoneDigitsOnly}`;
 
           const { data: existingContacts } = await supabaseServiceRole
             .from('contacts')
