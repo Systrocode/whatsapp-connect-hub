@@ -158,6 +158,11 @@ export const useMessages = (conversationId: string | undefined) => {
         created_at: new Date().toISOString(),
       };
 
+      // Handle template content for optimistic render
+      if (newMsgParams.messageType === 'template' && newMsgParams.templateName) {
+        optimisticMessage.content = `Template: ${newMsgParams.templateName}`;
+      }
+
       // Handle media content structure for optimistic render
       if (['image', 'video', 'audio', 'document'].includes(newMsgParams.messageType || '')) {
         optimisticMessage.content = JSON.stringify({

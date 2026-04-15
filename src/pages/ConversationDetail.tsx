@@ -353,11 +353,28 @@ const ConversationDetail = () => {
                             }`}
                         >
                           {['image', 'video', 'audio', 'document', 'template'].includes(message.message_type || '') ? (() => {
+                            // Helper to detect direct Meta URLs that will fail without auth header
+                            const isMetaUrl = (url?: string) => url && (url.includes('fbsbx') || url.includes('facebook.com') || url.includes('whatsapp.net'));
+
+                            // For template messages stored as plain text (e.g. "Template: hello_world")
+                            if (message.message_type === 'template' && !message.content.startsWith('{')) {
+                              // Extract template name: "Template: name" → "name", or show content as-is
+                              const templateLabel = message.content.startsWith('Template: ')
+                                ? message.content.replace('Template: ', '')
+                                : message.content;
+                              return (
+                                <div className="flex items-center gap-2">
+                                  <LayoutTemplate className="w-4 h-4 shrink-0 opacity-70" />
+                                  <div>
+                                    <p className="text-[10px] font-semibold uppercase tracking-wide opacity-60 mb-0.5">Template</p>
+                                    <p className="text-sm font-medium">{templateLabel}</p>
+                                  </div>
+                                </div>
+                              );
+                            }
+
                             try {
                               const parsed = JSON.parse(message.content);
-
-                              // Helper to detect direct Meta URLs that will fail without auth header
-                              const isMetaUrl = (url?: string) => url && (url.includes('fbsbx') || url.includes('facebook.com') || url.includes('whatsapp.net'));
 
                               // Handle Image
                               if (parsed.image) {
@@ -394,9 +411,8 @@ const ConversationDetail = () => {
                                 return <WhatsAppMedia mediaId={mediaId} mediaUrl={mediaUrl} filename={filename} type="document" />;
                               }
 
-                              // Handle Template Fallback (JSON Body)
+                              // Handle Template with JSON body
                               if (message.message_type === 'template') {
-                                // If message content is JSON { body: "..." }, extract it
                                 if (parsed.body) {
                                   return (
                                     <div className="space-y-2">
@@ -409,18 +425,25 @@ const ConversationDetail = () => {
                                     </div>
                                   );
                                 }
-                              }
-
-                              // Fallback for legacy text messages that might look like media but aren't handled above
-                              if (!parsed.image && !parsed.document && !parsed.video && !parsed.audio) {
-                                // It might be just a JSON object without recognized keys, fall through
+                                // JSON template but no body key — show template name if available
+                                const templateName = parsed.name || parsed.template_name || message.content;
+                                return (
+                                  <div className="flex items-center gap-2">
+                                    <LayoutTemplate className="w-4 h-4 shrink-0 opacity-70" />
+                                    <div>
+                                      <p className="text-[10px] font-semibold uppercase tracking-wide opacity-60 mb-0.5">Template</p>
+                                      <p className="text-sm font-medium">{templateName}</p>
+                                    </div>
+                                  </div>
+                                );
                               }
 
                             } catch (e) {
-                              // Legacy message or text
+                              // Non-JSON content fallback
+                              return <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>;
                             }
 
-                            // Fallback
+                            // Fallback for unrecognised JSON structures
                             return (
                               <div className="flex items-center gap-2 text-sm italic opacity-80">
                                 <span>💬</span>
