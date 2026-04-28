@@ -54,7 +54,7 @@ export const BookDemoDialog = ({ open, onOpenChange }: BookDemoDialogProps) => {
         </DialogHeader>
         <div className="w-full flex-1 bg-background">
           <iframe
-            src="https://calendly.com/systrocode/new-meeting?hide_event_type_details=1&hide_gdpr_banner=1"
+            src="https://calendly.com/connectwithavelo/30min?hide_event_type_details=1&hide_gdpr_banner=1"
             width="100%"
             height="100%"
             frameBorder="0"

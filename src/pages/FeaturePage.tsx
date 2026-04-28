@@ -2390,7 +2390,7 @@ const FeaturePage = () => {
 
                             <div className="flex items-center gap-4">
                                 <a
-                                    href="https://calendly.com/systrocode/new-meeting"
+                                    href="https://calendly.com/connectwithavelo/30min"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >

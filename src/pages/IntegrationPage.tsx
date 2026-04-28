@@ -65,7 +65,7 @@ const IntegrationPage = () => {
                                 className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start"
                             >
                                 <a
-                                    href="https://calendly.com/systrocode/new-meeting"
+                                    href="https://calendly.com/connectwithavelo/30min"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-8 rounded-full transition-colors inline-flex items-center gap-2 group justify-center text-lg h-14"
@@ -193,7 +193,7 @@ const IntegrationPage = () => {
                         Book a demo to learn how Avelo connects with your tools.
                     </p>
                     <a
-                        href="https://calendly.com/systrocode/new-meeting"
+                        href="https://calendly.com/connectwithavelo/30min"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-10 rounded-full transition-colors inline-flex items-center gap-2 justify-center text-lg h-14"

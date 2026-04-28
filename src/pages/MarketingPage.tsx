@@ -41,7 +41,7 @@ export default function MarketingPage() {
                             <div className="flex flex-wrap gap-4">
 
                                 <a
-                                    href="https://calendly.com/systrocode/new-meeting"
+                                    href="https://calendly.com/connectwithavelo/30min"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-8 rounded-lg transition-colors inline-flex items-center gap-2 group"

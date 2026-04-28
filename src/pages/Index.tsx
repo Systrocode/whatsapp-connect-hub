@@ -51,7 +51,7 @@ const Index = () => {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
 
               <a
-                href="https://calendly.com/systrocode/new-meeting"
+                href="https://calendly.com/connectwithavelo/30min"
                 target="_blank"
                 rel="noopener noreferrer"
               >
