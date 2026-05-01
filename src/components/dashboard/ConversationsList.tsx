@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
+import { cn, formatPhoneDisplay } from '@/lib/utils';
 import { useConversations } from '@/hooks/useConversations';
 import { useNavigate } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
@@ -70,7 +70,7 @@ const ConversationsList = () => {
         ) : (
           recentConversations.map((conv, index) => {
             const contactName = conv.contacts?.name || 'Unknown Contact';
-            const contactPhone = conv.contacts?.phone_number || '';
+            const contactPhone = formatPhoneDisplay(conv.contacts?.phone_number) || '';
             const displayName = contactName !== 'Unknown Contact' ? contactName : contactPhone;
             const initials = displayName.slice(0, 2).toUpperCase();
 

@@ -13,7 +13,7 @@ import { useConversations } from '@/hooks/useConversations';
 import { useTemplates, MessageTemplate } from '@/hooks/useTemplates';
 import { Skeleton } from '@/components/ui/skeleton';
 import { isToday, isYesterday } from 'date-fns';
-import { formatToIST } from '@/lib/utils';
+import { formatToIST, formatPhoneDisplay } from '@/lib/utils';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -265,7 +265,7 @@ const ConversationDetail = () => {
                       </h2>
                       <p className="text-sm text-muted-foreground flex items-center gap-1">
                         <Phone className="w-3 h-3" />
-                        {contact.phone_number}
+                        {formatPhoneDisplay(contact.phone_number)}
                       </p>
                     </div>
                   </div>

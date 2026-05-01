@@ -5,6 +5,7 @@ import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import { cn, formatPhoneDisplay } from '@/lib/utils';
 import { useConversations, ConversationWithContact } from '@/hooks/useConversations';
 import { useCampaignLeads } from '@/hooks/useCampaignLeads';
 import { useNavigate } from 'react-router-dom';
@@ -329,7 +330,7 @@ const ConversationItem = ({ conversation, index, isSelected, onSelect, onClick }
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between mb-1">
             <h3 className="font-semibold text-foreground truncate">
-              {conversation.contacts?.name || conversation.contacts?.phone_number || 'Unknown'}
+              {conversation.contacts?.name || formatPhoneDisplay(conversation.contacts?.phone_number) || 'Unknown'}
             </h3>
             <span className="text-xs text-muted-foreground whitespace-nowrap ml-2">
               {formatDistanceToNow(new Date(conversation.last_message_at), { addSuffix: true })}
@@ -337,7 +338,7 @@ const ConversationItem = ({ conversation, index, isSelected, onSelect, onClick }
           </div>
           <div className="flex items-center justify-between gap-2">
             <p className="text-sm text-muted-foreground truncate">
-              {conversation.contacts?.phone_number}
+              {formatPhoneDisplay(conversation.contacts?.phone_number)}
             </p>
             <div className="flex items-center gap-2 shrink-0">
               {conversation.unread_count > 0 && (

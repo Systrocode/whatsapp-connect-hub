@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useContacts, CreateContactData } from '@/hooks/useContacts';
+import { formatPhoneDisplay } from '@/lib/utils';
 import { useConversations } from '@/hooks/useConversations';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -221,7 +222,7 @@ const Contacts = () => {
                       </h3>
                       <p className="text-sm text-muted-foreground flex items-center gap-1">
                         <Phone className="w-3 h-3" />
-                        {contact.phone_number}
+                        {formatPhoneDisplay(contact.phone_number)}
                       </p>
                     </div>
                   </div>

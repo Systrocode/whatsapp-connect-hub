@@ -16,3 +16,15 @@ export function formatToIST(date: string | Date | null | undefined, options: Int
     ...options
   });
 }
+
+/**
+ * Format a phone number for display by adding a '+' prefix.
+ * Meta sends numbers without '+' (e.g. "919672040456").
+ * This makes them display as "+91 9672040456".
+ */
+export function formatPhoneDisplay(phone: string | null | undefined): string {
+  if (!phone) return '';
+  const digits = phone.replace(/\D/g, '');
+  if (!digits) return phone;
+  return `+${digits}`;
+}
