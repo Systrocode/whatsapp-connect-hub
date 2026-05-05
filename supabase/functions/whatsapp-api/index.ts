@@ -141,6 +141,7 @@ serve(async (req: Request) => {
               .from('whatsapp_settings')
               .select('user_id, access_token:access_token_encrypted')
               .eq('phone_number_id', phoneNumberId)
+              .limit(1)
               .maybeSingle();
 
             if (settingsByPhone) {
@@ -148,24 +149,13 @@ serve(async (req: Request) => {
               accessToken = settingsByPhone.access_token;
               console.log(`Matched phone_number_id ${phoneNumberId} to user_id: ${userId}`);
             } else {
-              console.warn(`No whatsapp_settings found for phone_number_id: ${phoneNumberId}. Will try fallback.`);
+              console.warn(`No whatsapp_settings found for phone_number_id: ${phoneNumberId}.`);
             }
           }
 
           if (!userId) {
-            console.log("No user found by phone_number_id, trying fallback...");
-            const { data: whatsappSettings } = await supabaseServiceRole
-              .from('whatsapp_settings')
-              .select('user_id, access_token:access_token_encrypted')
-              .limit(1)
-              .single();
-
-            if (!whatsappSettings) {
-              console.error("No WhatsApp settings found - cannot assign contact");
-              return new Response("NO_SETTINGS", { status: 200, headers: ch });
-            }
-            userId = whatsappSettings.user_id;
-            accessToken = whatsappSettings.access_token;
+            console.error("No WhatsApp settings found - cannot assign contact");
+            return new Response("NO_SETTINGS", { status: 200, headers: ch });
           }
 
           // Process and Download Media
@@ -356,6 +346,7 @@ serve(async (req: Request) => {
             .select('id')
             .eq('contact_id', contactId)
             .eq('user_id', userId)  // CRITICAL: scope to the correct user
+            .limit(1)
             .maybeSingle(); // maybeSingle() returns null (not error) when 0 rows found
 
           if (convLookupError) {
@@ -401,6 +392,7 @@ serve(async (req: Request) => {
             .from('messages')
             .select('id')
             .eq('whatsapp_message_id', message.id)
+            .limit(1)
             .maybeSingle();
 
           if (existingMsg) {
@@ -746,12 +738,12 @@ serve(async (req: Request) => {
           if (existingContact) {
             contactId = existingContact.id;
           } else {
-            // Create new contact – save exactly as received so subsequent lookups are consistent
+            // Create new contact – save in standard format (just digits with +)
             const { data: newContact, error: contactError } = await supabaseServiceRole
               .from('contacts')
               .insert({
                 user_id: authenticatedUser.id,
-                phone_number: to,
+                phone_number: phoneWithPlus,
                 name: to, // Default name to phone number
               })
               .select()
@@ -767,6 +759,7 @@ serve(async (req: Request) => {
             .select('id')
             .eq('contact_id', contactId)
             .eq('user_id', authenticatedUser.id)
+            .limit(1)
             .maybeSingle();
 
           let conversationId: string;
@@ -805,6 +798,7 @@ serve(async (req: Request) => {
               .select('content')
               .eq('name', template_name)
               .eq('user_id', authenticatedUser.id)
+              .limit(1)
               .maybeSingle();
 
             if (templateData?.content) {

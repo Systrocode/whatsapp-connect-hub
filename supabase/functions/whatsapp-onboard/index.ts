@@ -53,6 +53,28 @@ serve(async (req: Request) => {
 
     if (dbError) throw dbError
 
+    // 6. Subscribe the WABA to the App's webhook automatically
+    try {
+      const subscribeResponse = await fetch(
+        `https://graph.facebook.com/v21.0/${waba_id}/subscribed_apps`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${access_token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      const subscribeData = await subscribeResponse.json();
+      if (!subscribeResponse.ok || subscribeData.error) {
+        console.error("Failed to subscribe WABA to webhook:", subscribeData);
+      } else {
+        console.log("Successfully subscribed WABA to webhook.");
+      }
+    } catch (e) {
+      console.error("Error during webhook subscription:", e);
+    }
+
     return new Response(JSON.stringify({ success: true }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 200,

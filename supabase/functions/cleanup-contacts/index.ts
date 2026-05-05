@@ -56,7 +56,7 @@ serve(async (req: Request) => {
         for (const dup of duplicates) {
           const { data: convos } = await supabaseServiceRole.from('conversations').select('*').eq('contact_id', dup.id);
           for (const convo of convos || []) {
-            const { data: primaryConvo } = await supabaseServiceRole.from('conversations').select('*').eq('contact_id', primary.id).maybeSingle();
+            const { data: primaryConvo } = await supabaseServiceRole.from('conversations').select('*').eq('contact_id', primary.id).limit(1).maybeSingle();
             if (primaryConvo) {
               await supabaseServiceRole.from('messages').update({ conversation_id: primaryConvo.id }).eq('conversation_id', convo.id);
               await supabaseServiceRole.from('conversations').delete().eq('id', convo.id);
