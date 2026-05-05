@@ -235,8 +235,15 @@ const Settings = () => {
                     </div>
                     <Button 
                       variant="destructive" 
-                      onClick={() => {
-                        updateWhatsAppSettings.mutateAsync({ is_connected: false }).then(() => window.location.reload());
+                      onClick={async () => {
+                        try {
+                          await supabase.functions.invoke('whatsapp-api', {
+                            body: { action: 'disconnect' }
+                          });
+                          window.location.reload();
+                        } catch (err) {
+                          toast.error('Failed to disconnect');
+                        }
                       }}
                     >
                       Disconnect Facebook

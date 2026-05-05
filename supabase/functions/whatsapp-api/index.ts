@@ -630,6 +630,30 @@ serve(async (req: Request) => {
         });
       }
 
+      case 'disconnect': {
+        const { error } = await supabaseServiceRole
+          .from('whatsapp_settings')
+          .update({
+            access_token_encrypted: null,
+            phone_number_id: null,
+            business_account_id: null,
+            is_connected: false,
+            updated_at: new Date().toISOString()
+          })
+          .eq('user_id', authenticatedUser.id);
+
+        if (error) {
+          return new Response(JSON.stringify({ error: error.message }), {
+            status: 400,
+            headers: { ...ch, 'Content-Type': 'application/json' }
+          });
+        }
+
+        return new Response(JSON.stringify({ success: true }), {
+          headers: { ...ch, 'Content-Type': 'application/json' }
+        });
+      }
+
       case 'send_message': {
         const { to, message, template_name, template_params, type = 'text', media_url, caption, filename } = params;
 
