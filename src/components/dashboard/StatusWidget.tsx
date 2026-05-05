@@ -185,7 +185,22 @@ export const StatusWidget = () => {
             </div>
             <div className="flex flex-col gap-1.5">
                 <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Incoming Messages</span>
-                <Badge className="w-fit px-3 py-1 bg-emerald-500 hover:bg-emerald-600">Active ✓</Badge>
+                {isCheckingWebhook ? (
+                    <div className="flex items-center text-sm text-muted-foreground"><Spinner className="w-4 h-4 mr-2" /> Checking...</div>
+                ) : webhookChecked && !messagesSubscribed ? (
+                    <Button 
+                        size="sm" 
+                        variant="destructive" 
+                        onClick={() => registerWebhook.mutate()}
+                        disabled={registerWebhook.isPending}
+                        className="h-7 w-fit px-3 text-xs"
+                    >
+                        {registerWebhook.isPending ? <Spinner className="w-3 h-3 mr-2" /> : null}
+                        Enable Now
+                    </Button>
+                ) : (
+                    <Badge className="w-fit px-3 py-1 bg-emerald-500 hover:bg-emerald-600">Active ✓</Badge>
+                )}
             </div>
         </Card>
     );
