@@ -211,7 +211,7 @@ const Settings = () => {
                 <CardDescription>Connect your Meta Business Account</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                {!connectionStatus?.connected && (
+                {!connectionStatus?.connected ? (
                   <div className="bg-blue-50 dark:bg-blue-900/10 p-5 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4 border border-blue-100 dark:border-blue-900/30 mb-2">
                     <div className="space-y-1 text-center sm:text-left">
                       <h4 className="font-semibold text-blue-900 dark:text-blue-100 flex items-center justify-center sm:justify-start gap-2">
@@ -222,6 +222,25 @@ const Settings = () => {
                       </p>
                     </div>
                     <FacebookLoginButton onSuccess={() => window.location.reload()} />
+                  </div>
+                ) : (
+                  <div className="bg-green-50 dark:bg-green-900/10 p-5 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4 border border-green-100 dark:border-green-900/30 mb-2">
+                    <div className="space-y-1 text-center sm:text-left">
+                      <h4 className="font-semibold text-green-900 dark:text-green-100 flex items-center justify-center sm:justify-start gap-2">
+                        Account Connected
+                      </h4>
+                      <p className="text-sm text-green-700 dark:text-green-300 max-w-sm">
+                        Your Meta App is successfully linked. To switch accounts, disconnect first.
+                      </p>
+                    </div>
+                    <Button 
+                      variant="destructive" 
+                      onClick={() => {
+                        updateWhatsAppSettings.mutateAsync({ is_connected: false }).then(() => window.location.reload());
+                      }}
+                    >
+                      Disconnect Facebook
+                    </Button>
                   </div>
                 )}
 
