@@ -1345,10 +1345,36 @@ serve(async (req: Request) => {
 
         const subscription = data?.data?.[0];
         const subscribedFields: string[] = subscription?.subscribed_fields || [];
-        const hasMessages = subscribedFields.includes('messages');
+        let hasMessages = subscribedFields.includes('messages');
+
+        // AUTO-SUBSCRIBE: If they check their webhook and it's missing, forcefully fix it for them!
+        if (!hasMessages) {
+          console.log(`Auto-subscribing WABA ${settings.business_account_id} to webhook...`);
+          try {
+            const subRes = await fetch(
+              `https://graph.facebook.com/v21.0/${settings.business_account_id}/subscribed_apps`,
+              {
+                method: 'POST',
+                headers: {
+                  'Authorization': `Bearer ${settings.access_token}`,
+                  'Content-Type': 'application/json'
+                }
+              }
+            );
+            const subData = await subRes.json();
+            if (subData.success) {
+              console.log("Auto-subscribe successful!");
+              hasMessages = true;
+            } else {
+              console.error("Auto-subscribe failed:", subData);
+            }
+          } catch (e) {
+            console.error("Auto-subscribe error:", e);
+          }
+        }
 
         return new Response(JSON.stringify({
-          subscribed: !!subscription,
+          subscribed: !!subscription || hasMessages,
           subscribed_fields: subscribedFields,
           messages_field_subscribed: hasMessages,
           raw: data,
