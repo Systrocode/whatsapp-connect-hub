@@ -99,16 +99,40 @@ export const useAdminSubscriptions = () => {
   // Change subscription plan
   const changePlan = useMutation({
     mutationFn: async ({ userId, planId }: { userId: string; planId: string }) => {
-      const { error } = await supabase
+      // First check if a subscription exists
+      const { data: existingSub } = await supabase
         .from('user_subscriptions')
-        .update({ plan_id: planId })
-        .eq('user_id', userId);
-      
-      if (error) throw error;
+        .select('id')
+        .eq('user_id', userId)
+        .maybeSingle();
+
+      if (existingSub) {
+        // Update existing
+        const { error } = await supabase
+          .from('user_subscriptions')
+          .update({ plan_id: planId })
+          .eq('user_id', userId);
+        if (error) throw error;
+      } else {
+        // Insert new subscription for this user
+        const { error } = await supabase
+          .from('user_subscriptions')
+          .insert({
+            user_id: userId,
+            plan_id: planId,
+            status: 'active',
+            current_period_start: new Date().toISOString(),
+            current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+            messages_used: 0,
+            contacts_used: 0
+          });
+        if (error) throw error;
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-subscriptions'] });
-      toast.success('Plan changed');
+      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
+      toast.success('Plan changed successfully');
     },
     onError: (error: Error) => {
       toast.error(error.message);

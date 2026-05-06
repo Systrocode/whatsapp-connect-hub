@@ -18,6 +18,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { useAdminUsers } from '@/hooks/useAdminUsers';
+import { useAdminSubscriptions } from '@/hooks/useAdminSubscriptions';
 import { useAuth } from '@/contexts/AuthContext';
 import { Users, Shield, UserCog, User, Trash2 } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -31,6 +32,7 @@ const roleConfig = {
 
 const AdminUsers = () => {
   const { users, isLoading, updateRole, isUpdating, deleteUser, isDeleting } = useAdminUsers();
+  const { plans, subscriptions, changePlan } = useAdminSubscriptions();
   const { user: currentUser } = useAuth();
 
   const handleRoleChange = (userId: string, newRole: 'admin' | 'moderator' | 'user') => {
@@ -79,6 +81,7 @@ const AdminUsers = () => {
                       <TableHead>User</TableHead>
                       <TableHead>Phone</TableHead>
                       <TableHead>Role</TableHead>
+                      <TableHead>Plan</TableHead>
                       <TableHead>Joined</TableHead>
                       <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
@@ -120,6 +123,11 @@ const AdminUsers = () => {
                               {role.label}
                             </Badge>
                           </TableCell>
+                          <TableCell>
+                            <Badge variant="secondary">
+                              {plans.find(p => p.id === subscriptions.find(s => s.user_id === user.id)?.plan_id)?.name || 'Free'}
+                            </Badge>
+                          </TableCell>
                           <TableCell className="text-muted-foreground">
                             {formatToIST(user.created_at)}
                           </TableCell>
@@ -139,6 +147,30 @@ const AdminUsers = () => {
                                   <SelectItem value="admin">Admin</SelectItem>
                                 </SelectContent>
                               </Select>
+
+                              {/* Plan Selection */}
+                              <Select
+                                value={subscriptions.find(s => s.user_id === user.id)?.plan_id || 'free'}
+                                onValueChange={(value) => {
+                                  if (value !== 'free') {
+                                    changePlan.mutate({ userId: user.id, planId: value });
+                                  }
+                                }}
+                                disabled={changePlan.isPending || isCurrentUser}
+                              >
+                                <SelectTrigger className="w-32">
+                                  <SelectValue placeholder="Free Plan" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="free">Free</SelectItem>
+                                  {plans.map(plan => (
+                                    <SelectItem key={plan.id} value={plan.id}>
+                                      {plan.name}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+
                               <Button
                                 variant="ghost"
                                 size="icon"
