@@ -18,19 +18,36 @@ export const useTeamMembers = () => {
     queryFn: async () => {
       if (!user) return [];
       
-      const { data, error } = await supabase
+      const { data: members, error: membersError } = await supabase
         .from('team_members')
-        .select(`
-          user_id,
-          role,
-          profiles:user_id (business_name)
-        `);
+        .select('user_id, role');
 
-      if (error) {
-        console.error('Error fetching team members:', error);
+      if (membersError) {
+        console.error('Error fetching team members:', membersError);
         return [];
       }
-      return data as TeamMember[];
+
+      if (!members || members.length === 0) return [];
+
+      const userIds = members.map(m => m.user_id);
+
+      const { data: profiles, error: profilesError } = await supabase
+        .from('profiles')
+        .select('id, business_name')
+        .in('id', userIds);
+
+      if (profilesError) {
+        console.error('Error fetching profiles:', profilesError);
+        return [];
+      }
+
+      const profilesMap = new Map(profiles.map(p => [p.id, p]));
+
+      return members.map(m => ({
+        user_id: m.user_id,
+        role: m.role,
+        profiles: profilesMap.get(m.user_id) || null
+      })) as TeamMember[];
     },
     enabled: !!user,
   });
