@@ -17,6 +17,8 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useQueryClient } from '@tanstack/react-query';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useTeamMembers, TeamMember } from '@/hooks/useTeamMembers';
 
 const statusConfig = {
   active: { label: 'Active', color: 'bg-green-500', icon: MessageSquare },
@@ -25,7 +27,8 @@ const statusConfig = {
 };
 
 const Conversations = () => {
-  const { conversations, isLoading } = useConversations();
+  const { conversations, isLoading, updateConversation } = useConversations();
+  const { data: teamMembers = [] } = useTeamMembers();
   const { leads } = useCampaignLeads();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -270,6 +273,8 @@ const Conversations = () => {
                 isSelected={selectedIds.includes(conversation.id)}
                 onSelect={(checked) => handleSelectOne(conversation.id, checked)}
                 onClick={() => handleOpenConversation(conversation.id)}
+                teamMembers={teamMembers}
+                onAssign={(id, userId) => updateConversation.mutate({ id, assigned_to: userId })}
               />
             ))}
           </div>
@@ -285,9 +290,11 @@ interface ConversationItemProps {
   isSelected: boolean;
   onSelect: (checked: boolean) => void;
   onClick: () => void;
+  teamMembers: TeamMember[];
+  onAssign: (id: string, userId: string | null) => void;
 }
 
-const ConversationItem = ({ conversation, index, isSelected, onSelect, onClick }: ConversationItemProps) => {
+const ConversationItem = ({ conversation, index, isSelected, onSelect, onClick, teamMembers, onAssign }: ConversationItemProps) => {
   const status = statusConfig[conversation.status];
   const StatusIcon = status.icon;
 
@@ -341,6 +348,25 @@ const ConversationItem = ({ conversation, index, isSelected, onSelect, onClick }
               {formatPhoneDisplay(conversation.contacts?.phone_number)}
             </p>
             <div className="flex items-center gap-2 shrink-0">
+              <div onClick={(e) => e.stopPropagation()}>
+                <Select 
+                  value={conversation.assigned_to || "unassigned"}
+                  onValueChange={(val) => onAssign(conversation.id, val === "unassigned" ? null : val)}
+                >
+                  <SelectTrigger className="h-6 text-xs w-[120px] bg-background">
+                    <SelectValue placeholder="Assignee" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="unassigned">Unassigned</SelectItem>
+                    {teamMembers.map((tm) => (
+                      <SelectItem key={tm.user_id} value={tm.user_id}>
+                        {tm.profiles?.business_name || 'Agent'}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
               {conversation.unread_count > 0 && (
                 <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-primary text-primary-foreground">
                   {conversation.unread_count}

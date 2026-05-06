@@ -14,6 +14,7 @@ export interface Conversation {
   unread_count: number;
   created_at: string;
   updated_at: string;
+  assigned_to?: string | null;
   contact?: Contact;
 }
 
