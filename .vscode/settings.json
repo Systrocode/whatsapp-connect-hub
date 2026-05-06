@@ -1,7 +1,7 @@
 {
-    "deno.enable": true,
+    "deno.enable": false,
     "deno.enablePaths": [
-        "supabase"
+        "supabase/functions"
     ],
     "deno.unstable": true,
     "deno.lint": true,

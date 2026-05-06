@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { PaymentSettingsForm } from "./PaymentSettingsForm";
+import { useProfile } from "@/hooks/useProfile";
 
 interface AffiliateProfile {
     id: string;
@@ -42,6 +43,7 @@ interface Referral {
 
 export default function AffiliateDashboard() {
     const { user } = useAuth();
+    const { profile: userProfile } = useProfile();
     const { toast } = useToast();
     const [loading, setLoading] = useState(true);
     const [creating, setCreating] = useState(false);
@@ -96,8 +98,14 @@ export default function AffiliateDashboard() {
     const joinProgram = async () => {
         setCreating(true);
         try {
-            // Generate a simple code based on email or random
-            const baseCode = user?.email?.split('@')[0] || 'user';
+            // Generate a code based on business name or email
+            let baseCode = 'user';
+            if (userProfile?.business_name) {
+                baseCode = userProfile.business_name.replace(/[^a-zA-Z0-9]/g, '');
+            } else if (user?.email) {
+                baseCode = user.email.split('@')[0].replace(/[^a-zA-Z0-9]/g, '');
+            }
+            
             const randomSuffix = Math.random().toString(36).substring(2, 6);
             const code = `${baseCode}-${randomSuffix}`.toLowerCase();
 

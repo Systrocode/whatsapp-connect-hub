@@ -22,8 +22,9 @@ import MessageNode from '@/components/flow/nodes/MessageNode';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import Sidebar from '@/components/flow/Sidebar';
 import { Button } from '@/components/ui/button';
-import { Save, Play } from 'lucide-react';
+import { Save, Play, Lock } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useSubscription } from '@/hooks/useSubscription';
 
 const nodeTypes = {
     message: MessageNode,
@@ -242,6 +243,41 @@ function FlowBuilderContent() {
 }
 
 export default function FlowBuilder() {
+    const { subscription, isLoading } = useSubscription();
+    
+    const isPaidPlan = subscription?.plan && subscription.plan.price_monthly > 0;
+
+    if (isLoading) {
+        return (
+            <DashboardLayout>
+                <div className="flex items-center justify-center h-[calc(100vh-65px)]">
+                    <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full"></div>
+                </div>
+            </DashboardLayout>
+        );
+    }
+
+    if (!isPaidPlan) {
+        return (
+            <DashboardLayout>
+                <div className="flex flex-col items-center justify-center h-[calc(100vh-65px)] p-8 text-center space-y-6">
+                    <div className="bg-purple-100 dark:bg-purple-900/20 p-6 rounded-full">
+                        <Lock className="w-12 h-12 text-purple-600 dark:text-purple-400" />
+                    </div>
+                    <div className="space-y-2 max-w-md">
+                        <h1 className="text-3xl font-bold">Premium Feature</h1>
+                        <p className="text-muted-foreground">
+                            The advanced Flow Builder is exclusively available on paid plans. Upgrade your account to build powerful automated conversational bots.
+                        </p>
+                    </div>
+                    <Button onClick={() => window.location.href = '/pricing'} size="lg" className="bg-purple-600 hover:bg-purple-700">
+                        Upgrade Plan
+                    </Button>
+                </div>
+            </DashboardLayout>
+        );
+    }
+
     return (
         <DashboardLayout>
             <ReactFlowProvider>
