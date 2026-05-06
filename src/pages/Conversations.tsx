@@ -9,6 +9,7 @@ import { cn, formatPhoneDisplay } from '@/lib/utils';
 import { useConversations, ConversationWithContact } from '@/hooks/useConversations';
 import { useCampaignLeads } from '@/hooks/useCampaignLeads';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatDistanceToNow } from 'date-fns';
 import CampaignLeadsList from '@/components/dashboard/CampaignLeadsList';
@@ -32,8 +33,10 @@ const Conversations = () => {
   const { leads } = useCampaignLeads();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { user: currentUser } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [assigneeFilter, setAssigneeFilter] = useState<'all' | 'me'>('all');
   const [showLeads, setShowLeads] = useState(true);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [isBulkActionLoading, setIsBulkActionLoading] = useState(false);
@@ -50,7 +53,8 @@ const Conversations = () => {
       contactPhone.includes(searchQuery);
 
     const matchesStatus = statusFilter === 'all' || conv.status === statusFilter;
-    return matchesSearch && matchesStatus;
+    const matchesAssignee = assigneeFilter === 'all' || conv.assigned_to === currentUser?.id;
+    return matchesSearch && matchesStatus && matchesAssignee;
   });
 
   const handleOpenConversation = (id: string) => {
@@ -233,6 +237,15 @@ const Conversations = () => {
                         {status}
                       </Button>
                     ))}
+                    <div className="w-px h-6 bg-border mx-1 self-center" />
+                    <Button
+                      variant={assigneeFilter === 'me' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setAssigneeFilter(prev => prev === 'me' ? 'all' : 'me')}
+                      className={assigneeFilter === 'me' ? '' : 'text-primary border-primary/30 bg-primary/5 hover:bg-primary/10'}
+                    >
+                      Assigned to me
+                    </Button>
                   </div>
                 )}
               </AnimatePresence>
