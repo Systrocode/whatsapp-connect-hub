@@ -25,6 +25,7 @@ import { Button } from '@/components/ui/button';
 import { Save, Play, Lock } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useSubscription } from '@/hooks/useSubscription';
+import { useUserRole } from '@/hooks/useUserRole';
 
 const nodeTypes = {
     message: MessageNode,
@@ -243,11 +244,13 @@ function FlowBuilderContent() {
 }
 
 export default function FlowBuilder() {
-    const { subscription, isLoading } = useSubscription();
+    const { subscription, isLoading: isLoadingSub } = useSubscription();
+    const { isAdmin, isLoading: isLoadingRole } = useUserRole();
     
     const isPaidPlan = subscription?.plan && subscription.plan.price_monthly > 0;
+    const hasAccess = isPaidPlan || isAdmin;
 
-    if (isLoading) {
+    if (isLoadingSub || isLoadingRole) {
         return (
             <DashboardLayout>
                 <div className="flex items-center justify-center h-[calc(100vh-65px)]">
@@ -257,7 +260,7 @@ export default function FlowBuilder() {
         );
     }
 
-    if (!isPaidPlan) {
+    if (!hasAccess) {
         return (
             <DashboardLayout>
                 <div className="flex flex-col items-center justify-center h-[calc(100vh-65px)] p-8 text-center space-y-6">
