@@ -9,29 +9,49 @@ export const KitNewsletterSection = () => {
   useEffect(() => {
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
-
-    // Avoid duplicate injection
     if (wrapper.querySelector('script[data-uid]')) return;
 
     const script = document.createElement('script');
     script.src = KIT_SCRIPT_URL;
     script.async = true;
     script.setAttribute('data-uid', KIT_FORM_UID);
-
-    // Inject script INSIDE the wrapper so Kit renders the form here, not at body end
     wrapper.appendChild(script);
   }, []);
 
   return (
-    <section
-      style={{ backgroundColor: '#128c7e' }}
-      className="w-full py-16 px-4"
-    >
+    <section className="w-full relative overflow-hidden py-16 px-4">
+
+      {/* Background image — blurred at ~10% (2px) */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundImage: 'url(/newsletter-bg.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          filter: 'blur(2px)',
+          transform: 'scale(1.06)', // slightly scale to hide blur edges
+          zIndex: 0,
+        }}
+      />
+
+      {/* Subtle dark overlay so form stays readable */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.35)',
+          zIndex: 1,
+        }}
+      />
+
+      {/* Kit form — sits on top of the background */}
       <div
         ref={wrapperRef}
-        className="mx-auto w-full"
-        style={{ maxWidth: '680px' }}
+        className="relative mx-auto w-full"
+        style={{ maxWidth: '680px', zIndex: 2 }}
       />
+
     </section>
   );
 };
