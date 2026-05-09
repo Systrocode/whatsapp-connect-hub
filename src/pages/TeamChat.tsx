@@ -354,7 +354,7 @@ function TeamChatInner() {
         {/* E2EE status footer */}
         <div className="p-3 border-t border-border bg-primary/5">
           <div className="flex items-center gap-2 text-[10px] text-primary">
-            <ShieldCheck className="w-3.5 h-3.5" />
+            <img src="https://img.icons8.com/fluency/48/security-shield-green.png" className="w-3.5 h-3.5" alt="E2EE" />
             <span className="font-semibold">AES-256-GCM · ECDH P-256 · HMAC-SHA256</span>
           </div>
         </div>
