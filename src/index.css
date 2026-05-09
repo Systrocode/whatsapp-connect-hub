@@ -153,3 +153,117 @@
     /* Firefox */
   }
 }
+
+/* ============================================
+   Kit (ConvertKit) Newsletter Form Overrides
+   ============================================ */
+
+/* Wrapper reset */
+.kit-form-wrapper .formkit-form,
+.formkit-form[data-uid="78a8d72db0"] {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 1.5rem !important;
+  font-family: 'Outfit', sans-serif !important;
+}
+
+/* Hide Kit branding / background panels */
+.formkit-form[data-uid="78a8d72db0"] .formkit-background {
+  display: none !important;
+}
+
+/* Header text */
+.formkit-form[data-uid="78a8d72db0"] .formkit-header h1,
+.formkit-form[data-uid="78a8d72db0"] .formkit-header h2 {
+  color: hsl(var(--foreground)) !important;
+  font-family: 'Outfit', sans-serif !important;
+  font-weight: 700 !important;
+}
+
+/* Subheader / description */
+.formkit-form[data-uid="78a8d72db0"] .formkit-subheader p {
+  color: hsl(var(--muted-foreground)) !important;
+  font-family: 'Outfit', sans-serif !important;
+}
+
+/* Input fields */
+.formkit-form[data-uid="78a8d72db0"] input[type="email"],
+.formkit-form[data-uid="78a8d72db0"] input[type="text"] {
+  background: hsl(var(--background)) !important;
+  border: 1.5px solid hsl(var(--border)) !important;
+  border-radius: 12px !important;
+  color: hsl(var(--foreground)) !important;
+  font-family: 'Outfit', sans-serif !important;
+  font-size: 1rem !important;
+  padding: 0.85rem 1.2rem !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.formkit-form[data-uid="78a8d72db0"] input[type="email"]:focus,
+.formkit-form[data-uid="78a8d72db0"] input[type="text"]:focus {
+  border-color: #00E785 !important;
+  box-shadow: 0 0 0 3px rgba(0, 231, 133, 0.15) !important;
+  outline: none !important;
+}
+
+/* Submit button */
+.formkit-form[data-uid="78a8d72db0"] .formkit-submit,
+.formkit-form[data-uid="78a8d72db0"] button[type="submit"] {
+  background: #00E785 !important;
+  color: #000 !important;
+  border: none !important;
+  border-radius: 12px !important;
+  font-family: 'Outfit', sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 1rem !important;
+  padding: 0.85rem 2rem !important;
+  cursor: pointer !important;
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease !important;
+  box-shadow: 0 4px 20px rgba(0, 231, 133, 0.3) !important;
+}
+
+.formkit-form[data-uid="78a8d72db0"] .formkit-submit:hover,
+.formkit-form[data-uid="78a8d72db0"] button[type="submit"]:hover {
+  background: #00d176 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 30px rgba(0, 231, 133, 0.4) !important;
+}
+
+/* Success / confirmation message */
+.formkit-form[data-uid="78a8d72db0"] .formkit-alert-success {
+  background: rgba(0, 231, 133, 0.1) !important;
+  border: 1px solid rgba(0, 231, 133, 0.3) !important;
+  border-radius: 12px !important;
+  color: #00b360 !important;
+  font-family: 'Outfit', sans-serif !important;
+  font-weight: 600 !important;
+}
+
+/* Error message */
+.formkit-form[data-uid="78a8d72db0"] .formkit-alert-error {
+  background: rgba(239, 68, 68, 0.08) !important;
+  border: 1px solid rgba(239, 68, 68, 0.2) !important;
+  border-radius: 12px !important;
+  font-family: 'Outfit', sans-serif !important;
+}
+
+/* Privacy note */
+.formkit-form[data-uid="78a8d72db0"] .formkit-guarantee {
+  color: hsl(var(--muted-foreground)) !important;
+  font-family: 'Outfit', sans-serif !important;
+  font-size: 0.75rem !important;
+}
+
+/* Powered by Kit link — style or hide */
+.formkit-form[data-uid="78a8d72db0"] .formkit-powered-by-convertkit-container {
+  opacity: 0.4 !important;
+}
+
+/* Dark mode adjustments */
+.dark .formkit-form[data-uid="78a8d72db0"] input[type="email"],
+.dark .formkit-form[data-uid="78a8d72db0"] input[type="text"] {
+  background: hsl(var(--card)) !important;
+  border-color: hsl(var(--border)) !important;
+  color: hsl(var(--foreground)) !important;
+}

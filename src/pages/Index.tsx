@@ -9,6 +9,7 @@ import { QuoteRequestDialog } from '@/components/landing/QuoteRequestDialog';
 import { LandingHeader } from '@/components/landing/LandingHeader';
 import { LandingFooter } from '@/components/landing/LandingFooter';
 import { FloatingWidget } from '@/components/landing/FloatingWidget';
+import { KitNewsletterSection } from '@/components/landing/KitNewsletterSection';
 
 
 const Index = () => {
@@ -1179,6 +1180,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Kit Newsletter Section */}
+      <KitNewsletterSection />
 
       {/* Footer */}
       < LandingFooter />
