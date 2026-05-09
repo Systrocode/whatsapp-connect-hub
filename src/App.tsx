@@ -63,6 +63,7 @@ const InvoicesPage = lazy(() => import("./pages/InvoicesPage"));
 const AffiliateDashboard = lazy(() => import("./pages/affiliates/AffiliateDashboard"));
 const HelpSupport = lazy(() => import("./pages/dashboard/HelpSupport"));
 const JoinTeam = lazy(() => import("./pages/JoinTeam"));
+const TeamChat = lazy(() => import("./pages/TeamChat"));
 
 // Tools Pages
 const WhatsAppLinkGenerator = lazy(() => import("./pages/tools/WhatsAppLinkGenerator"));
@@ -149,6 +150,7 @@ const App = () => {
                   <Route path="/dashboard/website-widget" element={<ProtectedRoute><WebsiteWidget /></ProtectedRoute>} />
                   <Route path="/dashboard/affiliate" element={<ProtectedRoute><AffiliateDashboard /></ProtectedRoute>} />
                   <Route path="/dashboard/help" element={<ProtectedRoute><HelpSupport /></ProtectedRoute>} />
+                  <Route path="/dashboard/team-chat" element={<ProtectedRoute><TeamChat /></ProtectedRoute>} />
                   {/* Admin Routes */}
                   <Route path="/dashboard/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
                   <Route path="/dashboard/admin/users" element={<AdminRoute><AdminUsers /></AdminRoute>} />

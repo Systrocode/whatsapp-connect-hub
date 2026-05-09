@@ -100,7 +100,7 @@ serve(async (req: Request) => {
           console.log("Processing status update:", statusUpdate);
 
           let updatePayload: any = { status: statusUpdate.status };
-          
+
           if (statusUpdate.status === 'failed' && statusUpdate.errors && statusUpdate.errors.length > 0) {
             updatePayload.content = `[Delivery Failed] Reason: ${statusUpdate.errors[0]?.title} - ${statusUpdate.errors[0]?.message}`;
           }
@@ -174,25 +174,25 @@ serve(async (req: Request) => {
                 console.error("Failed to get media URL from Meta:", mediaJson);
                 return null;
               }
-              
+
               // 2. Download media
               let fileRes = await fetch(mediaJson.url, {
                 headers: { 'Authorization': `Bearer ${accessToken}` },
                 redirect: 'manual'
               });
               if (fileRes.status === 301 || fileRes.status === 302) {
-                 const location = fileRes.headers.get('Location');
-                 if (location) {
-                    fileRes = await fetch(location); // Fetch without Authorization header
-                 }
+                const location = fileRes.headers.get('Location');
+                if (location) {
+                  fileRes = await fetch(location); // Fetch without Authorization header
+                }
               }
               if (!fileRes.ok) {
                 console.error("Failed to download media bytes:", fileRes.status);
                 return null;
               }
-              
+
               const blob = await fileRes.blob();
-              
+
               // 3. Upload to Supabase Storage
               const filePath = `${userId}/${crypto.randomUUID()}.${extension}`;
               const { data, error } = await supabaseServiceRole.storage
@@ -201,17 +201,17 @@ serve(async (req: Request) => {
                   contentType: mimeType || 'application/octet-stream',
                   upsert: true
                 });
-                
+
               if (error) {
                 console.error("Storage upload error:", error);
                 return null;
               }
-              
+
               // 4. Return the public URL
               const { data: publicUrlData } = supabaseServiceRole.storage
                 .from('chat-media')
                 .getPublicUrl(filePath);
-                
+
               return publicUrlData.publicUrl;
             } catch (err) {
               console.error("Media processing error:", err);
@@ -227,9 +227,9 @@ serve(async (req: Request) => {
             const mimeType = message.image?.mime_type || 'image/jpeg';
             let publicUrl = null;
             if (mediaId && accessToken) {
-                publicUrl = await uploadMediaToStorage(mediaId, mimeType, 'jpg');
+              publicUrl = await uploadMediaToStorage(mediaId, mimeType, 'jpg');
             }
-            
+
             content = JSON.stringify({
               caption: message.image?.caption || '',
               media_url: publicUrl,
@@ -241,10 +241,10 @@ serve(async (req: Request) => {
             const mimeType = message.document?.mime_type || 'application/pdf';
             const originalName = message.document?.filename || 'document';
             const extension = originalName.includes('.') ? originalName.split('.').pop() : 'pdf';
-            
+
             let publicUrl = null;
             if (mediaId && accessToken) {
-                publicUrl = await uploadMediaToStorage(mediaId, mimeType, extension);
+              publicUrl = await uploadMediaToStorage(mediaId, mimeType, extension);
             }
 
             content = JSON.stringify({
@@ -258,7 +258,7 @@ serve(async (req: Request) => {
             const mimeType = message.audio?.mime_type || 'audio/ogg';
             let publicUrl = null;
             if (mediaId && accessToken) {
-                publicUrl = await uploadMediaToStorage(mediaId, mimeType, 'ogg');
+              publicUrl = await uploadMediaToStorage(mediaId, mimeType, 'ogg');
             }
 
             content = JSON.stringify({ audio: message.audio, media_url: publicUrl });
@@ -268,7 +268,7 @@ serve(async (req: Request) => {
             const mimeType = message.video?.mime_type || 'video/mp4';
             let publicUrl = null;
             if (mediaId && accessToken) {
-                publicUrl = await uploadMediaToStorage(mediaId, mimeType, 'mp4');
+              publicUrl = await uploadMediaToStorage(mediaId, mimeType, 'mp4');
             }
 
             content = JSON.stringify({ video: message.video, media_url: publicUrl });
@@ -730,8 +730,8 @@ serve(async (req: Request) => {
           const errorMsg = metaError
             ? `${metaError.message} (Code: ${metaError.code}${metaError.error_data ? ' — ' + metaError.error_data : ''})`
             : 'Failed to send message';
-          return new Response(JSON.stringify({ 
-            success: false, 
+          return new Response(JSON.stringify({
+            success: false,
             error: errorMsg,
             meta_error: metaError,
           }), {
