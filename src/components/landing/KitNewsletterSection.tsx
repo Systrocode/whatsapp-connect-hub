@@ -45,11 +45,11 @@ export const KitNewsletterSection = () => {
         }}
       />
 
-      {/* Kit form — left aligned, responsive */}
+      {/* Kit form — centered, wider */}
       <div
         ref={wrapperRef}
-        className="relative w-full px-4 sm:px-8 md:px-16 lg:px-24"
-        style={{ maxWidth: '780px', zIndex: 2 }}
+        className="relative mx-auto w-full"
+        style={{ maxWidth: '900px', zIndex: 2 }}
       />
 
     </section>
