@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { useE2EEChat, DecryptedMessage, ChatRoom } from '@/hooks/useE2EEChat';
 import { useTeamMembers } from '@/hooks/useTeamMembers';
+import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import {
   Shield, Lock, Key, Send, Plus, Users, MessageSquare,
   MoreVertical, Trash2, Pin, Reply, Smile, CheckCheck, Check,
@@ -180,16 +181,19 @@ export default function TeamChat() {
 
   if (!keyReady) {
     return (
-      <div className="h-screen flex items-center justify-center bg-background flex-col gap-4">
-        <div className="w-12 h-12 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
-        <p className="text-muted-foreground text-sm">Initializing encryption keys…</p>
-        <p className="text-xs text-muted-foreground/60">Your private key is being generated on this device</p>
-      </div>
+      <DashboardLayout noPadding shouldScroll={false}>
+        <div className="h-full flex items-center justify-center bg-background flex-col gap-4">
+          <div className="w-12 h-12 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
+          <p className="text-muted-foreground text-sm">Initializing encryption keys…</p>
+          <p className="text-xs text-muted-foreground/60">Your private key is being generated on this device</p>
+        </div>
+      </DashboardLayout>
     );
   }
 
   return (
-    <div className="h-screen flex bg-background overflow-hidden">
+    <DashboardLayout noPadding shouldScroll={false}>
+    <div className="h-full flex bg-background overflow-hidden">
 
       {/* ── Sidebar ────────────────────────────────────────── */}
       <div className="w-80 border-r border-border flex flex-col bg-card shrink-0">
@@ -468,5 +472,6 @@ export default function TeamChat() {
         </div>
       )}
     </div>
+    </DashboardLayout>
   );
 }
