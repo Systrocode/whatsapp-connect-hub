@@ -24,8 +24,8 @@ export const KitNewsletterSection = () => {
 
   return (
     <section
-      style={{ backgroundColor: '#ffffff' }}
-      className="w-full py-16 px-4 border-t border-gray-100"
+      style={{ backgroundColor: '#128c7e' }}
+      className="w-full py-16 px-4"
     >
       <div
         ref={wrapperRef}
