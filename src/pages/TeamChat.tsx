@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, Component, ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { useE2EEChat, DecryptedMessage, ChatRoom } from '@/hooks/useE2EEChat';
@@ -6,15 +6,45 @@ import { useTeamMembers } from '@/hooks/useTeamMembers';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import {
   Shield, Lock, Key, Send, Plus, Users, MessageSquare,
-  MoreVertical, Trash2, Pin, Reply, Smile, CheckCheck, Check,
-  Search, Phone, Video, Info, AlertTriangle, X, ChevronDown,
+  Trash2, Pin, Reply, CheckCheck,
+  Search, Phone, Video, Info, AlertTriangle, X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { formatDistanceToNow, format } from 'date-fns';
+import { format } from 'date-fns';
+
+// ─── Error Boundary ───────────────────────────────────────────
+
+class ChatErrorBoundary extends Component<{ children: ReactNode }, { error: string | null }> {
+  constructor(props: { children: ReactNode }) {
+    super(props);
+    this.state = { error: null };
+  }
+  static getDerivedStateFromError(error: Error) {
+    return { error: error.message };
+  }
+  render() {
+    if (this.state.error) {
+      return (
+        <DashboardLayout>
+          <div className="flex flex-col items-center justify-center h-full gap-4 p-8">
+            <img src="https://img.icons8.com/fluency/96/error.png" className="w-16 h-16" alt="error" />
+            <h2 className="text-lg font-bold text-foreground">Team Chat failed to load</h2>
+            <p className="text-sm text-muted-foreground text-center max-w-md">{this.state.error}</p>
+            <button onClick={() => this.setState({ error: null })}
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm">
+              Try Again
+            </button>
+          </div>
+        </DashboardLayout>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 // ─── Helpers ─────────────────────────────────────────────────
 
@@ -145,7 +175,7 @@ function MessageBubble({
 
 // ─── Main Page ────────────────────────────────────────────────
 
-export default function TeamChat() {
+function TeamChatInner() {
   const { user } = useAuth();
   const {
     keyReady, fingerprint, rooms, messages, activeRoom, typingUsers,
@@ -473,5 +503,13 @@ export default function TeamChat() {
       )}
     </div>
     </DashboardLayout>
+  );
+}
+
+export default function TeamChat() {
+  return (
+    <ChatErrorBoundary>
+      <TeamChatInner />
+    </ChatErrorBoundary>
   );
 }
