@@ -173,18 +173,10 @@
   display: none !important;
 }
 
-/* Header text */
-.formkit-form[data-uid="78a8d72db0"] .formkit-header h1,
-.formkit-form[data-uid="78a8d72db0"] .formkit-header h2 {
-  color: hsl(var(--foreground)) !important;
-  font-family: 'Outfit', sans-serif !important;
-  font-weight: 700 !important;
-}
-
-/* Subheader / description */
-.formkit-form[data-uid="78a8d72db0"] .formkit-subheader p {
-  color: hsl(var(--muted-foreground)) !important;
-  font-family: 'Outfit', sans-serif !important;
+/* Hide Kit's built-in header & subheader — we use our own custom headings */
+.formkit-form[data-uid="78a8d72db0"] .formkit-header,
+.formkit-form[data-uid="78a8d72db0"] .formkit-subheader {
+  display: none !important;
 }
 
 /* Input fields */
