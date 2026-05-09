@@ -4,9 +4,9 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useE2EEChat, DecryptedMessage, ChatRoom } from '@/hooks/useE2EEChat';
 import { useTeamMembers } from '@/hooks/useTeamMembers';
 import {
-  Shield, Lock, ShieldCheck, Send, Plus, Users, MessageSquare,
+  Shield, Lock, Key, Send, Plus, Users, MessageSquare,
   MoreVertical, Trash2, Pin, Reply, Smile, CheckCheck, Check,
-  Search, Phone, Video, Info, AlertTriangle, Fingerprint, X, ChevronDown,
+  Search, Phone, Video, Info, AlertTriangle, X, ChevronDown,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -198,13 +198,13 @@ export default function TeamChat() {
         <div className="p-4 border-b border-border">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5 text-primary" />
+              <Shield className="w-5 h-5 text-primary" />
               <span className="font-bold text-foreground">Team Chat</span>
               <Badge variant="secondary" className="text-[10px] px-1.5 py-0">E2EE</Badge>
             </div>
             <div className="flex gap-1">
               <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setShowFingerprint(v => !v)}>
-                <Fingerprint className="w-4 h-4" />
+                <Key className="w-4 h-4" />
               </Button>
               <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setShowNewGroup(v => !v)}>
                 <Plus className="w-4 h-4" />
@@ -333,11 +333,9 @@ export default function TeamChat() {
           {/* Chat header */}
           <div className="h-16 border-b border-border px-6 flex items-center justify-between bg-card shrink-0">
             <div className="flex items-center gap-3">
-              <Avatar className="w-9 h-9">
-                <AvatarFallback className={`text-sm font-bold text-white ${activeRoom.room_type === 'group' ? 'bg-gradient-to-br from-violet-500 to-purple-600' : 'bg-gradient-to-br from-emerald-500 to-teal-600'}`}>
-                  {activeRoom.room_type === 'group' ? <Users className="w-4 h-4" /> : initials(roomDisplayName(activeRoom, user?.id ?? ''))}
-                </AvatarFallback>
-              </Avatar>
+          <div className="w-9 h-9 shrink-0 flex items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 text-white font-bold">
+                  {activeRoom.room_type === 'group' ? <Users className="w-4 h-4" /> : <span className="text-sm">{initials(roomDisplayName(activeRoom, user?.id ?? ''))}</span>}
+                </div>
               <div>
                 <div className="font-semibold text-foreground text-sm">{roomDisplayName(activeRoom, user?.id ?? '')}</div>
                 <div className="flex items-center gap-1 text-[10px] text-primary">
@@ -356,9 +354,8 @@ export default function TeamChat() {
             </div>
           </div>
 
-          {/* E2EE notice */}
           <div className="flex items-center justify-center gap-2 py-2 bg-primary/5 text-[10px] text-primary/80">
-            <ShieldCheck className="w-3 h-3" />
+            <Shield className="w-3 h-3" />
             Messages are end-to-end encrypted. Only participants can read them.
           </div>
 
@@ -450,7 +447,7 @@ export default function TeamChat() {
       ) : (
         <div className="flex-1 flex flex-col items-center justify-center gap-4 text-muted-foreground">
           <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center">
-            <ShieldCheck className="w-10 h-10 text-primary" />
+            <Shield className="w-10 h-10 text-primary" />
           </div>
           <div className="text-center">
             <h2 className="font-bold text-foreground text-lg mb-1">Avelo Secure Team Chat</h2>
@@ -459,8 +456,8 @@ export default function TeamChat() {
           <div className="grid grid-cols-3 gap-3 mt-2 text-xs">
             {[
               { icon: <Lock className="w-4 h-4" />, label: 'AES-256-GCM' },
-              { icon: <ShieldCheck className="w-4 h-4" />, label: 'ECDH P-256' },
-              { icon: <Fingerprint className="w-4 h-4" />, label: 'HMAC-SHA256' },
+              { icon: <Key className="w-4 h-4" />, label: 'ECDH P-256' },
+              { icon: <Shield className="w-4 h-4" />, label: 'HMAC-SHA256' },
             ].map(item => (
               <div key={item.label} className="flex flex-col items-center gap-1 bg-muted/40 rounded-xl p-3">
                 <span className="text-primary">{item.icon}</span>
