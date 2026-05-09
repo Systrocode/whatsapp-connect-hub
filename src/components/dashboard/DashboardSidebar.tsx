@@ -28,11 +28,13 @@ const icons = {
   flow: 'https://img.icons8.com/fluency/48/flow-chart.png',
   affiliates: 'https://img.icons8.com/fluency/48/money-bag.png',
   invoice: 'https://img.icons8.com/fluency/48/invoice.png',
+  teamchat: 'https://img.icons8.com/fluency/48/lock-2.png',
 };
 
 const navItems = [
   { icon: icons.dashboard, label: 'Dashboard', path: '/dashboard' },
   { icon: icons.conversations, label: 'Conversations', path: '/dashboard/conversations' },
+  { icon: icons.teamchat, label: 'Team Chat 🔐', path: '/dashboard/team-chat' },
   { icon: icons.contacts, label: 'Contacts', path: '/dashboard/contacts' },
   { icon: icons.segments, label: 'Segments', path: '/dashboard/segments' },
   { icon: icons.broadcasts, label: 'Broadcasts', path: '/dashboard/broadcasts' },
