@@ -198,13 +198,13 @@ export default function TeamChat() {
         <div className="p-4 border-b border-border">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <Shield className="w-5 h-5 text-primary" />
+              <img src="https://img.icons8.com/fluency/48/security-shield-green.png" className="w-5 h-5" alt="E2EE" />
               <span className="font-bold text-foreground">Team Chat</span>
               <Badge variant="secondary" className="text-[10px] px-1.5 py-0">E2EE</Badge>
             </div>
             <div className="flex gap-1">
               <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setShowFingerprint(v => !v)}>
-                <Key className="w-4 h-4" />
+                <img src="https://img.icons8.com/fluency/48/key.png" className="w-4 h-4" alt="Fingerprint" />
               </Button>
               <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setShowNewGroup(v => !v)}>
                 <Plus className="w-4 h-4" />
@@ -355,7 +355,7 @@ export default function TeamChat() {
           </div>
 
           <div className="flex items-center justify-center gap-2 py-2 bg-primary/5 text-[10px] text-primary/80">
-            <Shield className="w-3 h-3" />
+            <img src="https://img.icons8.com/fluency/48/security-shield-green.png" className="w-3 h-3" alt="encrypted" />
             Messages are end-to-end encrypted. Only participants can read them.
           </div>
 
@@ -447,7 +447,7 @@ export default function TeamChat() {
       ) : (
         <div className="flex-1 flex flex-col items-center justify-center gap-4 text-muted-foreground">
           <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center">
-            <Shield className="w-10 h-10 text-primary" />
+            <img src="https://img.icons8.com/fluency/96/security-shield-green.png" className="w-12 h-12" alt="Secure Chat" />
           </div>
           <div className="text-center">
             <h2 className="font-bold text-foreground text-lg mb-1">Avelo Secure Team Chat</h2>
@@ -455,12 +455,12 @@ export default function TeamChat() {
           </div>
           <div className="grid grid-cols-3 gap-3 mt-2 text-xs">
             {[
-              { icon: <Lock className="w-4 h-4" />, label: 'AES-256-GCM' },
-              { icon: <Key className="w-4 h-4" />, label: 'ECDH P-256' },
-              { icon: <Shield className="w-4 h-4" />, label: 'HMAC-SHA256' },
+              { icon: 'https://img.icons8.com/fluency/48/lock-2.png', label: 'AES-256-GCM' },
+              { icon: 'https://img.icons8.com/fluency/48/key.png', label: 'ECDH P-256' },
+              { icon: 'https://img.icons8.com/fluency/48/verified-account.png', label: 'HMAC-SHA256' },
             ].map(item => (
               <div key={item.label} className="flex flex-col items-center gap-1 bg-muted/40 rounded-xl p-3">
-                <span className="text-primary">{item.icon}</span>
+                <img src={item.icon} alt={item.label} className="w-5 h-5" />
                 <span className="font-mono font-semibold text-foreground">{item.label}</span>
               </div>
             ))}
