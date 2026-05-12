@@ -85,6 +85,9 @@ const Index = () => {
                   <img
                     src="/logos/indigo-airlines-logo.svg"
                     alt="Indigo"
+                    width="192" height="52"
+                    loading="lazy"
+                    decoding="async"
                     className="h-full w-full object-contain filter grayscale hover:grayscale-0 opacity-70 hover:opacity-100 transition-all duration-300 dark:invert dark:hue-rotate-180"
                   />
                 </div>
@@ -93,6 +96,9 @@ const Index = () => {
                   <img
                     src="/logos/adani.svg"
                     alt="Adani"
+                    width="192" height="52"
+                    loading="lazy"
+                    decoding="async"
                     className="h-full w-full object-contain filter grayscale hover:grayscale-0 opacity-70 hover:opacity-100 transition-all duration-300 dark:invert dark:hue-rotate-180"
                   />
                 </div>
@@ -101,6 +107,9 @@ const Index = () => {
                   <img
                     src="/logos/vivo.svg"
                     alt="Vivo"
+                    width="192" height="52"
+                    loading="lazy"
+                    decoding="async"
                     className="h-full w-full object-contain filter grayscale hover:grayscale-0 opacity-70 hover:opacity-100 transition-all duration-300 dark:invert dark:hue-rotate-180"
                   />
                 </div>
@@ -109,6 +118,9 @@ const Index = () => {
                   <img
                     src="/logos/stake logo.png"
                     alt="Stake"
+                    width="192" height="52"
+                    loading="lazy"
+                    decoding="async"
                     className="h-full w-full object-contain filter grayscale hover:grayscale-0 opacity-70 hover:opacity-100 transition-all duration-300 dark:invert dark:hue-rotate-180"
                   />
                 </div>
@@ -162,7 +174,7 @@ const Index = () => {
               {/* Central Logo */}
               <div className="relative z-20 w-24 h-24 bg-white rounded-full shadow-2xl flex items-center justify-center p-4 border-4 border-green-50 dark:border-green-900/30">
                 {/* WhatsApp Icon SVG */}
-                <img src="/logos/Logomark.png" alt="Avelo" className="w-16 h-16 object-contain mix-blend-multiply" />
+                <img src="/logos/Logomark.png" alt="Avelo" width="64" height="64" fetchPriority="high" className="w-16 h-16 object-contain mix-blend-multiply" />
               </div>
 
               {/* Orbit Ring */}
@@ -173,39 +185,39 @@ const Index = () => {
               {/* Meta (Top) */}
               <div className="absolute w-12 h-12 bg-white rounded-xl shadow-lg flex flex-col items-center justify-center transform hover:scale-110 transition-transform"
                 style={{ transform: 'rotate(-90deg) translate(200px) rotate(90deg)' }}>
-                <img src="/logos/meta.svg" alt="Meta" className="w-8 h-8 object-contain" />
+                <img src="/logos/meta.svg" alt="Meta" width="32" height="32" loading="lazy" decoding="async" className="w-8 h-8 object-contain" />
                 <span className="absolute -bottom-4 text-[10px] font-bold text-gray-500">Ads</span>
               </div>
 
               {/* Messenger (Top Right) */}
               <div className="absolute w-12 h-12 bg-white rounded-xl shadow-lg flex items-center justify-center transform hover:scale-110 transition-transform"
                 style={{ transform: 'rotate(-40deg) translate(200px) rotate(40deg)' }}>
-                <img src="/logos/messenger.svg" alt="Messenger" className="w-8 h-8 object-contain" />
+                <img src="/logos/messenger.svg" alt="Messenger" width="32" height="32" loading="lazy" decoding="async" className="w-8 h-8 object-contain" />
               </div>
 
               {/* Google Ads (Right) */}
               <div className="absolute w-12 h-12 bg-white rounded-xl shadow-lg flex flex-col items-center justify-center transform hover:scale-110 transition-transform"
                 style={{ transform: 'rotate(10deg) translate(200px) rotate(-10deg)' }}>
-                <img src="/logos/google-ads.svg" alt="Google Ads" className="w-7 h-7 object-contain" />
+                <img src="/logos/google-ads.svg" alt="Google Ads" width="28" height="28" loading="lazy" decoding="async" className="w-7 h-7 object-contain" />
                 <span className="absolute -bottom-4 text-[10px] font-bold text-gray-500">Ads</span>
               </div>
 
               {/* Instagram (Bottom Right) */}
               <div className="absolute w-12 h-12 bg-white rounded-xl shadow-lg flex items-center justify-center transform hover:scale-110 transition-transform"
                 style={{ transform: 'rotate(60deg) translate(200px) rotate(-60deg)' }}>
-                <img src="/logos/instagram.svg" alt="Instagram" className="w-8 h-8 object-contain" />
+                <img src="/logos/instagram.svg" alt="Instagram" width="32" height="32" loading="lazy" decoding="async" className="w-8 h-8 object-contain" />
               </div>
 
               {/* RCS (Bottom Left) */}
               <div className="absolute w-12 h-12 bg-white rounded-xl shadow-lg flex items-center justify-center transform hover:scale-110 transition-transform"
                 style={{ transform: 'rotate(120deg) translate(200px) rotate(-120deg)' }}>
-                <img src="/logos/rcs.svg" alt="RCS" className="w-8 h-8 object-contain" />
+                <img src="/logos/rcs.svg" alt="RCS" width="32" height="32" loading="lazy" decoding="async" className="w-8 h-8 object-contain" />
               </div>
 
               {/* Facebook (Left) */}
               <div className="absolute w-12 h-12 bg-white rounded-xl shadow-lg flex items-center justify-center transform hover:scale-110 transition-transform"
                 style={{ transform: 'rotate(180deg) translate(200px) rotate(-180deg)' }}>
-                <img src="/logos/facebook.svg" alt="Facebook" className="w-8 h-8 object-contain" />
+                <img src="/logos/facebook.svg" alt="Facebook" width="32" height="32" loading="lazy" decoding="async" className="w-8 h-8 object-contain" />
               </div>
 
               {/* Phone (Top Left) */}

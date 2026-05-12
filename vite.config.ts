@@ -4,7 +4,7 @@ import path from "path";
 import basicSsl from "@vitejs/plugin-basic-ssl";
 import viteCompression from "vite-plugin-compression";
 
-// https://vitejs.dev/config/ -- Updated to trigger reload
+// https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
@@ -13,8 +13,10 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     basicSsl(),
-    viteCompression({ algorithm: "gzip", ext: ".gz" }),
-    viteCompression({ algorithm: "brotliCompress", ext: ".br" }),
+    // Gzip for broad compatibility
+    viteCompression({ algorithm: "gzip", ext: ".gz", threshold: 1024 }),
+    // Brotli for modern browsers — smaller than gzip
+    viteCompression({ algorithm: "brotliCompress", ext: ".br", threshold: 1024 }),
   ].filter(Boolean),
   resolve: {
     alias: {
@@ -23,17 +25,53 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
+    // Target modern browsers to ship less polyfill code
+    target: ["es2020", "chrome96", "firefox97", "safari15"],
+    // Enable minification (esbuild is the default, which is fast)
+    minify: "esbuild",
+    // Inline small assets to reduce requests
+    assetsInlineLimit: 4096,
+    // Increase limit slightly so we don't get noise warnings
+    chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'],
-          ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-popover', '@radix-ui/react-tooltip', 'framer-motion'],
-          supabase: ['@supabase/supabase-js'],
-          charts: ['recharts'],
-          utils: ['date-fns', 'zod', 'clsx', 'tailwind-merge'],
+        manualChunks(id) {
+          // Core React runtime — must be first so nothing else bleeds in
+          if (id.includes("node_modules/react/") || id.includes("node_modules/react-dom/") || id.includes("node_modules/react-router-dom/") || id.includes("node_modules/scheduler/")) {
+            return "vendor";
+          }
+          // Supabase client — large and stable
+          if (id.includes("node_modules/@supabase/")) {
+            return "supabase";
+          }
+          // Charting library — only needed on analytics pages
+          if (id.includes("node_modules/recharts")) {
+            return "charts";
+          }
+          // Framer Motion — only needed for landing page animations
+          if (id.includes("node_modules/framer-motion")) {
+            return "animations";
+          }
+          // ReactFlow — only needed on flow builder
+          if (id.includes("node_modules/reactflow") || id.includes("node_modules/@reactflow")) {
+            return "flow";
+          }
+          // Radix UI primitives
+          if (id.includes("node_modules/@radix-ui/")) {
+            return "radix";
+          }
+          // Utility libs
+          if (
+            id.includes("node_modules/date-fns") ||
+            id.includes("node_modules/zod") ||
+            id.includes("node_modules/clsx") ||
+            id.includes("node_modules/tailwind-merge") ||
+            id.includes("node_modules/class-variance-authority")
+          ) {
+            return "utils";
+          }
         },
       },
     },
-    chunkSizeWarningLimit: 1000,
   },
 }));

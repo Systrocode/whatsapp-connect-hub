@@ -2,25 +2,9 @@
 <html lang="en">
 
 <head>
-  <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-MWR8NG3D');</script>
-  <!-- End Google Tag Manager -->
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SR6LQ7F5ZF"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-SR6LQ7F5ZF');
-  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
+
   <!-- Primary Meta Tags -->
   <title>WhatsApp Business API Platform | Avelo</title>
   <meta name="title" content="WhatsApp Business API Platform | Avelo">
@@ -42,14 +26,48 @@
   <meta property="twitter:title" content="WhatsApp Business API Platform | Avelo">
   <meta property="twitter:description" content="Boost your business with Avelo's WhatsApp Business API. Automate marketing, sales & customer support with AI chatbots. Start free today.">
   <meta property="twitter:image" content="https://www.avelo.in/og-image.png">
-  
+
+  <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="/logos/logomark-transparent.png">
+
+  <!-- Resource hints: pre-connect to external CDNs to reduce connection latency -->
+  <link rel="preconnect" href="https://img.icons8.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+  <link rel="dns-prefetch" href="https://www.google-analytics.com">
+  <link rel="dns-prefetch" href="https://images.unsplash.com">
+
+  <!-- Google Tag Manager — loaded after page is interactive to avoid render blocking -->
+  <script>
+    // Defer GTM until after page load to eliminate render-blocking
+    window.addEventListener('load', function () {
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, 'script', 'dataLayer', 'GTM-MWR8NG3D');
+    });
+  </script>
+
+  <!-- Google Analytics (gtag) — async & non-blocking -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SR6LQ7F5ZF"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-SR6LQ7F5ZF');
+  </script>
 </head>
 
 <body>
   <!-- Google Tag Manager (noscript) -->
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MWR8NG3D"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
   <div id="root"></div>
   <script type="module" src="/src/main.tsx"></script>
